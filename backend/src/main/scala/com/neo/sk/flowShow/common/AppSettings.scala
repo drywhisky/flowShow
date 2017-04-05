@@ -50,6 +50,16 @@ object AppSettings {
   val slickIdleTimeout = slickConfig.getInt("idleTimeout")
   val slickMaxLifetime = slickConfig.getInt("maxLifetime")
 
+  private val dependence = config.getConfig("dependence")
+  val nyx = dependence.getConfig("nyx")
+
+  val nyxProtocol = nyx.getString("protocol")
+  val nyxWebsokectProtocol = nyx.getString("websokectProtocol")
+  val nyxAppId = nyx.getString("appId")
+  val nyxSecureKey = nyx.getString("secureKey")
+  val nyxHost = nyx.getString("host")
+  val nyxPort = nyx.getString("port")
+
 
 
   val sessionConfig = {
