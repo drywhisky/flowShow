@@ -25,7 +25,7 @@ trait HttpService extends ResourceService
   implicit val materializer: Materializer
 
   implicit val timeout: Timeout
-
+  
 
   val routes: Route =
     pathPrefix("hw1701b") {

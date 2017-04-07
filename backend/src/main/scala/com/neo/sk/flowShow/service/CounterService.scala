@@ -5,6 +5,7 @@ import io.circe.Error
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.CirceSupport
 import io.circe.generic.auto._
+import akka.actor.ActorRef
 
 
 /**
@@ -24,6 +25,9 @@ trait CounterService extends CirceSupport {
   import com.neo.sk.flowShow.ptcl._
 
   private var counter = 0
+
+  val receiveDataActor : ActorRef
+
 
   import CounterService.log
   //import io.circe._

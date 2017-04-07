@@ -9,7 +9,6 @@ import akka.http.scaladsl.model.ws.{Message, TextMessage, WebSocketRequest}
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.util.Timeout
 import com.neo.sk.flowShow.common.AppSettings
-import com.neo.sk.flowShow.core.WebSocketActor.Connect
 import com.neo.sk.utils.SecureUtil
 import org.slf4j.LoggerFactory
 
@@ -26,6 +25,12 @@ object ReceiveDataActor {
 
   //internal
   case object Init
+
+  case object Connect
+
+  case class Subscribe(actorRef: ActorRef)
+
+  case class UnSubscribe(actorRef: ActorRef)
 
   case class SwitchState(stateName: String, func: Receive, duration: Duration)
 
@@ -101,38 +106,7 @@ class ReceiveDataActor extends Actor with Stash {
   def init(): Receive = {
     case msg@Init =>
       log.debug(s"$logPrefix got a msg:$msg.")
-      val sn = (System.currentTimeMillis() / 1000) + SecureUtil.nonceStr(3)
-      val (timestamp, nonce, signature) =
-        SecureUtil.generateSignatureParameters(List(AppSettings.nyxAppId, sn), AppSettings.nyxSecureKey)
-
-      val url = AppSettings.nyxWebsokectProtocol + AppSettings.nyxHost + ":" + AppSettings.nyxPort +
-        s"/nyx/api/pulse?appId=${AppSettings.nyxAppId}&sn=$sn&timestamp=$timestamp&nonce=$nonce&signature=$signature"
-
-      log.info("nyx  recieveDataActor  ws  url  is : " + url)
-      val webSocketFlow = Http().webSocketClientFlow(WebSocketRequest(url))
-
-      val (upgradeResponse, closed) =
-        Source.maybe[Message]
-          .viaMat(webSocketFlow)(Keep.right) // keep the materialized Future[WebSocketUpgradeResponse]
-          .toMat(incoming)(Keep.both) // also keep the Future[Done]
-          .run()
-      val connected = upgradeResponse.flatMap { upgrade =>
-        if (upgrade.response.status == StatusCodes.SwitchingProtocols) {
-          Future.successful(Done)
-        } else {
-          throw new RuntimeException(s"Connection failed: ${upgrade.response.status}")
-        }
-      }
-
-      connected.onComplete {
-        case Success(_) => println(s"${self.path} connect nyx success.")
-        case Failure(e) => println(s"${self.path} connect nyx failed." + e.getMessage)
-      }
-      closed.onComplete { x =>
-        println("closed.onComplete")
-        context.system.scheduler.scheduleOnce(2.minutes, self, Connect)
-      }
-
+      switchState("idle", idle(), Duration.Undefined)
 
     case msg@ReceiveTimeout =>
       log.debug(s"$logPrefix i got a msg: $msg.")
@@ -144,6 +118,56 @@ class ReceiveDataActor extends Actor with Stash {
   }
 
   def idle(): Receive = {
+    case msg@Connect =>
+      log.debug(s"$logPrefix got a msg:$msg.")
+      val sn = (System.currentTimeMillis() / 1000) + SecureUtil.nonceStr(3)
+      val (timestamp, nonce, signature) =
+        SecureUtil.generateSignatureParameters(List(AppSettings.nyxAppId, sn), AppSettings.nyxSecureKey)
+
+      val url = AppSettings.nyxWebsokectProtocol + AppSettings.nyxHost + ":" + AppSettings.nyxPort +
+        s"/nyx/api/pulse?appId=${AppSettings.nyxAppId}&sn=$sn&timestamp=$timestamp&nonce=$nonce&signature=$signature"
+
+      log.info("nyx recieveDataActor  ws  url  is : " + url)
+      val webSocketFlow = Http().webSocketClientFlow(WebSocketRequest(url))
+
+      val (upgradeResponse, closed) =
+        Source.maybe[Message]
+          .viaMat(webSocketFlow)(Keep.right) // keep the materialized Future[WebSocketUpgradeResponse]
+          .toMat(incoming)(Keep.both) // also keep the Future[Done]
+          .run()
+
+      val connected = upgradeResponse.flatMap { upgrade =>
+        if (upgrade.response.status == StatusCodes.SwitchingProtocols) {
+          Future.successful(Done)
+        } else {
+          throw new RuntimeException(s"Connection failed: ${upgrade.response.status}")
+        }
+      }
+
+      connected.onComplete {
+        case Success(_) =>
+          log.debug(s"${self.path} connect nyx success.")
+
+        case Failure(e) =>
+          log.debug(s"${self.path} connect nyx failed." + e.getMessage)
+      }
+
+      closed.onComplete { x =>
+        log.debug("closed.onComplete")
+        context.system.scheduler.scheduleOnce(2.minutes, self, Connect)
+      }
+
+    case msg@Subscribe(actorRef) =>
+      log.debug(s"i got a msg: $msg")
+      dataBus.subscribe(actorRef, "")
+
+    case msg@UnSubscribe(actorRef) =>
+      log.debug(s"i got a msg: $msg")
+      dataBus.unsubscribe(actorRef)
+
+    case msg =>
+      log.debug(s"$logPrefix i got an unknown msg: $msg and stash.")
+      stash()
 
   }
 

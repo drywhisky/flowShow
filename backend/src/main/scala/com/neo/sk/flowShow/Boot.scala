@@ -10,7 +10,7 @@ import akka.util.Timeout
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
 import com.neo.sk.flowShow.service.HttpService
-
+import com.neo.sk.flowShow.core.ReceiveDataActor
 
 /**
   * User: Taoz
@@ -34,6 +34,9 @@ object Boot extends HttpService {
   override val timeout = Timeout(20 seconds) // for actor asks
 
   val log: LoggingAdapter = Logging(system, getClass)
+
+  override val receiveDataActor = system.actorOf(ReceiveDataActor.props(),"receiveDataActor")
+
 
 
   def main(args: Array[String]) {
