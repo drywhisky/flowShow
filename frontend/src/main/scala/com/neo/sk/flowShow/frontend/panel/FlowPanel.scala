@@ -1,21 +1,26 @@
 package com.neo.sk.flowShow.frontend.panel
 
 import com.neo.sk.flowShow.frontend.utils.Panel
-import com.neo.sk.flowShow.ptcl.{WebSocketMsg, Heartbeat}
+import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
 import org.scalajs.dom.{Event, window}
 import io.circe.generic.auto._
+
 import scalatags.JsDom.short._
-import org.scalajs.dom.html.Div
-import org.scalajs.dom.raw.{Document, MessageEvent, WebSocket}
+import org.scalajs.dom.html.{Canvas, Div}
+import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, WebSocket}
+
+import scala.scalajs.js
+import scala.scalajs.js.Date
 
 /**
   * Created by dry on 2017/4/10.
   */
 object FlowPanel extends Panel{
 
-  private val currentDiv = div().render
+  private val realTimeChartIn = canvas(*.width := "500").render
+  private val realTimeChartOut = canvas(*.width := "500").render
 
   val ws = new WebSocket(getWebsocketUrl(dom.document))
 
@@ -61,11 +66,60 @@ object FlowPanel extends Panel{
     decode[T](s)
   }
 
+  private def drawChart(area: Canvas,data:List[TimeDot],`type`:String,label:String,rank:Int) = {
+    import com.neo.sk.feeler3.frontend.business.facede.chartjs2._
+    import js.JSConverters._
+
+    println("drawChart")
+    val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+    val (xs, ys) = data.sortBy(_.timestamp).map(d => (MyUtil.DateFormatter(new Date(d.timestamp),`type`), d.value.toDouble)).unzip
+    val dataSet = new LineDataSet(data = ys.toJSArray,label = label)
+    val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
+    rank match{
+      case 1 =>
+        realTimeInstance.foreach(_.destroy())
+        realTimeInstance = Some( new Chart(ctx, new ChartConfig("line", chartData,null)))
+      case 2 =>
+        realTimeOutInstance.foreach(_.destroy())
+        realTimeOutInstance = Some( new Chart(ctx, new ChartConfig("line", chartData,null)))
+    }
+  }
+
+
+  private def updateRealTimeDetail(id: String,date:String) = {
+    val url = UserRoutes.flowDetailByHour(id,date)
+    Http.getAndParse[FlowDetailRsp](url).foreach {
+      case Right(rsp) =>
+        if (rsp.errCode == 0) {
+          rsp.data.filter(_.behavior == "in").foreach( d =>{
+            realTimeDetailData=d.dots
+          })
+          drawChart(realTimeChartIn,realTimeDetailData,"hh:mm","顾客 进店",1)
+          rsp.data.filter(_.behavior == "out").foreach( d =>{
+            realTimeDetailData=d.dots
+          })
+          drawChart(realTimeChartOut,realTimeDetailData,"hh:mm","顾客 穿行",2)
+        } else {
+          JsFunc.alert(s"some error: ${rsp.msg}")
+        }
+      case Left(err) =>
+        JsFunc.alert(s"internal error: ${err.getMessage}")
+    }
+  }
+
   override def locationHash = ""
 
   override protected def build(): Div = {
-    div(*.cls := "row")(
-      currentDiv
+    div(*.cls := "row alt")(
+      h1(*.cls:="t1")("实时客流图表"),
+      div(
+        div(*.cls:="in")("进店"),
+        realTimeChartIn
+      ),
+      div(
+        div(*.cls:="out")("穿行"),
+        realTimeChartOut
+      )
     ).render
   }
 
