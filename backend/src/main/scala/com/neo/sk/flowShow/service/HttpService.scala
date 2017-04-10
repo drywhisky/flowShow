@@ -30,7 +30,7 @@ trait HttpService extends ResourceService
   
 
   val routes: Route =
-    pathPrefix("hw1701b") {
+    pathPrefix("flowShow") {
       resourceRoutes ~ testRoute ~ counterRouter ~ wsRoutes ~ baseRoutes
     }
 

@@ -11,7 +11,7 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
 
   private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.BaseService")
 
-  val baseRoutes = pathPrefix("base")(
+  val baseRoutes = pathPrefix("user")(
     staticRoutes
   )
 

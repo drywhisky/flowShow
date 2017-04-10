@@ -112,6 +112,7 @@ class ReceiveDataActor extends Actor with Stash {
   def init(): Receive = {
     case msg@Init =>
       log.debug(s"$logPrefix got a msg:$msg.")
+      selfRef ! Connect
       switchState("idle", idle(), Duration.Undefined)
 
     case msg@ReceiveTimeout =>
