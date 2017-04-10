@@ -13,6 +13,7 @@ import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, We
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
+import com.neo.sk.flowShow.frontend.utils.MyUtil
 
 /**
   * Created by dry on 2017/4/10.
@@ -86,24 +87,14 @@ object FlowPanel extends Panel{
   }
 
 
-  private def updateRealTimeDetail(id: String,date:String) = {
-    val url = UserRoutes.flowDetailByHour(id,date)
-    Http.getAndParse[FlowDetailRsp](url).foreach {
-      case Right(rsp) =>
-        if (rsp.errCode == 0) {
-          rsp.data.filter(_.behavior == "in").foreach( d =>{
-            realTimeDetailData=d.dots
-          })
-          drawChart(realTimeChartIn,realTimeDetailData,"hh:mm","顾客 进店",1)
-          rsp.data.filter(_.behavior == "out").foreach( d =>{
-            realTimeDetailData=d.dots
-          })
-          drawChart(realTimeChartOut,realTimeDetailData,"hh:mm","顾客 穿行",2)
-        } else {
-          JsFunc.alert(s"some error: ${rsp.msg}")
-        }
-      case Left(err) =>
-        JsFunc.alert(s"internal error: ${err.getMessage}")
+  private def updateRealTimeDetail(id: Int) = {
+    id match {
+      case 1 =>
+        drawChart(realTimeChartIn,realTimeDetailData,"hh:mm","顾客 进店",1)
+
+      case 2 =>
+        drawChart(realTimeChartOut,realTimeDetailData,"hh:mm","顾客 穿行",2)
+
     }
   }
 
