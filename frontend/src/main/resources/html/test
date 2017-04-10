@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>shop-hong-Test</title>
+    <!--<link href="../css/bootstrap.css" rel="stylesheet">-->
+    <!--<link href="../css/normalized.css" rel="stylesheet">-->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+
+<script type="text/javascript" src="../../../../target/scala-2.11/sjsout/frontend-jsdeps.js"></script>
+<script type="text/javascript" src="../../../../target/scala-2.11/sjsout/frontend-fastopt.js"></script>
+<!--<script type="text/javascript" src="/superpay/static/sjsout/frontend-opt.js"></script>-->
+<!--<script type="text/javascript" src="/feeler3/static/pc/sjsout/frontend-launcher.js"></script>-->
+<!--<script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>-->
+<!--<script type="text/javascript">-->
+    <!--com.neo.sk.feeler3.frontend.business.HongTest().showPage();-->
+<!--</script>-->
+
+</body>
+</html>

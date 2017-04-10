@@ -32,6 +32,11 @@ package object ptcl {
   ) extends Response
 
 
+  sealed trait WebSocketMsg
+
+  //"heartbeat"
+  case class Heartbeat(id: String) extends WebSocketMsg
+
 
 
 

@@ -9,12 +9,14 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import com.neo.sk.flowShow.Boot.receiveDataActor
 import com.neo.sk.flowShow.core.ReceiveDataActor._
+import com.neo.sk.flowShow.ptcl.WebSocketMsg
 
 /**
   * Created by dry on 2017/4/5.
   */
 trait WebSocketActor {
-  def buildCode(): Flow[String, String, Any]
+
+  def buildCode(): Flow[String, WebSocketMsg, Any]
 }
 
 object WebSocketActor {
@@ -51,19 +53,17 @@ object WebSocketActor {
 
       }
 
-
-
     }))
 
     new WebSocketActor {
-      override def buildCode(): Flow[String, dataMessage, Any] = {
+      override def buildCode(): Flow[String, WebSocketMsg, Any] = {
         val in =
           Flow[String]
             .map( msg => Handle(msg))
             .to(Sink.actorRef[Event](dataWsActor, End))
 
         val out =
-          Source.actorRef[dataMessage](5, OverflowStrategy.dropHead)
+          Source.actorRef[WebSocketMsg](5, OverflowStrategy.dropHead)
             .mapMaterializedValue(outActor => dataWsActor ! Start(outActor))
 
         Flow.fromSinkAndSource(in, out)
@@ -78,10 +78,10 @@ object WebSocketActor {
   private case object End extends Event
   private case class Handle(msg: String) extends Event
 
-  private trait dataMessage
-  private case class RegisterWebsocket(out:ActorRef) extends dataMessage
-  private case class DeleteWebsocket(out:ActorRef) extends dataMessage
-  private case class RealTimePersonNumberAdd(groupId:Int,list:List[Int]) extends dataMessage
-  private case object Tick extends dataMessage
+  private trait InnerMsg
+  private case class RegisterWebsocket(out:ActorRef) extends InnerMsg
+  private case class DeleteWebsocket(out:ActorRef) extends InnerMsg
+  private case class RealTimePersonNumberAdd(groupId:Int,list:List[Int]) extends InnerMsg
+  private case object Tick extends InnerMsg
 
 }

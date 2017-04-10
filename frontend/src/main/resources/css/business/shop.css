@@ -1,0 +1,128 @@
+.panel-heading__title{
+    /*text-align:right;*/
+}
+
+.panel-heading__button{
+    display: inline-block;
+    float:right;
+    /*font-size: rem;*/
+}
+
+.shop-panel-heading{
+    height: 2.5rem;
+}
+
+.shop-info-row{
+    margin-bottom: 1rem ;
+}
+
+.shop-info-row-right{
+    height: 1.5rem;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.shop-info-row-left{
+    height: 1.5rem;
+    font-size: 1rem;
+    text-align: right;
+    padding:0px 0px 0px 0px;
+}
+
+.none-padding {
+    padding: 0 !important;
+}
+
+.none-margin {
+    margin: 0 !important;
+}
+
+.shop-info-row-right-button{
+    font-size: 0.5rem;
+}
+
+.observer-row{
+    height: 1.5rem;
+}
+
+.observer-headImg{
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.shop-no-data{
+    color: #ccc;
+    text-align: center;
+    font-size: 0.75rem;
+}
+.shop-no-data img{
+    height: 0.75rem;
+    width: 0.75rem;
+}
+
+.observer-table-nickname{
+    width: 50%;
+}
+.observer-table-headImg{
+    width: 30%;
+}
+.observer-table-operator{
+    width: 20%;
+}
+.box-table-name{
+    width: 20%;
+}
+.box-table-mac{
+    width: 20%;
+}
+.box-table-rssi{
+    width: 10%;
+}
+.box-table-time{
+    width: 20%;
+}
+.box-table-operator{
+    width: 30%;
+}
+.myshop-table-name{
+    width: 40%;
+}
+.myshop-table-time{
+    width: 40%;
+}
+.myshop-table-operator{
+    width: 20%;
+}
+.shareshop-table-name{
+    width: 50%;
+}
+.shareshop-table-time{
+    width: 50%;
+}
+
+.inputIncon{
+    display: block;
+    width: 10%;
+}
+
+.inputInconSuccess{
+    display: block;
+    background-image: url(/feeleriii/static/mobile/img/icon/dskj.png);
+}
+
+.inputInconError{
+    display: block;
+    background-image: url(/feeleriii/static/mobile/img/icon/dskj.png);
+}
+.modal-input{
+    width: 90%;
+}
+
+.modal-label{
+    font-weight: 500 ;
+}
+
+
+/*.shop-info-row-left span button{*/
+/*font-size: 0.75rem;*/
+/*}*/

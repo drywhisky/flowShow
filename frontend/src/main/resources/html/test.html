@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>shop-hong-Test</title>
+    <!--<link href="../css/bootstrap.css" rel="stylesheet">-->
+    <!--<link href="../css/normalized.css" rel="stylesheet">-->
+
+    <link href="../css/modal.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../css/business/shop.css" rel="stylesheet">
+    <!--<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>-->
+    <!--<script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>&lt;!&ndash;<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>&ndash;&gt;-->
+    <!--<script src="../js/bootstrap.min.js"></script>-->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+        (function(designWidth, maxWidth) {
+            var doc = document,
+                win = window;
+            var docEl = doc.documentElement;
+            var tid;
+            var rootItem,rootStyle;
+
+            function refreshRem() {
+                var width = docEl.getBoundingClientRect().width;
+                if (!maxWidth) {
+                    maxWidth = 540;
+                };
+                if (width > maxWidth) {
+                    width = maxWidth;
+                }
+                //与淘宝做法不同，直接采用简单的rem换算方法1rem=100px
+                var rem = width * 20 / designWidth;
+                //兼容UC开始
+                rootStyle="html{font-size:"+rem+'px !important}';
+                rootItem = document.getElementById('rootsize') || document.createElement("style");
+                if(!document.getElementById('rootsize')){
+                    document.getElementsByTagName("head")[0].appendChild(rootItem);
+                    rootItem.id='rootsize';
+                }
+                if(rootItem.styleSheet){
+                    rootItem.styleSheet.disabled||(rootItem.styleSheet.cssText=rootStyle)
+                }else{
+                    try{rootItem.innerHTML=rootStyle}catch(f){rootItem.innerText=rootStyle}
+                }
+                //兼容UC结束
+                docEl.style.fontSize = rem + "px";
+            };
+            refreshRem();
+
+            win.addEventListener("resize", function() {
+                clearTimeout(tid); //防止执行两次
+                tid = setTimeout(refreshRem, 300);
+            }, false);
+
+            win.addEventListener("pageshow", function(e) {
+                if (e.persisted) { // 浏览器后退的时候重新计算
+                    clearTimeout(tid);
+                    tid = setTimeout(refreshRem, 300);
+                }
+            }, false);
+
+            if (doc.readyState === "complete") {
+                doc.body.style.fontSize = "16px";
+            } else {
+                doc.addEventListener("DOMContentLoaded", function(e) {
+                    doc.body.style.fontSize = "16px";
+                }, false);
+            }
+        })(640, 640);
+    </script>
+
+
+</head>
+<body>
+
+<!--<script type="text/javascript" src="../target/scala-2.11/pc/sjsout/frontend-jsdeps.js"></script>-->
+<script type="text/javascript" src="../target/scala-2.11/pc/sjsout/frontend-fastopt.js"></script>
+<!--<script type="text/javascript" src="/superpay/static/sjsout/frontend-opt.js"></script>-->
+<!--<script type="text/javascript" src="/target/scala-2.11/pc/sjsout/frontend-launcher.js"></script>-->
+<!--<script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/2.5.1/vconsole.min.js"></script>-->
+<script type="text/javascript">
+    com.neo.sk.feeler3.frontend.business.HongTest().showPage();
+</script>
+
+
+</body>
+</html>

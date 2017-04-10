@@ -6,6 +6,7 @@ import akka.actor.Actor._
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.ws.{Message, TextMessage, WebSocketRequest}
+import akka.stream.{ActorMaterializer, Materializer}
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.util.Timeout
 import com.neo.sk.flowShow.common.AppSettings
@@ -16,6 +17,8 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * Created by dry on 2017/4/5.
   */
@@ -47,6 +50,8 @@ class ReceiveDataActor extends Actor with Stash {
   private[this] val InitTimeOut = 1.minutes
   private[this] val BusyTimeOut = 1.minutes
 
+  implicit val system: ActorSystem = context.system
+  implicit val materializer: Materializer = ActorMaterializer()
   implicit val timeout: Timeout = 1.minutes
 
   private val dataBus = new DataBus()

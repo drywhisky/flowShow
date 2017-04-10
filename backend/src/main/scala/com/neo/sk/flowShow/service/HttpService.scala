@@ -15,7 +15,9 @@ import scala.concurrent.ExecutionContextExecutor
   */
 trait HttpService extends ResourceService
                           with TestService
-                          with CounterService {
+                          with CounterService
+                          with WsService
+                          with BaseService {
 
 
   implicit val system: ActorSystem
@@ -29,7 +31,7 @@ trait HttpService extends ResourceService
 
   val routes: Route =
     pathPrefix("hw1701b") {
-      resourceRoutes ~ testRoute ~ counterRouter
+      resourceRoutes ~ testRoute ~ counterRouter ~ wsRoutes ~ baseRoutes
     }
 
 

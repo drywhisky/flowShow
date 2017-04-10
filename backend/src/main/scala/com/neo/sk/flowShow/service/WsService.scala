@@ -7,15 +7,20 @@ import akka.util.Timeout
 import org.slf4j.LoggerFactory
 import akka.stream.scaladsl.Flow
 import akka.stream.{ActorAttributes, Materializer, Supervision}
-import io.circe.generic.auto._
 import io.circe.syntax._
+import io.circe.generic.auto._
+import com.neo.sk.utils.CirceSupport
+import com.neo.sk.flowShow.core.WebSocketActor
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.neo.sk.flowShow.ptcl.WebSocketMsg
+
 
 /**
   * Created by dry on 2017/4/5.
   */
-trait WsService {
+trait WsService extends ServiceUtils with SessionBase with CirceSupport{
 
-  private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.UserWsService")
+  private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.WsService")
 
   implicit val system: ActorSystem
 
@@ -23,17 +28,13 @@ trait WsService {
 
   implicit val timeout: Timeout
 
-//  private val joinRoom = (path("joinRoom") & get & pathEndOrSingleSlash) {
-//    UserAction { user =>
-//      parameters(
-//        'roomId.as[Long]
-//      ) { case (roomId) =>
-//        handleWebSocketMessages(websocketChatFlow(UserChatWebSocket.create(system).chatFlow(user, roomId)))
-//      }
-//    }
-//  }
+  private val home = (path("home") & get & pathEndOrSingleSlash) {
+    handleWebSocketMessages(websocketChatFlow(WebSocketActor.create(system).buildCode()))
+  }
 
-  def websocketChatFlow(flow: Flow[String, String, Any]): Flow[Message, Message, Any] =
+
+
+  def websocketChatFlow(flow: Flow[String, WebSocketMsg, Any]): Flow[Message, Message, Any] =
     Flow[Message]
       .collect {
         case TextMessage.Strict(msg) =>
@@ -51,8 +52,8 @@ trait WsService {
       Supervision.Resume
   }
 
-//  val userWsRoutes = pathPrefix("userWs"){
-//    joinRoom
-//  }
+  val wsRoutes = pathPrefix("ws"){
+    home
+  }
 
 }
