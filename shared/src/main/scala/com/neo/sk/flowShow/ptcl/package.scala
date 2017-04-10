@@ -37,6 +37,8 @@ package object ptcl {
   //"heartbeat"
   case class Heartbeat(id: String) extends WebSocketMsg
 
+  case class NyxData(data:String) extends WebSocketMsg
+
 
 
 

@@ -18,6 +18,7 @@ import scala.concurrent.duration._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.neo.sk.flowShow.ptcl.NyxData
 
 /**
   * Created by dry on 2017/4/5.

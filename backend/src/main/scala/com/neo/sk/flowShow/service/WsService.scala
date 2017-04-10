@@ -32,8 +32,6 @@ trait WsService extends ServiceUtils with SessionBase with CirceSupport{
     handleWebSocketMessages(websocketChatFlow(WebSocketActor.create(system).buildCode()))
   }
 
-
-
   def websocketChatFlow(flow: Flow[String, WebSocketMsg, Any]): Flow[Message, Message, Any] =
     Flow[Message]
       .collect {
