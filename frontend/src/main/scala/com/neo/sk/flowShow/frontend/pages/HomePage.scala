@@ -12,7 +12,6 @@ object HomePage extends Page{
 
   private val panelBox = FlowPanel.render
 
-
   override def locationHash: String = ""
 
   override def build(): Div = {
@@ -20,6 +19,15 @@ object HomePage extends Page{
       div(*.id := "content")(
         div(*.cls := "navbar navbar-default", *.role := "navigation")(
           h1("实时客流可视化系统")
+        ),
+        div(*.cls := "cd-vertical-nav")(
+          ul(
+            li(a(*.cls := "smooth")("1")),
+            li(a(*.cls := "smooth")("2")),
+            li(a(*.cls := "smooth")("3")),
+            li(a(*.cls := "smooth")("4")),
+            li(a(*.cls := "smooth")("5"))
+          )
         ),
         div(*.id := "main")(
           div(*.cls := "featured-container")(
