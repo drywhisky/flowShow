@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import com.neo.sk.utils.NyxClient
-import com.neo.sk.flowShow.common.{AppSettings, CacheMap}
+import com.neo.sk.flowShow.common.AppSettings
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
