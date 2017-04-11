@@ -1,7 +1,7 @@
 package com.neo.sk.flowShow.frontend.panel
 
 import com.neo.sk.flowShow.frontend.utils.Panel
-import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg}
+import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg, ComeIn, GetOut}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
 import org.scalajs.dom.{Event, window}
@@ -39,6 +39,12 @@ object FlowPanel extends Panel{
         messages match {
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
+
+          case msg@ComeIn(_) =>
+            println(s"comeIn.i got a msg:$msg")
+
+          case msg@GetOut(_) =>
+            println(s"i got a msg:$msg")
 
           case x =>
             println(s"i got a msg:$x")

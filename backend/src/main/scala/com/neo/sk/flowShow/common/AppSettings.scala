@@ -51,6 +51,7 @@ object AppSettings {
   val slickMaxLifetime = slickConfig.getInt("maxLifetime")
 
   private val dependence = config.getConfig("dependence")
+
   val nyx = dependence.getConfig("nyx")
 
   val nyxProtocol = nyx.getString("protocol")
@@ -60,7 +61,14 @@ object AppSettings {
   val nyxHost = nyx.getString("host")
   val nyxPort = nyx.getString("port")
 
-
+  val group = dependence.getConfig("group")
+  val groupIdNameMap = {
+    import collection.JavaConversions._
+    val groupIdList = group.getIntList("groupId")
+    val groupNameList = group.getStringList("groupName")
+    require(groupIdList.length == groupNameList.length, "groupIdList.length and groupNameList.length not equal")
+    groupIdList.zip(groupNameList).toMap
+  }
 
   val sessionConfig = {
     val sConf = config.getConfig("session")

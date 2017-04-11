@@ -1,6 +1,11 @@
 package com.neo.sk.flowShow.service
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
+import akka.http.scaladsl.server
+
+import scala.concurrent.Future
+import akka.http.scaladsl.server.Directives._
+import scala.util.{Failure, Success}
 
 /**
   * User: Taoz
@@ -16,6 +21,15 @@ trait ServiceUtils {
 
   def jsonResponse(json: String): HttpResponse = {
     HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json))
+  }
+
+  def dealFutureResult(future: => Future[server.Route]) = onComplete(future){
+    case Success(route) =>
+      route
+
+    case Failure(e) =>
+      e.printStackTrace()
+      complete("Internal error.")
   }
 
 }

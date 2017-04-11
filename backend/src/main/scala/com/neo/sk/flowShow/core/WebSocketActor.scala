@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import com.neo.sk.flowShow.Boot.receiveDataActor
 import com.neo.sk.flowShow.core.ReceiveDataActor._
-import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg}
+import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg, ComeIn, GetOut}
 import com.neo.sk.utils.SecureUtil
 import akka.actor.PoisonPill
 
@@ -68,6 +68,14 @@ object WebSocketActor {
 
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
+
+//        case ComeIn(floor:String) =>
+//          log.info(s"people come in: $floor")
+//          subscriber ! ComeIn(floor)
+//
+//        case GetOut(floor:String) =>
+//          log.info(s"people get out: $floor")
+//          subscriber ! GetOut(floor)
 
         case Handle(msg) =>
           log.info(s"$id got msg $msg.")

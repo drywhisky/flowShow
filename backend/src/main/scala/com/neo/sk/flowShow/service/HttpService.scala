@@ -5,7 +5,6 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
 import akka.util.Timeout
-
 import scala.concurrent.ExecutionContextExecutor
 
 /**
@@ -15,7 +14,6 @@ import scala.concurrent.ExecutionContextExecutor
   */
 trait HttpService extends ResourceService
                           with TestService
-                          with CounterService
                           with WsService
                           with BaseService {
 
@@ -31,7 +29,7 @@ trait HttpService extends ResourceService
 
   val routes: Route =
     pathPrefix("flowShow") {
-      resourceRoutes ~ testRoute ~ counterRouter ~ wsRoutes ~ baseRoutes
+      resourceRoutes ~ testRoute ~ wsRoutes ~ baseRoutes
     }
 
 

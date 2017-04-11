@@ -18,7 +18,6 @@ import scala.concurrent.duration._
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.neo.sk.flowShow.ptcl.NyxData
 
 /**
   * Created by dry on 2017/4/5.
@@ -49,7 +48,6 @@ class ReceiveDataActor extends Actor with Stash {
   private[this] val logPrefix = selfRef.path
 
   private[this] val InitTimeOut = 1.minutes
-  private[this] val BusyTimeOut = 1.minutes
 
   implicit val system: ActorSystem = context.system
   implicit val materializer: Materializer = ActorMaterializer()
@@ -83,25 +81,25 @@ class ReceiveDataActor extends Actor with Stash {
 
   val incoming: Sink[Message, Future[Done]] =
     Sink.foreach[Message] {
-      case msg: TextMessage.Strict=>
+      case msg: TextMessage.Strict =>
+        log.info(s"msg: " + msg)
         val str = msg.text
         val arr = str.split("#")
+        // groupId#sign#amount
         // groupId, type(1 is come , 0 is leave) , num(come always be 1)
         //        cacheMap.leaveNumberOperator(true,1)
 
-        if(arr(1).toInt==1){
-          val floor = if(arr(0)=="13"){
-            "0"
-          }else if(arr(0)=="14"){
-            "2"
-          } else if(arr(0)=="12"){
-            "4"
-          }else{
-            "6"
-          }
+        val floor = if (arr(0) == "13") {
+          "7"
+        } else if (arr(0) == "14") {
+          "8"
+        } else if (arr(0) == "12") {
+          "9"
+        } else if (arr(0) == "11"){
+          "12"
+        } else "none"
 
-          dataBus.publish((arr(1), floor))
-        }
+        dataBus.publish((arr(1), floor))
 
       case msg =>
         log.info(s" receive unknown msg: " + msg)

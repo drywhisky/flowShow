@@ -1,8 +1,16 @@
 package com.neo.sk.flowShow.service
 
+import akka.actor.ActorRef
 import akka.http.scaladsl.server.Directives._
 import com.neo.sk.utils.CirceSupport
 import org.slf4j.LoggerFactory
+import com.neo.sk.flowShow.core.AssistedDataActor._
+import akka.pattern.ask
+import akka.util.Timeout
+import com.neo.sk.flowShow.ptcl._
+import io.circe.generic.auto._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by dry on 2017/4/10.
@@ -10,13 +18,54 @@ import org.slf4j.LoggerFactory
 trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
 
   private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.BaseService")
+  implicit val timeout: Timeout
+
+  val receiveDataActor: ActorRef
+  val assistedDataActor: ActorRef
 
   val baseRoutes = pathPrefix("user")(
-    staticRoutes
+    staticRoutes ~ getResidentInfo ~ getRatioInfo ~ getBrandInfo ~ getFrequencyInfo
   )
 
   private val staticRoutes = (path("home") & get & pathEndOrSingleSlash) {
     getFromResource("html/index.html")
   }
+
+  private val getResidentInfo = (path("residentInfo") & get & pathEndOrSingleSlash) {
+    dealFutureResult {
+      assistedDataActor.ask(GetResidentInfo).map {
+        case "OK" => complete(CommonRsp())
+        case "Error" => complete(CommonRsp())
+      }
+    }
+  }
+
+  private val getRatioInfo = (path("ratioInfo") & get & pathEndOrSingleSlash) {
+    dealFutureResult {
+      assistedDataActor.ask(GetRatioInfo).map {
+        case "OK" => complete(CommonRsp())
+        case "Error" => complete(CommonRsp())
+      }
+    }
+  }
+
+  private val getBrandInfo = (path("brandInfo") & get & pathEndOrSingleSlash) {
+    dealFutureResult {
+      assistedDataActor.ask(GetBrandInfo).map {
+        case "OK" => complete(CommonRsp())
+        case "Error" => complete(CommonRsp())
+      }
+    }
+  }
+
+  private val getFrequencyInfo = (path("frequencyInfo") & get & pathEndOrSingleSlash) {
+    dealFutureResult {
+      assistedDataActor.ask(GetFrequencyInfo).map {
+        case "OK" => complete(CommonRsp())
+        case "Error" => complete(CommonRsp())
+      }
+    }
+  }
+
 
 }
