@@ -34,8 +34,8 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   private val getResidentInfo = (path("residentInfo") & get & pathEndOrSingleSlash) {
     dealFutureResult {
       assistedDataActor.ask(GetResidentInfo).map {
-        case "OK" => complete(CommonRsp())
-        case "Error" => complete(CommonRsp())
+        case data:List[_] => complete(ResidentsInfoRsp(Some(data.asInstanceOf[ResidentsInfo]), "ok", 0))
+        case "Error" => complete(ResidentsInfoRsp(None, "error", 100001))
       }
     }
   }
@@ -43,8 +43,8 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   private val getRatioInfo = (path("ratioInfo") & get & pathEndOrSingleSlash) {
     dealFutureResult {
       assistedDataActor.ask(GetRatioInfo).map {
-        case "OK" => complete(CommonRsp())
-        case "Error" => complete(CommonRsp())
+        case data:List[_] => complete(RatioInfoRsp(Some(data.asInstanceOf[RatioInfo]), "ok", 0))
+        case "Error" => complete(RatioInfoRsp(None, "error", 100002))
       }
     }
   }
@@ -52,8 +52,8 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   private val getBrandInfo = (path("brandInfo") & get & pathEndOrSingleSlash) {
     dealFutureResult {
       assistedDataActor.ask(GetBrandInfo).map {
-        case "OK" => complete(CommonRsp())
-        case "Error" => complete(CommonRsp())
+        case data:List[_] => complete(BrandsInfoRsp(Some(data.asInstanceOf[BrandsInfo]), "ok", 0))
+        case "Error" => complete(BrandsInfoRsp(None, "error", 100003))
       }
     }
   }
@@ -61,8 +61,8 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   private val getFrequencyInfo = (path("frequencyInfo") & get & pathEndOrSingleSlash) {
     dealFutureResult {
       assistedDataActor.ask(GetFrequencyInfo).map {
-        case "OK" => complete(CommonRsp())
-        case "Error" => complete(CommonRsp())
+        case data:List[_] => complete(FrequencyInfoRsp(Some(data.asInstanceOf[FrequencyInfo]), "ok", 0))
+        case "Error" => complete(FrequencyInfoRsp(None, "error", 100004))
       }
     }
   }

@@ -3,10 +3,14 @@ package com.neo.sk.flowShow.core
 import akka.actor.Actor.Receive
 import akka.actor.{Actor, Props, ReceiveTimeout, Stash}
 import org.slf4j.LoggerFactory
+
 import scala.concurrent.duration._
 import com.neo.sk.utils.NyxClient
 import com.neo.sk.flowShow.common.{AppSettings, CacheMap}
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 /**
   * Created by dry on 2017/4/11.
@@ -40,6 +44,7 @@ class AssistedDataActor extends Actor with Stash{
   private[this] val logPrefix = selfRef.path
 
   private[this] val InitTimeOut = 1.minutes
+  private[this] val BusyTimeOut = 1.minutes
 
   private[this] def switchState(stateName:String, func:Receive, duration: Duration) ={
     log.debug(s"$logPrefix becomes $stateName state.")
@@ -83,51 +88,95 @@ class AssistedDataActor extends Actor with Stash{
   def idle() : Receive = {
     case msg@GetResidentInfo =>
       log.debug(s"$logPrefix i got a msg: $msg.")
-      AppSettings.groupIdNameMap.toList.foreach{ a =>
+      val peer = sender()
+
+      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
         NyxClient.residentsInfo(a._2).map{
           case Right(res) =>
-            CacheMap.residentList += (a._1.toInt -> res.data)
-
-          case Left(e) =>
-            ""
+            res
         }
+      })
+
+      f.onComplete{
+        case Success(res) =>
+          peer ! res
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+
+        case Failure(e) =>
+          log.error(s"GetResidentInfo error:$e")
+          peer ! "Error"
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@GetRatioInfo =>
       log.debug(s"$logPrefix i got a msg: $msg.")
-      AppSettings.groupIdNameMap.toList.foreach{ a =>
+      val peer = sender()
+
+      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
         NyxClient.ratioInfo(a._2).map{
           case Right(res) =>
-            CacheMap.ratioList += (a._1.toInt -> res.ratio)
-
-          case Left(e) =>
-            ""
+            res
         }
+      })
+
+      f.onComplete{
+        case Success(res) =>
+          peer ! res
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+
+        case Failure(e) =>
+          log.error(s"GetResidentInfo error:$e")
+          peer ! "Error"
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@GetBrandInfo =>
       log.debug(s"$logPrefix i got a msg: $msg.")
-      AppSettings.groupIdNameMap.toList.foreach{ a =>
+      val peer = sender()
+
+      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
         NyxClient.brandsInfo(a._2).map{
           case Right(res) =>
-            CacheMap.brandList += (a._1.toInt -> res.data)
-
-          case Left(e) =>
-            ""
+            res
         }
+      })
+
+      f.onComplete{
+        case Success(res) =>
+          peer ! res
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+
+        case Failure(e) =>
+          log.error(s"GetResidentInfo error:$e")
+          peer ! "Error"
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@GetFrequencyInfo =>
       log.debug(s"$logPrefix i got a msg: $msg.")
-      AppSettings.groupIdNameMap.toList.foreach{ a =>
+      val peer = sender()
+
+      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
         NyxClient.frequencyInfo(a._2).map{
           case Right(res) =>
-            CacheMap.frequencyList += (a._1.toInt -> res.visitFrequency)
-
-          case Left(e) =>
-            ""
+            res
         }
+      })
+
+      f.onComplete{
+        case Success(res) =>
+          peer ! res
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+
+        case Failure(e) =>
+          log.error(s"GetResidentInfo error:$e")
+          peer ! "Error"
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@GetRealTimeInfo(_) =>
       log.debug(s"$logPrefix i got a msg: $msg.")
@@ -141,6 +190,8 @@ class AssistedDataActor extends Actor with Stash{
         }
       }
 
+    case msg@SwitchState(stateName: String, func: Receive, duration: Duration) =>
+      switchState(stateName, func, duration)
 
     case msg@ReceiveTimeout =>
       log.debug(s"$logPrefix i got a msg: $msg.")
@@ -152,6 +203,9 @@ class AssistedDataActor extends Actor with Stash{
   }
 
   def busy() : Receive = {
+    case msg@SwitchState(stateName: String, func: Receive, duration: Duration) =>
+      switchState(stateName, func, duration)
+
     case msg@ReceiveTimeout =>
       log.debug(s"$logPrefix i got a msg: $msg.")
       terminate(s"no msg for $InitTimeOut when init")

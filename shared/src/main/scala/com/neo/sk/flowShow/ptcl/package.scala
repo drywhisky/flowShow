@@ -64,4 +64,26 @@ package object ptcl {
 
   case class RatioDataRsp(ratio:List[RatioData], groupId: String, msg: String, errCode: Int) extends DataFromNyx
 
+
+  sealed trait RspResult
+
+  case class ResidentsInfo(groupId: String, data: List[DurationData]) extends RspResult
+
+  case class BrandsInfo(groupId: String, data: List[BrandsData]) extends RspResult
+
+  case class FrequencyInfo(groupId: String, visitFrequency: List[FrequencyData]) extends RspResult
+
+  case class RatioInfo(groupId: String, ratio:List[RatioData]) extends RspResult
+
+
+  case class ResidentsInfoRsp(data: Option[ResidentsInfo], msg: String, errCode: Int) extends RspResult
+
+  case class BrandsInfoRsp(data: Option[BrandsInfo], msg: String, errCode: Int) extends RspResult
+
+  case class FrequencyInfoRsp(data: Option[FrequencyInfo], msg: String, errCode: Int) extends RspResult
+
+  case class RatioInfoRsp(data: Option[RatioInfo], msg: String, errCode: Int) extends RspResult
+
+
+
 }

@@ -67,7 +67,7 @@ object NyxClient {
         decode[ResidentsDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(rsp)
+              Right(ResidentsInfo(rsp.groupId, rsp.data))
             else {
               log.error(s"ResidentsDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")
@@ -98,7 +98,7 @@ object NyxClient {
         decode[BrandsDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(rsp)
+              Right(BrandsInfo(rsp.groupId, rsp.data))
             else {
               log.error(s"BrandsDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")
@@ -129,7 +129,7 @@ object NyxClient {
         decode[FrequencyDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(rsp)
+              Right(FrequencyInfo(rsp.groupId, rsp.visitFrequency))
             else {
               log.error(s"FrequencyDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")
@@ -162,7 +162,7 @@ object NyxClient {
         decode[RatioDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(rsp)
+              Right(RatioInfo(rsp.groupId, rsp.ratio))
             else {
               log.error(s"RatioDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")
