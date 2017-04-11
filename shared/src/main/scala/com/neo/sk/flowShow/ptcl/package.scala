@@ -75,14 +75,18 @@ package object ptcl {
 
   case class RatioInfo(groupId: String, ratio:List[RatioData]) extends RspResult
 
+  case class RealTimeInfo(flow: List[CountData], groupId: String, max: Int, now: Int, total: Int) extends RspResult
 
-  case class ResidentsInfoRsp(data: Option[ResidentsInfo], msg: String, errCode: Int) extends RspResult
 
-  case class BrandsInfoRsp(data: Option[BrandsInfo], msg: String, errCode: Int) extends RspResult
+  case class ResidentsInfoRsp(data: Option[List[ResidentsInfo]], msg: String, errCode: Int) extends RspResult
 
-  case class FrequencyInfoRsp(data: Option[FrequencyInfo], msg: String, errCode: Int) extends RspResult
+  case class BrandsInfoRsp(data: Option[List[BrandsInfo]], msg: String, errCode: Int) extends RspResult
 
-  case class RatioInfoRsp(data: Option[RatioInfo], msg: String, errCode: Int) extends RspResult
+  case class FrequencyInfoRsp(data: Option[List[FrequencyInfo]], msg: String, errCode: Int) extends RspResult
+
+  case class RatioInfoRsp(data: Option[List[RatioInfo]], msg: String, errCode: Int) extends RspResult
+
+  case class RealTimeInfoRsp(data: Option[List[RealTimeInfo]], msg: String, errCode: Int) extends RspResult
 
 
 

@@ -31,7 +31,7 @@ object AssistedDataActor {
 
   case object GetFrequencyInfo
 
-  case class GetRealTimeInfo(groupId:Int)
+  case object GetRealTimeInfo
 
 }
 
@@ -126,7 +126,7 @@ class AssistedDataActor extends Actor with Stash{
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
 
         case Failure(e) =>
-          log.error(s"GetResidentInfo error:$e")
+          log.error(s"GetRatioInfo error:$e")
           peer ! "Error"
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
@@ -149,7 +149,7 @@ class AssistedDataActor extends Actor with Stash{
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
 
         case Failure(e) =>
-          log.error(s"GetResidentInfo error:$e")
+          log.error(s"GetBrandInfo error:$e")
           peer ! "Error"
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
@@ -172,23 +172,35 @@ class AssistedDataActor extends Actor with Stash{
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
 
         case Failure(e) =>
-          log.error(s"GetResidentInfo error:$e")
+          log.error(s"GetFrequencyInfo error:$e")
           peer ! "Error"
           selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
       switchState("busy", busy(), BusyTimeOut)
 
-    case msg@GetRealTimeInfo(_) =>
+    case msg@GetRealTimeInfo =>
       log.debug(s"$logPrefix i got a msg: $msg.")
-      AppSettings.groupIdNameMap.toList.foreach{ a =>
+
+      val peer = sender()
+
+      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
         NyxClient.realtimeDetail(a._2).map{
           case Right(res) =>
             res
-
-          case Left(e) =>
-            ""
         }
+      })
+
+      f.onComplete{
+        case Success(res) =>
+          peer ! res
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+
+        case Failure(e) =>
+          log.error(s"GetRealTimeInfo error:$e")
+          peer ! "Error"
+          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
       }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@SwitchState(stateName: String, func: Receive, duration: Duration) =>
       switchState(stateName, func, duration)

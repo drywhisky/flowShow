@@ -36,7 +36,7 @@ object NyxClient {
         decode[RealTimeDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(rsp)
+              Right(RealTimeInfo(rsp.flow, rsp.groupId, rsp.max, rsp.now, rsp.total))
             else {
               log.error(s"RealTimeDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")
