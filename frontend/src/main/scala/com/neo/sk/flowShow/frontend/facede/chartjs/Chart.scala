@@ -1,4 +1,4 @@
-package com.neo.sk.feeler3.frontend.business.facede.chartjs
+package com.neo.sk.flowShow.frontend.facede.chartjs
 
 import scala.scalajs.js
 import js.annotation._

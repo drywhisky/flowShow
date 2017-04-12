@@ -67,7 +67,7 @@ object NyxClient {
         decode[ResidentsDataRsp](str) match {
           case Right(rsp) =>
             if (rsp.errCode == 0)
-              Right(ResidentsInfo(rsp.groupId, rsp.data))
+              Right(ResidentInfo(rsp.groupId, rsp.data))
             else {
               log.error(s"ResidentsDataRsp error.error:${rsp.msg}")
               Left(s"${rsp.msg}")

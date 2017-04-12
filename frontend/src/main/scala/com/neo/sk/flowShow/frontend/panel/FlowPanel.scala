@@ -6,14 +6,13 @@ import io.circe.{Decoder, Error}
 import org.scalajs.dom
 import org.scalajs.dom.{Event, window}
 import io.circe.generic.auto._
-
 import scalatags.JsDom.short._
 import org.scalajs.dom.html.{Canvas, Div}
 import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, WebSocket}
-
 import scala.scalajs.js
 import scala.scalajs.js.Date
 import com.neo.sk.flowShow.frontend.utils.MyUtil
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by dry on 2017/4/10.

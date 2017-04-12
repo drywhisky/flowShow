@@ -84,10 +84,19 @@ object Http {
 
 
   def getAndParse[T](
-    url: String,
-    withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[Either[Error, T] ] = {
+                      url: String,
+                      withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[T] = {
     import io.circe.parser._
-    get(url, withCookie).map(s => decode[T](s))
+    get(url, withCookie).map { s =>
+      decode[T](s) match {
+        case Right(rsp) =>
+          println(s"postJsonAndParse, result: $rsp")
+          rsp
+        case Left(error) =>
+          println(s"request sent complete, but error happen: $error")
+          throw new IllegalArgumentException(s"parse error: $error")
+      }
+    }
   }
 
 

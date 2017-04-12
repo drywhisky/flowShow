@@ -7,29 +7,12 @@ package com.neo.sk.flowShow
   */
 package object ptcl {
 
-
-  trait Request
-
-  case class Plus(value: Int) extends Request
-  case class Minus(value: Int) extends Request
-
-
-
   trait Response{
     val errCode: Int
     val msg: String
   }
 
-
   case class CommonRsp( errCode: Int = 0, msg: String = "ok") extends Response
-
-  case class CounterData(value: Int, timestamp: Long)
-
-  case class CounterRsp(
-    data: CounterData,
-    errCode: Int = 0,
-    msg: String = "ok"
-  ) extends Response
 
 
   sealed trait WebSocketMsg
@@ -67,7 +50,7 @@ package object ptcl {
 
   sealed trait RspResult
 
-  case class ResidentsInfo(groupId: String, data: List[DurationData]) extends RspResult
+  case class ResidentInfo(groupId: String, data: List[DurationData]) extends RspResult
 
   case class BrandsInfo(groupId: String, data: List[BrandsData]) extends RspResult
 
@@ -78,7 +61,7 @@ package object ptcl {
   case class RealTimeInfo(flow: List[CountData], groupId: String, max: Int, now: Int, total: Int) extends RspResult
 
 
-  case class ResidentsInfoRsp(data: Option[List[ResidentsInfo]], msg: String, errCode: Int) extends RspResult
+  case class ResidentInfoRsp(data: Option[List[ResidentInfo]], msg: String, errCode: Int) extends RspResult
 
   case class BrandsInfoRsp(data: Option[List[BrandsInfo]], msg: String, errCode: Int) extends RspResult
 
