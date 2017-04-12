@@ -106,7 +106,7 @@ object FlowPanel extends Panel{
   override def locationHash = ""
 
   override protected def build(): Div = {
-    div(*.cls := "row alt")(
+    div(*.cls := "row")(
       h1(*.cls:="t1")("实时客流图表"),
       div(
         div(*.cls:="in")("进店"),

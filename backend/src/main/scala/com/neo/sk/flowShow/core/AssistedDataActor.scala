@@ -63,6 +63,7 @@ class AssistedDataActor extends Actor with Stash{
     log.info(s"$logPrefix starts.")
     log.info(s"$logPrefix becomes init state.")
     context.setReceiveTimeout(InitTimeOut)
+    selfRef ! Init
   }
 
   override def postStop(): Unit = {
