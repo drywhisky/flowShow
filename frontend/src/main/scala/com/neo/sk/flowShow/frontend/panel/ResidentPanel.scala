@@ -70,7 +70,7 @@ object ResidentPanel extends Panel{
 
   override protected def build() : Div = {
     initData()
-    div(*.cls := "row alt")(
+    div(*.cls := "row")(
       residentChart
     ).render
   }
