@@ -63,7 +63,14 @@ object RatioPanel extends Panel{
   override protected def build() : Div = {
     initData()
     div(*.cls := "row")(
-      ratioChart
+      div(*.cls := "col-md-12", *.textAlign := "center")(
+        h1(
+          span(*.cls := "artpip-highlight", *.color := "#13C5E4")("近30天新老客户占比")
+        )
+      ),
+      div(*.cls := "col-md-12")(
+        ratioChart
+      )
     ).render
   }
 

@@ -13,14 +13,20 @@ import scala.scalajs.js
 import scala.scalajs.js.Date
 import com.neo.sk.flowShow.frontend.utils.MyUtil
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.neo.sk.flowShow.ptcl._
+import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
+import com.neo.sk.flowShow.frontend.Routes
+import scala.collection.mutable
+import com.neo.sk.flowShow.frontend.facede.chartjs2._
 
 /**
   * Created by dry on 2017/4/10.
   */
 object FlowPanel extends Panel{
 
-  private val realTimeChartIn = canvas(*.width := "500").render
-  private val realTimeChartOut = canvas(*.width := "500").render
+  private val realTimeChart = canvas(*.width := "500").render
+  private val realTimeMap = mutable.HashMap[Int, RealTimeInfo]()
+  private var realTimeInstance : Option[Chart] = None
 
   val ws = new WebSocket(getWebsocketUrl(dom.document))
 
@@ -72,49 +78,56 @@ object FlowPanel extends Panel{
     decode[T](s)
   }
 
-//  private def drawChart(area: Canvas,data:List[TimeDot],`type`:String,label:String,rank:Int) = {
-//    import com.neo.sk.feeler3.frontend.business.facede.chartjs2._
-//    import js.JSConverters._
-//
-//    println("drawChart")
-//    val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-//    val (xs, ys) = data.sortBy(_.timestamp).map(d => (MyUtil.DateFormatter(new Date(d.timestamp),`type`), d.value.toDouble)).unzip
-//    val dataSet = new LineDataSet(data = ys.toJSArray, "label")
-//    val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
-//    rank match{
-//      case 1 =>
-//        realTimeInstance.foreach(_.destroy())
-//        realTimeInstance = Some( new Chart(ctx, new ChartConfig("line", chartData,null)))
-//      case 2 =>
-//        realTimeOutInstance.foreach(_.destroy())
-//        realTimeOutInstance = Some( new Chart(ctx, new ChartConfig("line", chartData,null)))
-//    }
-//  }
-//
-//
-//  private def updateRealTimeDetail(id: Int) = {
-//    id match {
-//      case 1 =>
-//        drawChart(realTimeChartIn,realTimeDetailData,"hh:mm","顾客 进店",1)
-//
-//      case 2 =>
-//        drawChart(realTimeChartOut,realTimeDetailData,"hh:mm","顾客 穿行",2)
-//
-//    }
-//  }
+  def drawRealTimeChart(area: Canvas, dataOpt: Option[RealTimeInfo]) = {
+    dataOpt match {
+      case Some(r) =>
+        import js.JSConverters._
+        val data = r.flow
+        println("drawChart")
+        val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+        val (xs, ys) = data.sortBy(_.timestamp).map(d => (MyUtil.DateFormatter(new Date(d.timestamp), "hh:mm"), d.count.toDouble)).unzip
+        val dataSet = new LineDataSet(data = ys.toJSArray, "label")
+        val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
+        realTimeInstance.foreach(_.destroy())
+        realTimeInstance = Some( new Chart(ctx, new ChartConfig("line", chartData, null)))
+
+      case None =>
+        //do noting
+    }
+  }
+
+  private def initData() = {
+    Http.getAndParse[RealTimeInfoRsp](Routes.realTimeUrl).map { rsp =>
+      if (rsp.errCode == 0) {
+        rsp.data match {
+          case Some(r) =>
+            realTimeMap ++= r.map(o => (o.groupId.toInt, o))
+            drawRealTimeChart(realTimeChart, realTimeMap.get(11))
+
+          case None =>
+            JsFunc.alert(s"rsp.data is None")
+        }
+      }else{
+        JsFunc.alert(s"${rsp.msg}")
+      }
+    }
+  }
+
 
   override def locationHash = ""
 
   override protected def build(): Div = {
-    div(*.cls := "row")(
-      h1(*.cls:="t1")("实时客流图表"),
-      div(
-        div(*.cls:="in")("进店"),
-        realTimeChartIn
+    initData()
+    div(
+      div(*.cls := "row")(
+        div(*.cls := "col-md-12", *.textAlign := "center")(
+          h1(
+            span(*.cls := "artpip-highlight", *.color := "#13C5E4")("实时客流统计")
+          )
+        )
       ),
-      div(
-        div(*.cls:="out")("穿行"),
-        realTimeChartOut
+      div(*.cls := "row", *.width := "50%", *.height := "50%")(
+        realTimeChart
       )
     ).render
   }

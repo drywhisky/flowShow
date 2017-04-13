@@ -50,12 +50,14 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   }
 
   private val getBrandInfo = (path("brandInfo") & get & pathEndOrSingleSlash) {
-    dealFutureResult {
-      assistedDataActor.ask(GetBrandInfo).map {
-        case data:List[_] => complete(BrandsInfoRsp(Some(data.asInstanceOf[List[BrandsInfo]]), "ok", 0))
-        case "Error" => complete(BrandsInfoRsp(None, "error", 100003))
-      }
-    }
+//    dealFutureResult {
+//      assistedDataActor.ask(GetBrandInfo).map {
+//        case data:List[_] => complete(BrandsInfoRsp(Some(data.asInstanceOf[List[BrandsInfo]]), "ok", 0))
+//        case "Error" => complete(BrandsInfoRsp(None, "error", 100003))
+//      }
+//    }
+    val a = List(BrandsInfo( "11", List(BrandsData(1, "三星", 200), BrandsData(2, "小米", 300))))
+    complete(BrandsInfoRsp(Some(a), "ok", 0))
   }
 
   private val getFrequencyInfo = (path("frequencyInfo") & get & pathEndOrSingleSlash) {

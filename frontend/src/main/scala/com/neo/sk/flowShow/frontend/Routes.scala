@@ -8,12 +8,13 @@ package com.neo.sk.flowShow.frontend
 object Routes {
 
 
-  val baseUrl = "/flowShow/base"
+  val baseUrl = "/flowShow/user"
 
   val brandUrl = baseUrl + "/brandInfo"
   val ratioUrl = baseUrl + "/ratioInfo"
   val frequencyUrl = baseUrl + "/frequencyInfo"
   val residentUrl = baseUrl + "/residentInfo"
+  val realTimeUrl = baseUrl + "/realTimeInfo"
 
 
 }

@@ -20,7 +20,7 @@ import io.circe.generic.auto._
   */
 object BrandPanel extends Panel{
 
-  private val brandChart = canvas(*.width := "500").render
+  private val brandChart = canvas(*.width := "250").render
   private val brandsMap = mutable.HashMap[Int, BrandsInfo]()
   private var brandInstance: Option[Chart] = None
 
@@ -30,7 +30,7 @@ object BrandPanel extends Panel{
         rsp.data match {
           case Some(r) =>
             brandsMap ++= r.map(o => (o.groupId.toInt, o))
-            drawBrandChart(brandChart, brandsMap.get(11), "MM-DD")
+            drawBrandChart(brandChart, brandsMap.get(11))
 
           case None =>
             JsFunc.alert(s"rsp.data is None")
@@ -41,23 +41,22 @@ object BrandPanel extends Panel{
     }
   }
 
-  private def drawBrandChart(area: Canvas,dataOpt:Option[BrandsInfo],`type`:String) = {
+  private def drawBrandChart(area: Canvas, dataOpt:Option[BrandsInfo]) = {
     dataOpt match {
       case Some(parent) =>
         import js.JSConverters._
         val data = parent.data
-        println("drawpieChart")
+        println(s"drawDoughnutChart:$data")
         val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-        val tooltip = new tooltips(titleFontSize = 20, bodyFontSize = 20)
+        val tooltip = new tooltips(titleFontSize = 20,bodyFontSize = 20)
         val option = new Options(tooltips = tooltip)
-        val xs = data.map(d => d.name)
-        val ys = data.map(d => d.num)
+        val xs = data.map(d=>d.name)
+        val ys = data.map(d=>d.num)
         //val (xs, ys) = (Array[String]("进入数","出门数"), Array[Double](data(1).custIn.toDouble,data(1).custOut.toDouble))).unzip
         val dataSet = new PieDataSet(data = ys.toJSArray)
         val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
         brandInstance.foreach(_.destroy())
-        brandInstance = Some(new Chart(ctx, new ChartConfig("doughnut", chartData, option)))
-
+        brandInstance = Some(  new Chart(ctx, new ChartConfig("pie", chartData,option)))
       case None =>
         //doNothing
     }
@@ -69,7 +68,16 @@ object BrandPanel extends Panel{
   override protected def build() : Div = {
     initData()
     div(*.cls := "row")(
-      brandChart
+      div(*.cls := "col-md-12", *.textAlign := "center")(
+        h1(
+          span(*.cls := "artpip-highlight", *.color := "#13C5E4")("近30天品牌分布")
+        )
+      ),
+      div(*.cls := "col-md-12")(
+        div(*.width:="50%",*.marginLeft:="25%")(
+          brandChart
+        )
+      )
     ).render
   }
 

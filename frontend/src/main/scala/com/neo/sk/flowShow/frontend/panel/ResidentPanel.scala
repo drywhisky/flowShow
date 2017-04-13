@@ -71,7 +71,14 @@ object ResidentPanel extends Panel{
   override protected def build() : Div = {
     initData()
     div(*.cls := "row")(
-      residentChart
+      div(*.cls := "col-md-12", *.textAlign := "center")(
+        h1(
+          span(*.cls := "artpip-highlight", *.color := "#13C5E4")("昨日驻留时长")
+        )
+      ),
+      div(*.cls := "col-md-12")(
+        residentChart
+      )
     ).render
   }
 }
