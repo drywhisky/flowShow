@@ -49,14 +49,15 @@ object BrandPanel extends Panel{
         println(s"drawDoughnutChart:$data")
         val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
         val tooltip = new tooltips(titleFontSize = 20,bodyFontSize = 20)
-        val option = new Options(tooltips = tooltip)
+        val legend = new legends(display=true ,position = "right")
+        val option = new Options(tooltips = tooltip, legend = legend)
         val xs = data.map(d=>d.name)
         val ys = data.map(d=>d.num)
-        //val (xs, ys) = (Array[String]("进入数","出门数"), Array[Double](data(1).custIn.toDouble,data(1).custOut.toDouble))).unzip
         val dataSet = new PieDataSet(data = ys.toJSArray)
         val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
         brandInstance.foreach(_.destroy())
-        brandInstance = Some(  new Chart(ctx, new ChartConfig("pie", chartData,option)))
+        brandInstance = Some(  new Chart(ctx, new ChartConfig("doughnut", chartData,option)))
+
       case None =>
         //doNothing
     }
@@ -73,10 +74,8 @@ object BrandPanel extends Panel{
           span(*.cls := "artpip-highlight", *.color := "#13C5E4")("近30天品牌分布")
         )
       ),
-      div(*.cls := "col-md-12")(
-        div(*.width:="50%",*.marginLeft:="25%")(
+      div(*.cls := "half-chart-left")(
           brandChart
-        )
       )
     ).render
   }
