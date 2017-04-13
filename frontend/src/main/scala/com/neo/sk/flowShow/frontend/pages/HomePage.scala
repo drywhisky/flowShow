@@ -16,7 +16,7 @@ object HomePage extends Page {
   private val panelBox = div().render
 
   panelBox.textContent = ""
-  panelBox.appendChild(BrandPanel.render)
+  panelBox.appendChild(ResidentPanel.render)
 
   private val flowButton = button(*.onclick := { e: MouseEvent =>
     e.preventDefault()

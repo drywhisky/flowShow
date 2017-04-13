@@ -32,12 +32,14 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   }
 
   private val getResidentInfo = (path("residentInfo") & get & pathEndOrSingleSlash) {
-    dealFutureResult {
-      assistedDataActor.ask(GetResidentInfo).map {
-        case data:List[_] => complete(ResidentInfoRsp(Some(data.asInstanceOf[List[ResidentInfo]]), "ok", 0))
-        case "Error" => complete(ResidentInfoRsp(None, "error", 100001))
-      }
-    }
+//    dealFutureResult {
+//      assistedDataActor.ask(GetResidentInfo).map {
+//        case data:List[_] => complete(ResidentInfoRsp(Some(data.asInstanceOf[List[ResidentInfo]]), "ok", 0))
+//        case "Error" => complete(ResidentInfoRsp(None, "error", 100001))
+//      }
+//    }
+    val a = List(ResidentInfo("11", List(DurationData(0, 390), DurationData(1, 63), DurationData(2, 15), DurationData(3,7), DurationData(4, 17), DurationData(5, 6))))
+    complete(ResidentInfoRsp(Some(a), "ok", 0))
   }
 
   private val getRatioInfo = (path("ratioInfo") & get & pathEndOrSingleSlash) {

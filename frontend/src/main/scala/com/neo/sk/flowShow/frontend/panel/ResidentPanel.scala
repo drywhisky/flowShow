@@ -40,7 +40,7 @@ object ResidentPanel extends Panel{
         val data = r.data
         val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
         val (xs, ys) = data.sortBy(_.duration).map(d => (timeMap(d.duration), d.num.toDouble)).unzip
-        val dataSet = new LineDataSet(data = ys.toJSArray, label = `type`)
+        val dataSet = new LineDataSet(data = ys.toJSArray, label = `type`, fill = true)
         val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
         residentInstance.foreach(_.destroy())
         residentInstance = Some(new Chart(ctx, new ChartConfig("line", chartData,null)))
@@ -76,7 +76,7 @@ object ResidentPanel extends Panel{
           span(*.cls := "artpip-highlight", *.color := "#13C5E4")("昨日驻留时长")
         )
       ),
-      div(*.cls := "col-md-12")(
+      div(*.cls := "half-chart-right")(
         residentChart
       )
     ).render
