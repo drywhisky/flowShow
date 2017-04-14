@@ -18,11 +18,11 @@ object MySlickCodeGenerator {
 
   val slickProfile = "slick.jdbc.PostgresProfile"
   val jdbcDriver = "org.postgresql.Driver"
-  val url = "jdbc:postgresql://10.1.29.247:5432/threemall"
+  val url = "jdbc:postgresql://127.0.0.1:5432/flowshow"
   val outputFolder = "target/gencode/genTablesPsql"
-  val pkg = "com.neo.sk.threeMall.models"
-  val user = "threemall"
-  val password = "ThReE2017MAllGoGO"
+  val pkg = "com.neo.sk.flowShow.models"
+  val user = "flowshow"
+  val password = "flowshow2017"
 
 
   //val dbDriver = MySQLDriver

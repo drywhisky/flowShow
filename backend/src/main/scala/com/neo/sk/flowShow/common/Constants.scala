@@ -9,26 +9,7 @@ object Constants {
 
   val USER_HOME_PATH = "/webchat/user/home"
 
-  object RoomState{
-    val ENABLE = 1
-    val DISABLE = 0
-  }
-
-  object UserSex{
-    val MALE = 0
-    val FEMALE = 1
-  }
-
-  object UserType{
-    val USER = "USER"
-    val ADMIN = "ADMIN"
-  }
-
-  object UserState{
-    val ENABLE = 0
-    val DISABLE = 1
-  }
-
+  val defaultGroupId = 0l
 
 
 
