@@ -67,29 +67,19 @@ trait WsClient extends Actor{
   implicit val materializer: Materializer
 
   val incoming = Sink.foreach[Message] {
-      case message: TextMessage =>
-        val f = message.textStream.runFold(""){
-          case (s,str) => s + str
-        }
-        f.map{s =>
-          println(s)
-        }
-
       case msg : BinaryMessage.Streamed =>
-        //        println("receive msg from akso")
         val f = msg.dataStream.runFold(new ByteStringBuilder().result()){
           case (s,str) => s.++(str)
         }
         f.map{ s =>
           s.decodeString("UTF-8").split("\u0001").toList.flatMap{i =>
             ShootUtil.line2Shoot(i)}.groupBy(_.apMac).foreach{case (apMac,shoots) =>
-
-            dataBus.publish((DataBus.ALL_CLASSIFY, PutShoots(apMac,shoots)))
+            dataBus.publish((DataBus.getClassify(apMac), PutShoots(apMac,shoots)))
           }
         }
 
-      case _ =>
-        println("receive unknown message")
+      case unknown =>
+        log.error(s"receive unknown message:$unknown")
     }
 
   override def receive:Receive = {
@@ -128,7 +118,7 @@ trait WsClient extends Actor{
     case SubscribeData(peer,name) =>
       log.info(s"$name register data...")
       context.watch(peer)
-      dataBus.subscribe(peer, DataBus.ALL_CLASSIFY+name)
+      dataBus.subscribe(peer, DataBus.getClassify(name))
 
   }
 

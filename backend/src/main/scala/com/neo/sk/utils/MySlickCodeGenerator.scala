@@ -1,28 +1,29 @@
 package com.neo.sk.utils
 
 import slick.codegen.SourceCodeGenerator
-import slick.driver.{JdbcDriver, JdbcProfile, PostgresDriver}
+import slick.driver.{JdbcProfile, PostgresDriver}
+import slick.jdbc.{JdbcProfile,PostgresProfile}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**
- * User: Taoz
- * Date: 7/15/2015
- * Time: 9:33 AM
- */
+  * User: Taoz
+  * Date: 7/15/2015
+  * Time: 9:33 AM
+  */
 object MySlickCodeGenerator {
 
 
   import concurrent.ExecutionContext.Implicits.global
 
-  val slickDriver = "slick.driver.PostgresDriver"
+  val slickDriver = "slick.jdbc.PostgresProfile"
   val jdbcDriver = "org.postgresql.Driver"
-  val url = "jdbc:postgresql://10.1.29.247:5432/webchat"
+  val url = "jdbc:postgresql://127.0.0.1:5432/flowshow"
   val outputFolder = "target/gencode/genTablesPsql"
-  val pkg = "com.neo.sk.webchat.models"
-  val user = "webchat"
-  val password = "webchat2017Seekloud1126"
+  val pkg = "com.neo.sk.hw1701b.models"
+  val user = "flowshow"
+  val password = "flowshow2017"
 
 
   //val dbDriver = MySQLDriver
@@ -31,7 +32,7 @@ object MySlickCodeGenerator {
 
 
 
-  def genCustomTables(dbDriver: JdbcDriver) = {
+  def genCustomTables(dbDriver: JdbcProfile) = {
 
     // fetch data model
     val driver: JdbcProfile =
@@ -94,9 +95,9 @@ object MySlickCodeGenerator {
 
 
 
-  def main1(args: Array[String]) {
+  def main(args: Array[String]) {
     //genDefaultTables()
-    val dbDriver = PostgresDriver
+    val dbDriver = PostgresProfile
 
     genCustomTables(dbDriver)
 

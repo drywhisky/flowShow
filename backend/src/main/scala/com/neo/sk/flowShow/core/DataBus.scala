@@ -12,7 +12,7 @@ import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut}
 object DataBus {
   val ALL_CLASSIFY = "ALL"
 
-  sealed trait PushData
+  def getClassify(boxMac: String) = s"$ALL_CLASSIFY$boxMac"
 }
 
 class DataBus extends EventBus with SubchannelClassification {
