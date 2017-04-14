@@ -61,6 +61,15 @@ object AppSettings {
   val nyxHost = nyx.getString("host")
   val nyxPort = nyx.getString("port")
 
+  val akso = dependence.getConfig("akso")
+
+  val aksoProtocol = akso.getString("protocol")
+  val aksoWebsokectProtocol = akso.getString("websokectProtocol")
+  val aksoAppId = akso.getString("appId")
+  val aksoSecureKey = akso.getString("secureKey")
+  val aksoHost = akso.getString("host")
+  val aksoPort = akso.getString("port")
+
   val group = dependence.getConfig("group")
   val groupIdNameMap = {
     import collection.JavaConversions._

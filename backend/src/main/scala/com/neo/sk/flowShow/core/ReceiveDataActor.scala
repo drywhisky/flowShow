@@ -99,7 +99,7 @@ class ReceiveDataActor extends Actor with Stash {
           "12"
         } else "none"
 
-        dataBus.publish((arr(1), floor))
+//        dataBus.publish((arr(1), floor))
 
       case msg =>
         log.info(s" receive unknown msg: " + msg)
