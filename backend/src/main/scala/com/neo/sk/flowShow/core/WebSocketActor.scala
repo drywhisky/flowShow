@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
-import com.neo.sk.flowShow.Boot.receiveDataActor
 import com.neo.sk.flowShow.core.ReceiveDataActor._
 import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg, ComeIn, GetOut}
 import com.neo.sk.utils.SecureUtil
@@ -55,12 +54,12 @@ object WebSocketActor {
         case RegisterWebsocket(out) =>
           log.debug("产生一个websocket链接" + out)
           subscriber = out
-          receiveDataActor ! Subscribe(out)
+//          receiveDataActor ! Subscribe(out)
 
         case DeleteWebsocket(out) =>
           log.debug("断开一个websocket 链接" + out)
           dataActorMap.remove(actorId)
-          receiveDataActor ! UnSubscribe(out)
+//          receiveDataActor ! UnSubscribe(out)
           self ! PoisonPill
 
 //        case RealTimePersonNumberAdd(groupId, list) =>

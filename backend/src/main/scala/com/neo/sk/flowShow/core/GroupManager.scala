@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 object GroupManager {
 
-  def props(wsClient: ActorRef, storeRouter: ActorRef, fileSaver: ActorRef) = Props[GroupManager](new GroupManager(wsClient, storeRouter, fileSaver))
+  def props(wsClient: ActorRef) = Props[GroupManager](new GroupManager(wsClient))
 
   case class InitDone(maps: Map[String, Seq[String]], baseInfo: Map[String, (Option[Int], Option[Int])])
 
@@ -25,7 +25,7 @@ object GroupManager {
   case class GetMyInfo(father: Option[ActorRef], durationLength: Option[Int], rssiSet: Option[Int])
 }
 
-class GroupManager(wsClient: ActorRef, storeRouter: ActorRef, fileSaver: ActorRef) extends Actor with Stash {
+class GroupManager(wsClient: ActorRef) extends Actor with Stash {
 
   import GroupManager._
 
@@ -85,7 +85,7 @@ class GroupManager(wsClient: ActorRef, storeRouter: ActorRef, fileSaver: ActorRe
 
   def getActor(id: String) : ActorRef = {
     context.child(id).getOrElse {
-      val child = context.actorOf(GroupActor.props(id, storeRouter, fileSaver), id)
+      val child = context.actorOf(GroupActor.props(id), id)
       log.info(s"$logPrefix $id is starting")
       context.watch(child)
       child

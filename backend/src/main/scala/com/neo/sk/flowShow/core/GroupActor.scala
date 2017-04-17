@@ -5,10 +5,7 @@ import com.neo.sk.flowShow.common.AppSettings
 import com.neo.sk.flowShow.core.GroupManager.{FindMyInfo, GetMyInfo}
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.{PutShoots, Shoot}
-
 import scala.concurrent.duration._
-import com.neo.sk.flowShow.core.RealTimeActor
-
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -16,7 +13,7 @@ import scala.collection.mutable.ListBuffer
   */
 object GroupActor {
 
-  def props(id:String, storeRouter: ActorRef, fileSaver: ActorRef) = Props[GroupActor](new GroupActor(id, storeRouter, fileSaver))
+  def props(id:String) = Props[GroupActor](new GroupActor(id))
 
 }
 
@@ -30,7 +27,7 @@ case object GroupType{
 }
 
 
-class GroupActor(id:String, storeRouter: ActorRef, fileSaver: ActorRef) extends Actor with Stash{
+class GroupActor(id:String) extends Actor with Stash{
 
   import GroupActor._
 

@@ -20,11 +20,9 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
   private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.BaseService")
   implicit val timeout: Timeout
 
-  val receiveDataActor: ActorRef
-  val assistedDataActor: ActorRef
-
   val baseRoutes = pathPrefix("user")(
-    staticRoutes ~ getResidentInfo ~ getRatioInfo ~ getBrandInfo ~ getFrequencyInfo ~ getRealTimeInfo
+    staticRoutes ~ getResidentInfo
+//      ~ getRatioInfo ~ getBrandInfo ~ getFrequencyInfo ~ getRealTimeInfo
   )
 
   private val staticRoutes = (path("home") & get & pathEndOrSingleSlash) {
@@ -42,42 +40,42 @@ trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
     complete(ResidentInfoRsp(Some(a), "ok", 0))
   }
 
-  private val getRatioInfo = (path("ratioInfo") & get & pathEndOrSingleSlash) {
-    dealFutureResult {
-      assistedDataActor.ask(GetRatioInfo).map {
-        case data:List[_] => complete(RatioInfoRsp(Some(data.asInstanceOf[List[RatioInfo]]), "ok", 0))
-        case "Error" => complete(RatioInfoRsp(None, "error", 100002))
-      }
-    }
-  }
-
-  private val getBrandInfo = (path("brandInfo") & get & pathEndOrSingleSlash) {
+//  private val getRatioInfo = (path("ratioInfo") & get & pathEndOrSingleSlash) {
 //    dealFutureResult {
-//      assistedDataActor.ask(GetBrandInfo).map {
-//        case data:List[_] => complete(BrandsInfoRsp(Some(data.asInstanceOf[List[BrandsInfo]]), "ok", 0))
-//        case "Error" => complete(BrandsInfoRsp(None, "error", 100003))
+//      assistedDataActor.ask(GetRatioInfo).map {
+//        case data:List[_] => complete(RatioInfoRsp(Some(data.asInstanceOf[List[RatioInfo]]), "ok", 0))
+//        case "Error" => complete(RatioInfoRsp(None, "error", 100002))
 //      }
 //    }
-    val a = List(BrandsInfo( "11", List(BrandsData(1, "三星", 200), BrandsData(2, "小米", 300))))
-    complete(BrandsInfoRsp(Some(a), "ok", 0))
-  }
-
-  private val getFrequencyInfo = (path("frequencyInfo") & get & pathEndOrSingleSlash) {
-    dealFutureResult {
-      assistedDataActor.ask(GetFrequencyInfo).map {
-        case data:List[_] => complete(FrequencyInfoRsp(Some(data.asInstanceOf[List[FrequencyInfo]]), "ok", 0))
-        case "Error" => complete(FrequencyInfoRsp(None, "error", 100004))
-      }
-    }
-  }
-
-  private val getRealTimeInfo = (path("realTimeInfo") & get & pathEndOrSingleSlash) {
-    dealFutureResult {
-      assistedDataActor.ask(GetRealTimeInfo).map {
-        case data:List[_] => complete(RealTimeInfoRsp(Some(data.asInstanceOf[List[RealTimeInfo]]), "ok", 0))
-        case "Error" => complete(FrequencyInfoRsp(None, "error", 100005))
-      }
-    }
-  }
+//  }
+//
+//  private val getBrandInfo = (path("brandInfo") & get & pathEndOrSingleSlash) {
+////    dealFutureResult {
+////      assistedDataActor.ask(GetBrandInfo).map {
+////        case data:List[_] => complete(BrandsInfoRsp(Some(data.asInstanceOf[List[BrandsInfo]]), "ok", 0))
+////        case "Error" => complete(BrandsInfoRsp(None, "error", 100003))
+////      }
+////    }
+//    val a = List(BrandsInfo( "11", List(BrandsData(1, "三星", 200), BrandsData(2, "小米", 300))))
+//    complete(BrandsInfoRsp(Some(a), "ok", 0))
+//  }
+//
+//  private val getFrequencyInfo = (path("frequencyInfo") & get & pathEndOrSingleSlash) {
+//    dealFutureResult {
+//      assistedDataActor.ask(GetFrequencyInfo).map {
+//        case data:List[_] => complete(FrequencyInfoRsp(Some(data.asInstanceOf[List[FrequencyInfo]]), "ok", 0))
+//        case "Error" => complete(FrequencyInfoRsp(None, "error", 100004))
+//      }
+//    }
+//  }
+//
+//  private val getRealTimeInfo = (path("realTimeInfo") & get & pathEndOrSingleSlash) {
+//    dealFutureResult {
+//      assistedDataActor.ask(GetRealTimeInfo).map {
+//        case data:List[_] => complete(RealTimeInfoRsp(Some(data.asInstanceOf[List[RealTimeInfo]]), "ok", 0))
+//        case "Error" => complete(FrequencyInfoRsp(None, "error", 100005))
+//      }
+//    }
+//  }
 
 }
