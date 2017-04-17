@@ -63,8 +63,8 @@ object WebSocketActor {
           receiveDataActor ! UnSubscribe(out)
           self ! PoisonPill
 
-        case RealTimePersonNumberAdd(groupId, list) =>
-        //TODO  每隔5分钟应该产生一个数据推送到前端
+//        case RealTimePersonNumberAdd(groupId, list) =>
+//        //TODO  每隔5分钟应该产生一个数据推送到前端
 
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
@@ -106,11 +106,14 @@ object WebSocketActor {
 
 
   private trait InnerMsg
+
   private case class RegisterWebsocket(out: ActorRef) extends InnerMsg
 
   private case class DeleteWebsocket(out: ActorRef) extends InnerMsg
 
-  private case class RealTimePersonNumberAdd(groupId: Int,list: List[Int]) extends InnerMsg
+  private case class NewMacNewMac(groupId:String,mac:String) extends InnerMsg
+
+  private case class LeaveMac(groupId:String,mac:Iterable[String]) extends InnerMsg
 
   private case class Handle(msg: String) extends InnerMsg
 

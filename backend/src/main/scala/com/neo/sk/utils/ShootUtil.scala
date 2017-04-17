@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory
   * Created by liuziwei on 2016/6/22.
   */
 
+case class PutShoots(apMac:String,shoots:List[Shoot])
+
 case class Shoot(id:Long,apMac:String,clientMac:String,t:Long,rssi:Array[Int],src:String){
   private val s1 = "#"
   private val s2 = ","

@@ -41,6 +41,13 @@ object AppSettings {
   val serverProtocol = appConfig.getString("server.protocol")
   val serverHost = appConfig.getString("server.host")
 
+  val realTimeCountInterval = config.getInt("app.realTimeCountInterval")
+  val historyCountInterval = config.getInt("app.historyCountInterval")
+  val realTimeMacInterval = config.getInt("app.realTimeMacInterval")
+
+  val tempPath = config.getString("app.tempPath")
+  val rssiValue = appConfig.getInt("rssiValue")
+
   val slickConfig = config.getConfig("slick.db")
   val slickUrl = slickConfig.getString("url")
   val slickUser = slickConfig.getString("user")

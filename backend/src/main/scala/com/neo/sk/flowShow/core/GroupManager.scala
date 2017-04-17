@@ -6,9 +6,10 @@ import akka.util.Timeout
 import org.slf4j.LoggerFactory
 import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao}
 import com.neo.sk.flowShow.core.WsClient.SubscribeData
-
+import com.neo.sk.utils.{Shoot, PutShoots}
 import scala.collection.mutable
 import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by whisky on 17/4/14.
@@ -89,6 +90,10 @@ class GroupManager(wsClient: ActorRef, storeRouter: ActorRef, fileSaver: ActorRe
       context.watch(child)
       child
     }
+  }
+
+  def getChildActor(path:String) = {
+    context.child(path)
   }
 
   override def receive = init()
