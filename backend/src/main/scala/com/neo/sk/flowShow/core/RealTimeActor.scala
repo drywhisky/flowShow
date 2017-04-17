@@ -1,24 +1,26 @@
 package com.neo.sk.flowShow.core
 
 import java.io.File
+
 import akka.actor.{Actor, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
 import com.neo.sk.flowShow.common.AppSettings
 import com.neo.sk.flowShow.ptcl._
+import com.neo.sk.flowShow.models.dao.CountDao
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.utils.{PutShoots, Shoot}
-
+import scala.util.{Failure, Success}
 
 /**
   * Created by dry on 2017/4/17.
   */
 object RealTimeActor {
 
-  def props(groupId:String) = Props(new RealTimeActor(groupId))
+  def props(symbol:String) = Props(new RealTimeActor(symbol))
 
   case object CountDetailFlow
   case object SaveTmpFile
@@ -37,12 +39,15 @@ object RealTimeActor {
 
 }
 
-class RealTimeActor(groupId:String) extends Actor with Stash{
+class RealTimeActor(symbol:String) extends Actor with Stash{
   import RealTimeActor._
 
   private[this] val log = LoggerFactory.getLogger(this.getClass)
   private[this] val logPrefix = self.path
   private[this] val selfRef = context.self
+
+  private[this] val groupId = context.parent.path.name
+
 
   private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
   private val realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
@@ -56,6 +61,7 @@ class RealTimeActor(groupId:String) extends Actor with Stash{
   private var lastFileDate = ""
   private val unsureDurCache = collection.mutable.HashMap[String,List[(Long,Long)]]()
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String,(Long,Long)]()
+
   private val reg = "[0-9]*".r
   private val needSend2Socket = if( reg.pattern.matcher(groupId).matches()) true else{
     realTimeMacCache.clear()
@@ -162,23 +168,24 @@ class RealTimeActor(groupId:String) extends Actor with Stash{
     log.info(s"$logPrefix starting...")
     durationCache.++=(FileUtil.readDuration(s"$groupId/duration.txt"))
     realTimeDurationCache ++= FileUtil.readDuration(s"$groupId/realduration.txt")
-    val start = DateTime.now.withTime(0,0,0,0).getMillis
+
+    val start = DateTime.now.withTimeAtStartOfDay().getMillis
     //TODO 需减小，要不后面都为0的话，取平均值会出错
-    val end = DateTime.now.minusMinutes(2).getMillis
+    val end = System.currentTimeMillis()
+
     val initCache = (start until end by AppSettings.realTimeCountInterval*60000).map(i => (i,0)).toMap
     countCache ++= initCache
-//    CountDao.getCountDetailByInterval(groupId,start,end).andThen{
-//      case Success(res) =>
-//        val countList = res.map(i => (i.timestamp,i.count))
-//        countCache.++=(countList)
-//        log.info(s"$logPrefix init countCache size ${countCache.size}")
-//      case Failure(e) =>
-//        log.error(s"$logPrefix init countCache error",e)
-//    }.onComplete{
-//      case _ =>
-//        self ! InitDone
-//    }
-    self ! InitDone
+    CountDao.getCountDetailByInterval(groupId,start,end).andThen{
+      case Success(res) =>
+        val countList = res.map(i => (i.timestamp,i.count))
+        countCache.++=(countList)
+        log.info(s"$logPrefix init countCache size ${countCache.size}")
+      case Failure(e) =>
+        log.error(s"$logPrefix init countCache error",e)
+    }.onComplete{
+      case _ =>
+        self ! InitDone
+    }
   }
 
   override def receive = init()
@@ -336,7 +343,7 @@ class RealTimeActor(groupId:String) extends Actor with Stash{
       val timeSet = (startTime to endTime by AppSettings.realTimeCountInterval*60000).toSet
       //取当天且人数不为0的时刻插入表格
       val record = countCache.filter(c => timeSet.contains(c._1) && c._2 != 0).toMap
-//      CountDao.addCountDetail(groupId,timeSet,record)
+      CountDao.addCountDetail(groupId, timeSet, record)
       log.info(s"$logPrefix add count detail size ${record.size}")
 
     case msg@SaveTmpFile =>

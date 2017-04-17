@@ -65,11 +65,11 @@ class GroupActor(id:String) extends Actor with Stash{
     log.info(s"$logPrefix stops.")
   }
 
-  def getRealTimeActor(groupId:String, historyDurationLength: Int): ActorRef = {
-    val name = s"$groupId"
+  def getRealTimeActor(symbol:String, historyDurationLength: Int): ActorRef = {
+    val name = s"$symbol"
     context.child(name).getOrElse {
-      val actor = RealTimeActor.props(groupId)
-      val child = context.actorOf(actor, groupId)
+      val actor = RealTimeActor.props(symbol)
+      val child = context.actorOf(actor, symbol)
       log.info(s"$logPrefix $name is starting.")
       context.watch(child)
       child
