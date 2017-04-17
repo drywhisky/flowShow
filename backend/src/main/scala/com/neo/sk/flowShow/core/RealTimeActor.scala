@@ -216,12 +216,12 @@ class RealTimeActor(groupId:String) extends Actor with Stash{
       shoots.groupBy(_.clientMac).foreach { case (clientMac, shootsList) =>
         var shootsCache = List[Shoot]()
         if (durationCache.get(clientMac).isDefined) {
-          val oldDuration = durationCache.get(clientMac).get
+          val oldDuration = durationCache(clientMac)
           if (oldDuration.isEmpty) {
             durationCache.remove(clientMac)
-            shootsCache = shootsList.toList
+            shootsCache = shootsList
           } else {
-            val newDuration = shootsList.toList.sortBy(_.t).foldLeft(oldDuration) { case (oldList, shoot) =>
+            val newDuration = shootsList.sortBy(_.t).foldLeft(oldDuration) { case (oldList, shoot) =>
               val old = oldList.head
               if (shoot.t - old._2 < oneDurationLength && shoot.t > old._2) {
                 (old._1, shoot.t) :: oldList.tail

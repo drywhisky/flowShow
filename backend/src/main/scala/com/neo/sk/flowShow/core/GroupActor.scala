@@ -65,11 +65,11 @@ class GroupActor(id:String) extends Actor with Stash{
     log.info(s"$logPrefix stops.")
   }
 
-  def getRealTimeActor(symbol:String, historyDurationLength: Int): ActorRef = {
-    val name = s"$symbol"
+  def getRealTimeActor(groupId:String, historyDurationLength: Int): ActorRef = {
+    val name = s"$groupId"
     context.child(name).getOrElse {
-      val actor = RealTimeActor.props(symbol)
-      val child = context.actorOf(actor, symbol)
+      val actor = RealTimeActor.props(groupId)
+      val child = context.actorOf(actor, groupId)
       log.info(s"$logPrefix $name is starting.")
       context.watch(child)
       child
@@ -99,11 +99,12 @@ class GroupActor(id:String) extends Actor with Stash{
   }
 
   def idle(father: Option[ActorRef], durationLength: Int, rssiSet: Int) : Receive = {
-    case r@PutShoots(boxMac, shoots) =>
+    case msg@PutShoots(boxMac, shoots) =>
 //      laseConnectTime = System.currentTimeMillis()
 //      dataVolume += shoots.size
       //      log.info(s"$unitId receive a shoot")
       //      log.info(s"$dataVolume is dataVolume")
+      log.debug(s"i got a msg:$msg")
       if(uniterType != GroupType.box){
         for(e <- shoots){
           if(boxInfo.contains(e.apMac))
@@ -124,7 +125,7 @@ class GroupActor(id:String) extends Actor with Stash{
       if(target.nonEmpty) {
         val r1 = PutShoots(boxMac, target)
         father.foreach(_ ! r1) //send data to fathers
-        getRealTimeActor(StatisticSymbol.realTime, durationLength).forward(r1)
+        getRealTimeActor(id, durationLength).forward(r1)
       }
 
     case Terminated(child) =>

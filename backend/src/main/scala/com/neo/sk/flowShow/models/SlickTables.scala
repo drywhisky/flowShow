@@ -24,8 +24,8 @@ trait SlickTables {
     *  @param boxMac Database column box_mac SqlType(varchar), Length(63,true)
     *  @param createTime Database column create_time SqlType(int8)
     *  @param groupId Database column group_id SqlType(int8), Default(0)
-    *  @param rssiSet Database column rssi_set SqlType(int4) */
-  case class rBoxs(boxId: Long, boxName: String, boxMac: String, createTime: Long, groupId: Long = 0L, rssiSet: Int)
+    *  @param rssiset Database column rssiset SqlType(int4) */
+  case class rBoxs(boxId: Long, boxName: String, boxMac: String, createTime: Long, groupId: Long = 0L, rssiset: Int)
   /** GetResult implicit for fetching rBoxs objects using plain SQL queries */
   implicit def GetResultrBoxs(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rBoxs] = GR{
     prs => import prs._
@@ -33,9 +33,9 @@ trait SlickTables {
   }
   /** Table description of table boxs. Objects of this class serve as prototypes for rows in queries. */
   class tBoxs(_tableTag: Tag) extends profile.api.Table[rBoxs](_tableTag, "boxs") {
-    def * = (boxId, boxName, boxMac, createTime, groupId, rssiSet) <> (rBoxs.tupled, rBoxs.unapply)
+    def * = (boxId, boxName, boxMac, createTime, groupId, rssiset) <> (rBoxs.tupled, rBoxs.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(boxId), Rep.Some(boxName), Rep.Some(boxMac), Rep.Some(createTime), Rep.Some(groupId), Rep.Some(rssiSet)).shaped.<>({r=>import r._; _1.map(_=> rBoxs.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(boxId), Rep.Some(boxName), Rep.Some(boxMac), Rep.Some(createTime), Rep.Some(groupId), Rep.Some(rssiset)).shaped.<>({r=>import r._; _1.map(_=> rBoxs.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column box_id SqlType(bigserial), AutoInc, PrimaryKey */
     val boxId: Rep[Long] = column[Long]("box_id", O.AutoInc, O.PrimaryKey)
@@ -47,8 +47,8 @@ trait SlickTables {
     val createTime: Rep[Long] = column[Long]("create_time")
     /** Database column group_id SqlType(int8), Default(0) */
     val groupId: Rep[Long] = column[Long]("group_id", O.Default(0L))
-    /** Database column rssi_set SqlType(int4) */
-    val rssiSet: Rep[Int] = column[Int]("rssi_set")
+    /** Database column rssiset SqlType(int4) */
+    val rssiset: Rep[Int] = column[Int]("rssiset")
   }
   /** Collection-like TableQuery object for table tBoxs */
   lazy val tBoxs = new TableQuery(tag => new tBoxs(tag))
@@ -79,26 +79,26 @@ trait SlickTables {
   /** Entity class storing rows of table tGroups
     *  @param groupId Database column group_id SqlType(bigserial), AutoInc, PrimaryKey
     *  @param groupName Database column group_name SqlType(varchar), Length(255,true)
-    *  @param createTime Database column create_time SqlType(int8), Default(Some(0))
+    *  @param createTime Database column create_time SqlType(int8)
     *  @param durationLength Database column duration_length SqlType(int8) */
-  case class rGroups(groupId: Long, groupName: String, createTime: Option[Long] = Some(0L), durationLength: Long)
+  case class rGroups(groupId: Long, groupName: String, createTime: Long, durationLength: Long)
   /** GetResult implicit for fetching rGroups objects using plain SQL queries */
-  implicit def GetResultrGroups(implicit e0: GR[Long], e1: GR[String], e2: GR[Option[Long]]): GR[rGroups] = GR{
+  implicit def GetResultrGroups(implicit e0: GR[Long], e1: GR[String]): GR[rGroups] = GR{
     prs => import prs._
-      rGroups.tupled((<<[Long], <<[String], <<?[Long], <<[Long]))
+      rGroups.tupled((<<[Long], <<[String], <<[Long], <<[Long]))
   }
   /** Table description of table groups. Objects of this class serve as prototypes for rows in queries. */
   class tGroups(_tableTag: Tag) extends profile.api.Table[rGroups](_tableTag, "groups") {
     def * = (groupId, groupName, createTime, durationLength) <> (rGroups.tupled, rGroups.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(groupId), Rep.Some(groupName), createTime, Rep.Some(durationLength)).shaped.<>({r=>import r._; _1.map(_=> rGroups.tupled((_1.get, _2.get, _3, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(groupId), Rep.Some(groupName), Rep.Some(createTime), Rep.Some(durationLength)).shaped.<>({r=>import r._; _1.map(_=> rGroups.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column group_id SqlType(bigserial), AutoInc, PrimaryKey */
     val groupId: Rep[Long] = column[Long]("group_id", O.AutoInc, O.PrimaryKey)
     /** Database column group_name SqlType(varchar), Length(255,true) */
     val groupName: Rep[String] = column[String]("group_name", O.Length(255,varying=true))
-    /** Database column create_time SqlType(int8), Default(Some(0)) */
-    val createTime: Rep[Option[Long]] = column[Option[Long]]("create_time", O.Default(Some(0L)))
+    /** Database column create_time SqlType(int8) */
+    val createTime: Rep[Long] = column[Long]("create_time")
     /** Database column duration_length SqlType(int8) */
     val durationLength: Rep[Long] = column[Long]("duration_length")
   }

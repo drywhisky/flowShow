@@ -51,7 +51,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       boxs <- BoxDao.listDistributedBoxs
     } yield {
       val groupInfo = groups.map(g => (g.groupId.toString, (Some(g.durationLength.toInt), None)))
-      val boxInfo = boxs.map(b => (b.boxMac, (None, Some(b.rssiSet))))
+      val boxInfo = boxs.map(b => (b.boxMac, (None, Some(b.rssiset))))
       val baseInfo = (groupInfo ++ boxInfo).toMap
       val groupBoxMap = boxs.groupBy(_.groupId).map{ case (groupId, iter) =>
         GroupBoxMap += (groupId.toString -> iter.map(_.boxMac))
