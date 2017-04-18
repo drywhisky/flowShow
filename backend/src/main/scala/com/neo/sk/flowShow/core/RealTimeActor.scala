@@ -2,17 +2,18 @@ package com.neo.sk.flowShow.core
 
 import java.io.File
 
-import akka.actor.{Actor, Props, ReceiveTimeout, Stash}
+import akka.actor.{Actor, ActorRef, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
 import com.neo.sk.flowShow.common.AppSettings
 import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.flowShow.models.dao.CountDao
-
+import com.neo.sk.flowShow.core.WebSocketBus.{PushData, NewMac, LeaveMac}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.utils.{PutShoots, Shoot}
+
 import scala.util.{Failure, Success}
 
 /**
@@ -37,6 +38,8 @@ object RealTimeActor {
   case class GetCountDetail(groupId:String)
   case class CountDetailResult(flow:List[(Long,Int)],max:Int,total:Int,now:Int)
 
+  case class SubscribeData(peer: ActorRef, name:String)
+
 }
 
 class RealTimeActor(symbol:String) extends Actor with Stash{
@@ -48,6 +51,7 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
   private[this] val groupId = context.parent.path.name
 
+  private[this] val wsBus = new WebSocketBus()
 
   private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
   private val realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
@@ -111,7 +115,8 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     self,
     Clean)
 
-  def stopActor = {
+  override def postStop(): Unit = {
+    log.info(s"$logPrefix stops.")
     val date = DateTime.now.toString("yyyyMMdd")
     if(date != lastFileDate) {
       FileUtil.saveDuration(s"$groupId/duration-$date.txt", groupId,
@@ -127,11 +132,16 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     }else{
       log.debug(s"$logPrefix file $date has already been written before")
     }
-    countCache.clear()
-    durationCache.clear()
-    countTask.cancel()
-    saveTempFileTask.cancel()
-    cleanTask.cancel()
+    List(
+      countCache,
+      durationCache    //is save count cache needed?
+    ).foreach{_.clear()}
+
+    List(
+      countTask,
+      saveTempFileTask,
+      cleanTask
+    ).foreach{_.cancel()}
   }
 
   def getDetailFlow = {
@@ -153,9 +163,10 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     result.++(countRst.toMap)
   }
 
-  private def sendSocket(msg: ActorProtocol) = {
+  private def sendSocket(msg: PushData) = {
     try {
-      val socket = context.system.actorSelection("/user/WebSocketActor")
+      log.debug(s"i will send $msg to WebSocketActor")
+      val socket = context.system.actorSelection("/user/webSocketManager")
       socket ! msg
     }catch{
       case e:Exception =>
@@ -163,8 +174,7 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     }
   }
 
-  override def preRestart(cause:Throwable,msg:Option[Any]) = {
-    log.debug(s"$logPrefix restart because",cause)
+  override def preStart(): Unit = {
     log.info(s"$logPrefix starting...")
     durationCache.++=(FileUtil.readDuration(s"$groupId/duration.txt"))
     realTimeDurationCache ++= FileUtil.readDuration(s"$groupId/realduration.txt")
@@ -192,10 +202,9 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
   def init(): Receive = {
     case msg@InitDone =>
-      log.debug(s"i got a msg:")
       log.info(s"$logPrefix init done")
       if(needSend2Socket) {
-        context.system.scheduler.schedule(0 seconds, AppSettings.realTimeMacInterval seconds) {
+        context.system.scheduler.schedule(0.seconds, AppSettings.realTimeMacInterval.seconds) {
           val cur = System.currentTimeMillis()
           val leaveMac = realTimeMacCache.filter { c =>
             cur - c._2 > realTimeDurationLength
@@ -220,6 +229,7 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
   def idle() : Receive = {
     case msg@PutShoots(apMac,shoots) =>
       log.debug(s"i got a msg:$msg")
+      sendSocket(NewMac(groupId,apMac))
       shoots.groupBy(_.clientMac).foreach { case (clientMac, shootsList) =>
         var shootsCache = List[Shoot]()
         if (durationCache.get(clientMac).isDefined) {
@@ -384,6 +394,10 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
         realTimeDurationCache.filter(_._2.exists(d => d._2 - d._1 > visitDurationLent)).keySet.size
       }
       send ! CountDetailResult(flow,max,total,now)
+
+    case SubscribeData(peer, name) =>
+      log.info(s"ws $name register data...")
+      wsBus.subscribe(peer, name)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

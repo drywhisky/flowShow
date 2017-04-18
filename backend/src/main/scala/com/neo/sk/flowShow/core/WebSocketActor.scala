@@ -7,11 +7,14 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
-import com.neo.sk.flowShow.core.WebSocketBus.{NewMac, LeaveMac}
-import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg, ComeIn, GetOut}
+import com.neo.sk.flowShow.core.WebSocketBus.{LeaveMac, NewMac}
+import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import com.neo.sk.utils.SecureUtil
 import akka.actor.PoisonPill
+
 import scala.collection.mutable
+import com.neo.sk.flowShow.Boot.webSocketManager
+import com.neo.sk.flowShow.core.WebSocketManager.{DeleterWsClient, RegisterWsClient}
 
 /**
   * Created by dry on 2017/4/5.
@@ -24,10 +27,6 @@ trait WebSocketActor {
 object WebSocketActor {
 
   private[this] val log = LoggerFactory.getLogger(getClass)
-
-  private val dataActorMap: mutable.HashMap[String, ActorRef] = mutable.HashMap()
-
-  private val dataBus = new WebSocketBus()
 
   def create(system: ActorSystem)(implicit executor: ExecutionContext): WebSocketActor = {
 
@@ -53,24 +52,23 @@ object WebSocketActor {
       override def receive: Receive = {
 
         case RegisterWebsocket(out) =>
-          log.debug("产生一个websocket链接" + out)
+          log.debug("产生一个webSocket链接" + out)
           subscriber = out
-//          dataBus.subscribe(out, actorId)
+          webSocketManager ! RegisterWsClient(context.self)
 
         case DeleteWebsocket(out) =>
-          log.debug("断开一个websocket 链接" + out)
-          dataActorMap.remove(actorId)
-//          dataBus.unsubscribe(out)
+          log.debug("断开一个webSocket 链接" + out)
+          webSocketManager ! DeleterWsClient(context.self)
           self ! PoisonPill
 
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
 
-        case NewMac(groupId:String,mac:String) =>
+        case NewMac(groupId: String, mac: String) =>
           log.info(s"$mac come in: $groupId")
           subscriber ! ComeIn(groupId)
 
-        case LeaveMac(groupId:String,mac:Iterable[String]) =>
+        case LeaveMac(groupId: String, mac: Iterable[String]) =>
           log.info(s"$mac get out: $groupId")
           subscriber ! GetOut(mac.head)
 
@@ -82,8 +80,6 @@ object WebSocketActor {
       }
 
     }))
-
-    dataActorMap.put(actorId, dataWsActor)
 
     new WebSocketActor {
       override def buildCode(): Flow[String, WebSocketMsg, Any] = {

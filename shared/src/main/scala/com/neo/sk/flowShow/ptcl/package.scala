@@ -70,11 +70,4 @@ package object ptcl {
   case class RatioInfoRsp(data: Option[List[RatioInfo]], msg: String, errCode: Int) extends RspResult
 
   case class RealTimeInfoRsp(data: Option[List[RealTimeInfo]], msg: String, errCode: Int) extends RspResult
-
-  sealed trait ActorProtocol
-
-  case class NewMac(groupId:String,mac:String) extends ActorProtocol
-
-  case class LeaveMac(groupId:String,mac:Iterable[String]) extends ActorProtocol
-
 }
