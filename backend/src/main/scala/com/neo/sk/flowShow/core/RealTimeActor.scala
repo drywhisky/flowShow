@@ -41,8 +41,6 @@ object RealTimeActor {
   case class GetCountDetail(groupId:String)
   case class CountDetailResult(flow:List[(Long,Int)],max:Int,total:Int,now:Int)
 
-  case class SubscribeData(peer: ActorRef, name:String)
-
   case object FinishWork
 }
 
@@ -54,8 +52,6 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
   private[this] val selfRef = context.self
 
   private[this] val groupId = context.parent.path.name
-
-  private[this] val wsBus = new WebSocketBus()
 
   private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
   private var realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
@@ -356,10 +352,6 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
         realTimeDurationCache.filter(_._2.exists(d => d._2 - d._1 > visitDurationLent)).keySet.size
       }
       send ! CountDetailResult(flow,max,total,now)
-
-    case SubscribeData(peer, name) =>
-      log.info(s"ws $name register data...")
-      wsBus.subscribe(peer, name)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")
