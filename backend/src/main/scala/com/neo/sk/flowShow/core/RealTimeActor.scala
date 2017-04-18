@@ -2,7 +2,7 @@ package com.neo.sk.flowShow.core
 
 import java.io.File
 
-import akka.actor.{Actor, ActorRef, Props, ReceiveTimeout, Stash}
+import akka.actor.{Actor, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
