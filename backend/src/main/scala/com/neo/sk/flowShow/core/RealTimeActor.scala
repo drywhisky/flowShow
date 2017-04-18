@@ -7,13 +7,16 @@ import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
 import com.neo.sk.flowShow.common.AppSettings
-import com.neo.sk.flowShow.ptcl._
+
+import scala.collection.mutable
 import com.neo.sk.flowShow.models.dao.CountDao
-import com.neo.sk.flowShow.core.WebSocketBus.{PushData, NewMac, LeaveMac}
+import com.neo.sk.flowShow.core.WebSocketBus.{LeaveMac, NewMac, PushData}
+
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.utils.{PutShoots, Shoot}
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -40,6 +43,7 @@ object RealTimeActor {
 
   case class SubscribeData(peer: ActorRef, name:String)
 
+  case object FinishWork
 }
 
 class RealTimeActor(symbol:String) extends Actor with Stash{
@@ -54,7 +58,7 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
   private[this] val wsBus = new WebSocketBus()
 
   private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
-  private val realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
+  private var realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
   private val realTimeMacCache = collection.mutable.HashMap[String,Long]() //mac time
 
   private val visitDurationLent = 2 * 60 *1000
@@ -67,10 +71,11 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String,(Long,Long)]()
 
   private val reg = "[0-9]*".r
-  private val needSend2Socket = if( reg.pattern.matcher(groupId).matches()) true else{
-    realTimeMacCache.clear()
-    false
-  }
+  private val needSend2Socket = true
+//    if(reg.pattern.matcher(groupId).matches()) true else{
+//    realTimeMacCache.clear()
+//    false
+//  }
 
   private[this] val targetDir = new File(AppSettings.tempPath + groupId + "/")
   if(!targetDir.exists){
@@ -99,21 +104,11 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     time - now
   }
 
-  private val countTask = context.system.scheduler.schedule(
-    countDelay.millis,
-    5.minutes,
-    self,
-    CountDetailFlow)
-  private val saveTempFileTask = context.system.scheduler.schedule(
-    saveDelay.millis,
-    1.minutes,
-    self,
-    SaveTmpFile)
-  private val cleanTask = context.system.scheduler.schedule(
-    cleanDelay.millis,
-    24.hours,
-    self,
-    Clean)
+  private val countTask = context.system.scheduler.schedule(countDelay.millis, 5.minutes, self, CountDetailFlow)
+
+  private val saveTempFileTask = context.system.scheduler.schedule(saveDelay.millis, 1.minutes, self, SaveTmpFile)
+
+  private val cleanTask = context.system.scheduler.schedule(cleanDelay.millis, 24.hours, self, Clean)
 
   override def postStop(): Unit = {
     log.info(s"$logPrefix stops.")
@@ -174,9 +169,67 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     }
   }
 
+  def updateDurationCache(shoots: List[Shoot],
+                          cache: collection.mutable.HashMap[String, List[(Long, Long)]],
+                          intervalMillis: Int): mutable.HashMap[String, List[(Long, Long)]] = {
+    shoots.groupBy(_.clientMac).foreach { case (clientMac, shootList) =>
+      var realTimeShootsCache = List[Shoot]()
+      val clientOpt = cache.get(clientMac)
+      val oldDuration = clientOpt.getOrElse(Nil)
+      val newDuration = shootList.sortBy(_.t).foldLeft(oldDuration) { case (oldShoots, shoot) =>
+        if(oldShoots.isEmpty) {
+          realTimeShootsCache = shootList
+          (shoot.t, shoot.t) :: oldShoots
+        } else {
+          val (startTime, endTime) = oldShoots.head
+          if (shoot.t <= endTime) {
+            oldShoots //time illegal, dropped
+          } else if (shoot.t - endTime < intervalMillis) {
+            //it is ok to combine
+            realTimeShootsCache = realTimeShootsCache.::(shoot)
+            (startTime, shoot.t) :: oldShoots.tail
+          } else {
+            (shoot.t, shoot.t) :: oldShoots //directly add
+          }
+        }
+      }
+      cache.put(clientMac, newDuration)
+
+      if (cache.nonEmpty) {
+        val oldUnsureDuration = realTimeUnsureDurCache.getOrElse(clientMac,(0L,0L))
+        val newUnsureDuration = realTimeShootsCache.sortBy(_.t).foldLeft(oldUnsureDuration) { case (old, shoot) =>
+          if (old._1 == 0) {
+            (shoot.t, shoot.t)
+          } else {
+            if (shoot.t - old._2 <= intervalMillis && shoot.t > old._2) {
+              (old._1, shoot.t)
+            } else if (shoot.t - old._2 > intervalMillis) {
+              (shoot.t, shoot.t)
+            } else {
+              old
+            }
+          }
+        }
+
+        val oldDuration = cache.getOrElse(clientMac, List())
+        if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent){
+          cache.put(clientMac, oldDuration.::(newUnsureDuration))
+          if(needSend2Socket){
+            val t = newUnsureDuration._2
+            realTimeMacCache.put(clientMac, t)
+            sendSocket(NewMac(groupId,clientMac))
+          }
+          realTimeUnsureDurCache.remove(clientMac)
+        }else{
+          realTimeUnsureDurCache.put(clientMac,newUnsureDuration)
+        }
+      }
+    }
+    cache
+  }
+
   override def preStart(): Unit = {
     log.info(s"$logPrefix starting...")
-    durationCache.++=(FileUtil.readDuration(s"$groupId/duration.txt"))
     realTimeDurationCache ++= FileUtil.readDuration(s"$groupId/realduration.txt")
 
     val start = DateTime.now.withTimeAtStartOfDay().getMillis
@@ -228,110 +281,18 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
   def idle() : Receive = {
     case msg@PutShoots(apMac,shoots) =>
-      log.debug(s"i got a msg:$msg")
-      sendSocket(NewMac(groupId,apMac))
-      shoots.groupBy(_.clientMac).foreach { case (clientMac, shootsList) =>
-        var shootsCache = List[Shoot]()
-        if (durationCache.get(clientMac).isDefined) {
-          val oldDuration = durationCache(clientMac)
-          if (oldDuration.isEmpty) {
-            durationCache.remove(clientMac)
-            shootsCache = shootsList
-          } else {
-            val newDuration = shootsList.sortBy(_.t).foldLeft(oldDuration) { case (oldList, shoot) =>
-              val old = oldList.head
-              if (shoot.t - old._2 < oneDurationLength && shoot.t > old._2) {
-                (old._1, shoot.t) :: oldList.tail
-              } else if (shoot.t - old._2 > oneDurationLength) {
-                shootsCache = shootsCache.::(shoot)
-                oldList
-              } else {
-                oldList
-              }
-            }
-            durationCache.put(clientMac, newDuration)
-          }
-        } else {
-          shootsCache = shootsList
-        }
-        if (shootsCache.nonEmpty) {
-          val oldUnsureDuration = unsureDurCache.getOrElse(clientMac, List())
-          val newUnsureDuration = shootsCache.sortBy(_.t).foldLeft(oldUnsureDuration) { case (oldList, shoot) =>
-            if (oldList.isEmpty) {
-              (shoot.t, shoot.t) :: oldList
-            } else {
-              val old = oldList.head
-              if (shoot.t - old._2 < oneDurationLength && shoot.t > old._2) {
-                (old._1, shoot.t) :: oldList.tail
-              } else if (shoot.t - old._2 > oneDurationLength) {
-                (shoot.t, shoot.t) :: oldList
-              } else {
-                oldList
-              }
-            }
-          }
-          val oldDuration = durationCache.getOrElse(clientMac, List())
-          val newDuration = oldDuration ::: newUnsureDuration.filter(d => d._2 - d._1 > visitDurationLent).map { d =>
-            //            log.error(s"${d._2} $clientMac has stay over 2 minutes")
-            (d._2, d._2)
-          }
-          if (newDuration.nonEmpty) durationCache.put(clientMac, newDuration)
-          unsureDurCache.put(clientMac, newUnsureDuration.filterNot(d => d._2 - d._1 > visitDurationLent))
-
-        }
-
-        var realTimeShootsCache = List[Shoot]()
-        if (realTimeDurationCache.get(clientMac).isDefined) {
-          val oldDuration = realTimeDurationCache(clientMac)
-          if (oldDuration.isEmpty) {
-            realTimeDurationCache.remove(clientMac)
-            realTimeShootsCache = shootsList
-          } else {
-            val newDuration = shootsList.sortBy(_.t).foldLeft(oldDuration) { case (oldList, shoot) =>
-              val old = oldList.head
-              if (shoot.t - old._2 <= realTimeDurationLength && shoot.t > old._2) {
-                (old._1, shoot.t) :: oldList.tail
-              } else if (shoot.t - old._2 > realTimeDurationLength) {
-                realTimeShootsCache = shootsCache.::(shoot)
-                oldList
-              } else {
-                oldList
-              }
-            }
-            realTimeDurationCache.put(clientMac, newDuration)
-          }
-        } else {
-          realTimeShootsCache = shootsList
-        }
-        if (realTimeShootsCache.nonEmpty) {
-          val oldUnsureDuration = realTimeUnsureDurCache.getOrElse(clientMac,(0L,0L))
-          val newUnsureDuration = realTimeShootsCache.sortBy(_.t).foldLeft(oldUnsureDuration) { case (old, shoot) =>
-            if (old._1 == 0) {
-              (shoot.t, shoot.t)
-            } else {
-              if (shoot.t - old._2 <= realTimeDurationLength && shoot.t > old._2) {
-                (old._1, shoot.t)
-              } else if (shoot.t - old._2 > realTimeDurationLength) {
-                (shoot.t, shoot.t)
-              } else {
-                old
-              }
-            }
-          }
-          val oldDuration = realTimeDurationCache.getOrElse(clientMac, List())
-          if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent){
-            realTimeDurationCache.put(clientMac, oldDuration.::(newUnsureDuration))
-            if(needSend2Socket){
-              val t = newUnsureDuration._2
-              realTimeMacCache.put(clientMac,t)
-              sendSocket(NewMac(groupId,clientMac))
-            }
-            realTimeUnsureDurCache.remove(clientMac)
-          }else{
-            realTimeUnsureDurCache.put(clientMac,newUnsureDuration)
-          }
-        }
+      Future{
+        log.debug(s"$logPrefix shoots:${shoots.size}")
+        realTimeDurationCache = updateDurationCache(shoots, realTimeDurationCache, realTimeDurationLength)
+        //        log.debug(s"$logPrefix realtimeDurationCache:$realtimeDurationCache")
+      }.onComplete{
+        case Success(_)=>
+          selfRef ! FinishWork
+        case Failure(e) =>
+          log.error(s"$logPrefix working updateDurationCache error:${e.getMessage}")
+          selfRef ! FinishWork
       }
+      context.become(busy())
 
     case msg@CountDetailFlow =>
       log.debug(s"i got a msg:$msg")
@@ -358,7 +319,6 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
     case msg@SaveTmpFile =>
       log.debug(s"i got a msg:$msg")
-      FileUtil.saveDuration(s"$groupId/duration.txt",groupId,durationCache.toMap)
       FileUtil.saveDuration(s"$groupId/realduration.txt",groupId,realTimeDurationCache.toMap)
 
     case msg@Clean =>
@@ -378,11 +338,13 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
       }else{
         log.debug(s"$logPrefix file $date has already been written before")
       }
-      durationCache.clear()
-      unsureDurCache.clear()
-      countCache.clear()
-      realTimeDurationCache.clear()
-      realTimeUnsureDurCache.clear()
+      List(
+        durationCache,
+        unsureDurCache,
+        countCache,
+        realTimeDurationCache,
+        realTimeUnsureDurCache
+      ).foreach(_.clear())
       new File(AppSettings.tempPath + s"$groupId/realduration.txt").getAbsoluteFile.delete()
 
     case msg@GetCountDetail(groupId) =>
@@ -406,6 +368,15 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
     case msg =>
       log.info(s"i got a msg:$msg")
+      stash()
+  }
+
+  def busy(): Receive ={
+    case FinishWork =>
+      unstashAll()
+      context.become(idle())
+
+    case msg =>
       stash()
   }
 

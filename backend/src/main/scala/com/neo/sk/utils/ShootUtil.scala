@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 
 case class PutShoots(apMac:String,shoots:List[Shoot])
 
-case class Shoot(id:Long,apMac:String,clientMac:String,t:Long,rssi:Array[Int],src:String){
+case class Shoot(id:Long, apMac:String, clientMac:String, t:Long, rssi:Array[Int], src:String){
   private val s1 = "#"
   private val s2 = ","
 
