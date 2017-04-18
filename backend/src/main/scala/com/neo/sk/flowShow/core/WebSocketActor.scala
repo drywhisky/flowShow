@@ -7,12 +7,11 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
-import com.neo.sk.flowShow.core.WebSocketBus.{LeaveMac, NewMac}
+import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac}
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import com.neo.sk.utils.SecureUtil
 import akka.actor.PoisonPill
 
-import scala.collection.mutable
 import com.neo.sk.flowShow.Boot.webSocketManager
 import com.neo.sk.flowShow.core.WebSocketManager.{DeleterWsClient, RegisterWsClient}
 

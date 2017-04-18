@@ -2,9 +2,6 @@ package com.neo.sk.flowShow.core
 
 import akka.actor.{Actor, ActorRef, Props}
 import org.slf4j.LoggerFactory
-import com.neo.sk.flowShow.core.WebSocketBus.{LeaveMac, NewMac}
-
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -16,6 +13,12 @@ object WebSocketManager {
   case class RegisterWsClient(peer: ActorRef)
 
   case class DeleterWsClient(peer: ActorRef)
+
+  sealed trait PushData
+
+  case class NewMac(groupId:String,mac:String) extends PushData
+
+  case class LeaveMac(groupId:String,mac:Iterable[String]) extends PushData
 
 }
 

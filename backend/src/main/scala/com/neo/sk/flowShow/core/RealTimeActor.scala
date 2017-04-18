@@ -10,7 +10,7 @@ import com.neo.sk.flowShow.common.AppSettings
 
 import scala.collection.mutable
 import com.neo.sk.flowShow.models.dao.CountDao
-import com.neo.sk.flowShow.core.WebSocketBus.{LeaveMac, NewMac, PushData}
+import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, PushData}
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
