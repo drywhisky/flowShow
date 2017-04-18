@@ -14,6 +14,7 @@ object FileUtil {
   val targetDir = new File(AppSettings.tempPath)
   if(!targetDir.exists){
     targetDir.mkdirs()
+    targetDir.mkdirs()
   }
 
   def saveDuration(fileName: String,gId:String, durationCache: Map[String, List[(Long, Long)]]) = {

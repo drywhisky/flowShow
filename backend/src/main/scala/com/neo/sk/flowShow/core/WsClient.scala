@@ -8,7 +8,7 @@ import akka.util.ByteStringBuilder
 import org.slf4j.LoggerFactory
 import akka.stream.{Materializer, OverflowStrategy}
 import akka.stream.scaladsl.{Keep, Sink, Source}
-import com.neo.sk.utils.{ShootUtil, Shoot}
+import com.neo.sk.utils.{ShootUtil, Shoot, PutShoots}
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import akka.http.scaladsl.model.ws.{Message, TextMessage, WebSocketRequest, BinaryMessage}
@@ -38,9 +38,6 @@ object WsClient {
   case object Connect
 
   case class SubscribeData(peer:ActorRef, name:String)
-
-  case class PutShoots(apMac:String,shoots:List[Shoot])
-
 }
 
 trait WsClient extends Actor{

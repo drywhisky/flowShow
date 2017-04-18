@@ -86,7 +86,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
   def getActor(id: String) : ActorRef = {
     context.child(id).getOrElse {
       val child = context.actorOf(GroupActor.props(id), id)
-      log.info(s"$logPrefix $id is starting")
+//      log.info(s"$logPrefix $id is starting")
       context.watch(child)
       child
     }

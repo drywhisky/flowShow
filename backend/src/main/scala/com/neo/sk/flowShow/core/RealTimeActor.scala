@@ -96,18 +96,18 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
   }
 
   private val countTask = context.system.scheduler.schedule(
-    countDelay millis,
-    5 minutes,
+    countDelay.millis,
+    5.minutes,
     self,
     CountDetailFlow)
   private val saveTempFileTask = context.system.scheduler.schedule(
-    saveDelay millis,
-    1 minutes,
+    saveDelay.millis,
+    1.minutes,
     self,
     SaveTmpFile)
   private val cleanTask = context.system.scheduler.schedule(
-    cleanDelay millis,
-    24 hours,
+    cleanDelay.millis,
+    24.hours,
     self,
     Clean)
 
@@ -155,11 +155,11 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
 
   private def sendSocket(msg: ActorProtocol) = {
     try {
-      val socket = context.system.actorSelection("/user/WebSocket")
+      val socket = context.system.actorSelection("/user/WebSocketActor")
       socket ! msg
     }catch{
       case e:Exception =>
-        log.error(s"send $msg to websocket error",e)
+        log.error(s"send $msg to WebSocketActor error",e)
     }
   }
 
@@ -242,7 +242,7 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
             durationCache.put(clientMac, newDuration)
           }
         } else {
-          shootsCache = shootsList.toList
+          shootsCache = shootsList
         }
         if (shootsCache.nonEmpty) {
           val oldUnsureDuration = unsureDurCache.getOrElse(clientMac, List())

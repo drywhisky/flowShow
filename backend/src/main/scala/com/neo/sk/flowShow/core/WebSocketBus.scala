@@ -3,32 +3,37 @@ package com.neo.sk.flowShow.core
 import akka.actor.ActorRef
 import akka.event.{EventBus, SubchannelClassification}
 import akka.util.Subclassification
-import com.neo.sk.utils.PutShoots
 
 /**
-  * Created by dry on 2017/4/5.
+  * Created by dry on 2017/4/18.
   */
-object DataBus {
+object WebSocketBus {
+
   val ALL_CLASSIFY = "ALL"
 
-  def getClassify(boxMac: String) = s"$ALL_CLASSIFY$boxMac"
+  sealed trait PushData
+
+  case class NewMac(groupId:String,mac:String) extends PushData
+
+  case class LeaveMac(groupId:String,mac:Iterable[String]) extends PushData
+
 }
 
-class DataBus extends EventBus with SubchannelClassification {
-  import DataBus._
+class WebSocketBus extends EventBus with SubchannelClassification {
+  import WebSocketBus._
 
-  override type Event = (String, PutShoots)
+  override type Event = (String, PushData)
   override type Classifier = String
   override type Subscriber = ActorRef
 
-  //  type(1 is come , 0 is leave)
   override protected def publish(event: Event, subscriber: Subscriber): Unit = subscriber ! event._2
 
   override protected def classify(event: Event): Classifier = event._1
 
-  override protected implicit def subclassification : Subclassification[Classifier] = Subclassification
+  override protected implicit def subclassification: Subclassification[Classifier] = Subclassification
 
   def subscribeAll(subscriber: Subscriber) = this.subscribe(subscriber, ALL_CLASSIFY)
+
 
   val Subclassification = new Subclassification[String] {
     override def isEqual(x: String, y: String): Boolean = y == x
