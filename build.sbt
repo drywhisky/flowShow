@@ -81,8 +81,9 @@ lazy val frontend = (project in file("frontend"))
       "org.scala-js" %%% "scalajs-dom" % scalaJsDomV,
       "me.chrons" %%% "diode" % diodeV,
       //"com.lihaoyi" %%% "upickle" % upickleV,
-      "com.lihaoyi" %%% "scalatags" % scalatagsV
+      "com.lihaoyi" %%% "scalatags" % scalatagsV,
       //"com.lihaoyi" %%% "utest" % "0.3.0" % "test"
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
     )
   )
   .dependsOn(sharedJs)
