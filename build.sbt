@@ -86,6 +86,7 @@ lazy val frontend = (project in file("frontend"))
       "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
     )
   )
+  .settings(jsDependencies += RuntimeDOM)
   .dependsOn(sharedJs)
 
 
