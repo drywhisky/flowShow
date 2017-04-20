@@ -53,7 +53,7 @@ object FlowPanel extends Panel{
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
           case msg@ComeIn(_) =>
@@ -110,7 +110,7 @@ object FlowPanel extends Panel{
   val test = new HighchartsConfig {
 
     // Chart config
-    override val chart: Cfg[Chart] = Chart(`type` = "spline", marginRight = 10)
+    override val chart: Cfg[Chart] = Chart(`type` = "spline")
 
     // Chart title
     override val title: Cfg[Title] = Title(text = "动态模拟实时数据")
@@ -124,16 +124,17 @@ object FlowPanel extends Panel{
     // Series
     override val series: SeriesCfg = js.Array[AnySeries](
       SeriesSpline(name = "随机",
-        data = getTime().toJSArray
+        data = getRadom().toJSArray
       )
     )
   }
 
-  def getTime() = {
-    val time = new Date().getTime()
-    val a = (-19 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
+  def getRadom() = {
+    val time = new Date(System.currentTimeMillis()).getTime()
+    val a = (-3 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
     a
   }
+
   private def renderChart(chartConfig: CleanJsObject[js.Object], container:Div) = {
     dom.console.log(chartConfig)
     val newContainer = div().render

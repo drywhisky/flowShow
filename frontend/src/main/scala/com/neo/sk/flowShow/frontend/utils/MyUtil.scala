@@ -114,4 +114,18 @@ object MyUtil {
     }
   }
 
+  def timestampToTime(time: Long) = {
+
+    (if (new Date(time).getHours() < 10)
+      "0" + new Date(time).getHours()
+    else new Date(time).getHours())+ ":" +
+      (if (new Date(time).getMinutes() < 10)
+        "0" + new Date(time).getMinutes()
+      else new Date(time).getMinutes()) + ":" +
+      (if (new Date(time).getSeconds() < 10)
+        "0" + new Date(time).getSeconds()
+      else new Date(time).getSeconds())
+
+  }
+
 }
