@@ -1,4 +1,4 @@
-[info] Updating {file:/Users/dry/IdeaProjects/flowShow/project/}flowshow-build...
+[info] Updating {file:/D:/project/flowShow/project/}flowshow-build...
 [debug] :: resolving dependencies :: default#flowshow-build;0.1-SNAPSHOT
 [debug] 	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool]
 [debug] 	validate = true
@@ -13295,19 +13295,19 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#template-resolver;0.1!template-resolver.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#jline;2.10.6!jline.jar
 [debug] 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-[debug] :: resolution report :: resolve 13381ms :: artifacts dl 274ms
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT compile produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-compile.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT runtime produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-runtime.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT test produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-test.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT provided produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-provided.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT optional produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-optional.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT compile-internal produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-compile-internal.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT runtime-internal produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-runtime-internal.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT test-internal produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-test-internal.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT plugin produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-plugin.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT sources produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-sources.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT docs produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-docs.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT pom produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-pom.xml
-[debug] 	report for default#flowshow-build;0.1-SNAPSHOT scala-tool produced in /Users/dry/IdeaProjects/flowShow/project/target/resolution-cache/reports/default-flowshow-build-scala-tool.xml
-[debug] 	resolve done (13381ms resolve - 274ms download)
+[debug] :: resolution report :: resolve 5141ms :: artifacts dl 141ms
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT compile produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-compile.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT runtime produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-runtime.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT test produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-test.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT provided produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-provided.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT optional produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-optional.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT compile-internal produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-compile-internal.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT runtime-internal produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-runtime-internal.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT test-internal produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-test-internal.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT plugin produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-plugin.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT sources produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-sources.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT docs produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-docs.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT pom produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-pom.xml
+[debug] 	report for default#flowshow-build;0.1-SNAPSHOT scala-tool produced in D:\project\flowShow\project\target\resolution-cache\reports\default-flowshow-build-scala-tool.xml
+[debug] 	resolve done (5141ms resolve - 141ms download)
 [info] Done updating.

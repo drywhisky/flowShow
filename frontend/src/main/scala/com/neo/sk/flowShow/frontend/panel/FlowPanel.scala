@@ -1,32 +1,40 @@
 package com.neo.sk.flowShow.frontend.panel
 
 import com.neo.sk.flowShow.frontend.utils.Panel
-import com.neo.sk.flowShow.ptcl.{Heartbeat, WebSocketMsg, ComeIn, GetOut}
+import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
 import org.scalajs.dom.{Event, window}
 import io.circe.generic.auto._
+
 import scalatags.JsDom.short._
 import org.scalajs.dom.html.{Canvas, Div}
 import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, WebSocket}
+
 import scala.scalajs.js
 import scala.scalajs.js.Date
 import com.neo.sk.flowShow.frontend.utils.MyUtil
+
+import js.JSConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
 import com.neo.sk.flowShow.frontend.Routes
+
 import scala.collection.mutable
-import com.neo.sk.flowShow.frontend.facede.chartjs2._
+import com.neo.sk.flowShow.frontend.utils.highcharts.CleanJsObject
+import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsUtils._
+import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsAliases._
+import com.neo.sk.flowShow.frontend.utils.highcharts.config._
+import org.scalajs.jquery.{JQueryEventObject, jQuery}
 
 /**
   * Created by dry on 2017/4/10.
   */
 object FlowPanel extends Panel{
 
-  private val realTimeChart = canvas(*.width := "500").render
+  private val realTimeChart = div().render
   private val realTimeMap = mutable.HashMap[Int, RealTimeInfo]()
-  private var realTimeInstance : Option[Chart] = None
 
   val ws = new WebSocket(getWebsocketUrl(dom.document))
 
@@ -44,6 +52,9 @@ object FlowPanel extends Panel{
         messages match {
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
+            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
+            }
 
           case msg@ComeIn(_) =>
             println(s"comeIn.i got a msg:$msg")
@@ -78,46 +89,64 @@ object FlowPanel extends Panel{
     decode[T](s)
   }
 
-  def drawRealTimeChart(area: Canvas, dataOpt: Option[RealTimeInfo]) = {
-    dataOpt match {
-      case Some(r) =>
-        import js.JSConverters._
-        val data = r.flow
-        println("drawChart")
-        val ctx = area.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
-        val (xs, ys) = data.sortBy(_.timestamp).map(d => (MyUtil.DateFormatter(new Date(d.timestamp), "hh:mm"), d.count.toDouble)).unzip
-        val dataSet = new LineDataSet(data = ys.toJSArray, "label")
-        val chartData = new ChartData(xs.toJSArray, js.Array(dataSet))
-        realTimeInstance.foreach(_.destroy())
-        realTimeInstance = Some( new Chart(ctx, new ChartConfig("line", chartData, null)))
 
-      case None =>
-        //do noting
-    }
+//  private def initData() = {
+//    Http.getAndParse[RealTimeInfoRsp](Routes.realTimeUrl).map { rsp =>
+//      if (rsp.errCode == 0) {
+//        rsp.data match {
+//          case Some(r) =>
+//            realTimeMap ++= r.map(o => (o.groupId.toInt, o))
+//            drawRealTimeChart(realTimeChart, realTimeMap.get(11))
+//
+//          case None =>
+//            JsFunc.alert(s"rsp.data is None")
+//        }
+//      }else{
+//        JsFunc.alert(s"${rsp.msg}")
+//      }
+//    }
+//  }
+
+  val test = new HighchartsConfig {
+
+    // Chart config
+    override val chart: Cfg[Chart] = Chart(`type` = "spline", marginRight = 10)
+
+    // Chart title
+    override val title: Cfg[Title] = Title(text = "动态模拟实时数据")
+
+    // X Axis settings
+    override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
+
+    // Y Axis settings
+    override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 1.0, color = "#808080"))))
+
+    // Series
+    override val series: SeriesCfg = js.Array[AnySeries](
+      SeriesSpline(name = "随机",
+        data = getTime().toJSArray
+      )
+    )
   }
 
-  private def initData() = {
-    Http.getAndParse[RealTimeInfoRsp](Routes.realTimeUrl).map { rsp =>
-      if (rsp.errCode == 0) {
-        rsp.data match {
-          case Some(r) =>
-            realTimeMap ++= r.map(o => (o.groupId.toInt, o))
-            drawRealTimeChart(realTimeChart, realTimeMap.get(11))
-
-          case None =>
-            JsFunc.alert(s"rsp.data is None")
-        }
-      }else{
-        JsFunc.alert(s"${rsp.msg}")
-      }
-    }
+  def getTime() = {
+    val time = new Date().getTime()
+    val a = (-19 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
+    a
   }
-
+  private def renderChart(chartConfig: CleanJsObject[js.Object], container:Div) = {
+    dom.console.log(chartConfig)
+    val newContainer = div().render
+    jQuery(newContainer).highcharts(chartConfig)
+    container.innerHTML = ""
+    container.appendChild(newContainer)
+  }
 
   override def locationHash = ""
 
   override protected def build(): Div = {
-    initData()
+//    initData()
+    renderChart(test, realTimeChart)
     div(
       div(*.cls := "row")(
         div(*.cls := "col-md-12", *.textAlign := "center")(
