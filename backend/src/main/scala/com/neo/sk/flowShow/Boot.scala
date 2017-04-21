@@ -11,7 +11,7 @@ import akka.util.Timeout
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
 import com.neo.sk.flowShow.service.HttpService
-import com.neo.sk.flowShow.core.{WebSocketManager, GroupManager, ReceiveDataActor, WsClient}
+import com.neo.sk.flowShow.core.{WebSocketManager, GroupManager, WsClient}
 
 /**
   * User: Taoz
@@ -36,8 +36,6 @@ object Boot extends HttpService {
 
   val log: LoggingAdapter = Logging(system, getClass)
 
-//  override val receiveDataActor = system.actorOf(ReceiveDataActor.props(),"receiveDataActor")
-//
 //  override val assistedDataActor = system.actorOf(AssistedDataActor.props(), "assistedDataActor")
 
   val wsClient = system.actorOf(WsClient.props(system, materializer, executor), "wsClient")
