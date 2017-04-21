@@ -53,15 +53,21 @@ object FlowPanel extends Panel{
         messages match {
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
-
-          case msg@ComeIn(_) =>
-            println(s"comeIn.i got a msg:$msg")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
-          case msg@GetOut(_) =>
+          case msg@ComeIn(num) =>
+            println(s"comeIn.i got a msg:$msg")
+            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+            }
+
+          case msg@GetOut(num) =>
             println(s"i got a msg:$msg")
+            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+            }
 
           case x =>
             println(s"i got a msg:$x")
@@ -132,7 +138,7 @@ object FlowPanel extends Panel{
 
   def getRadom() = {
     val time = new Date().getTime()
-    val a = (-3 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = 0)}.toList
+    val a = (-19 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
     a
   }
 

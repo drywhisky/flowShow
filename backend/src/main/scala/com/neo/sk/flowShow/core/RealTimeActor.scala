@@ -51,7 +51,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private[this] val logPrefix = self.path
   private[this] val selfRef = context.self
 
-  private[this] val groupId = fatherName
+  private[this] val groupId = context.parent.path.name
 
   //(clientMac) -> duration(startTime, endTime)
   private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]()
@@ -72,11 +72,10 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String,(Long,Long)]()
 
   private val reg = "[0-9]*".r
-  private val needSend2Socket = true
-//    if(reg.pattern.matcher(groupId).matches()) true else{
-//    realTimeMacCache.clear()
-//    false
-//  }
+  private val needSend2Socket = if(reg.pattern.matcher(groupId).matches()) true else{
+    realTimeMacCache.clear()
+    false
+  }
 
   private[this] val targetDir = new File(AppSettings.tempPath + groupId + "/")
   if(!targetDir.exists){
