@@ -22,7 +22,7 @@ object GroupManager {
 
   case object FindMyInfo
 
-  case class GetMyInfo(father: Option[ActorRef], durationLength: Option[Int], rssiSet: Option[Int])
+  case class GetMyInfo(father: Option[ActorRef], fatherName:String, durationLength: Option[Int], rssiSet: Option[Int])
 }
 
 class GroupManager(wsClient: ActorRef) extends Actor with Stash {
@@ -33,6 +33,8 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
   private[this] val logPrefix = context.self.path
 
   private[this] val selfRef = context.self
+
+  ///盒子靠groupId分组做缓存(groupId, Seq[boxMac])
   private[this] var GroupBoxMap = new mutable.HashMap[String,Seq[String]]
 
   implicit val timeout = Timeout(5.seconds)
@@ -57,7 +59,6 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
         GroupBoxMap += (groupId.toString -> iter.map(_.boxMac))
         (groupId, iter.map(_.boxMac))
       }
-      //all Map[GroupId, Seq[BoxMac]]
       val maps = groups.groupBy(_.groupId).map { case (groupId, iter) =>
         (groupId.toString, groupBoxMap.getOrElse(groupId, Nil))
       }
@@ -86,7 +87,6 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
   def getActor(id: String) : ActorRef = {
     context.child(id).getOrElse {
       val child = context.actorOf(GroupActor.props(id), id)
-//      log.info(s"$logPrefix $id is starting")
       context.watch(child)
       child
     }
@@ -99,6 +99,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
   override def receive = init()
 
   def init() : Receive = {
+    //maps: [String, Seq[String]] baseInfo:[String:groupId/boxMac, (Option[Int]:durationLength, Option[Int]:rssiSet)]
     case InitDone(maps, baseInfo) =>
       context.setReceiveTimeout(Duration.Undefined)
       val group = maps.keys
@@ -133,8 +134,9 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       log.debug(s"i got a msg:$msg")
       val peer = sender()
       val father = relations.getOrElse(peer.path.name, None).map(getActor)
+      val fatherName =  relations.getOrElse(peer.path.name, peer.path.name).toString
       val (durationLength, rssiSet) = baseInfo.getOrElse(peer.path.name, (None, None))
-      peer ! GetMyInfo(father, durationLength, rssiSet)
+      peer ! GetMyInfo(father, fatherName, durationLength, rssiSet)
 
     case Terminated(child) =>
       log.error(s"$logPrefix ${child.path.name} is dead.")

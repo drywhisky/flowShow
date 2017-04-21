@@ -17,10 +17,6 @@ object GroupActor {
 
 }
 
-object StatisticSymbol {
-  val realTime = "RealTime"
-}
-
 case object GroupType{
   val box = 0
   val group = 1
@@ -36,7 +32,9 @@ class GroupActor(id:String) extends Actor with Stash{
 
   private[this] val selfRef = context.self
 
-  private val visitDurationLent = 2 * 60 *1000
+  private val defaultVisitDurationLent = AppSettings.visitDurationLent
+  private val defaultRssiSet = AppSettings.rssiValue
+
   private val realTimeDurationLength =  9 * 60 *1000
   private val oneDurationLength = 1 * 60 * 60 *1000
 
@@ -69,7 +67,6 @@ class GroupActor(id:String) extends Actor with Stash{
     val name = s"$symbol"
     context.child(name).getOrElse {
       val child = context.actorOf(RealTimeActor.props(symbol), symbol)
-      log.info(s"$logPrefix $name is starting.")
       context.watch(child)
       child
     }
@@ -78,14 +75,14 @@ class GroupActor(id:String) extends Actor with Stash{
   override def receive = init()
 
   def init() : Receive = {
-    case msg@GetMyInfo(father, durationLength, rssiSet) =>
+    case msg@GetMyInfo(father, fatherName, durationLength, rssiSet) =>
       log.debug(s"i receive a msg:$msg")
       context.setReceiveTimeout(Duration.Undefined)
-      val duration = durationLength.getOrElse(visitDurationLent)
-      val rssi = rssiSet.getOrElse(AppSettings.rssiValue)
-      getRealTimeActor(StatisticSymbol.realTime, duration)
+      val duration = durationLength.getOrElse(defaultVisitDurationLent)
+      val rssi = rssiSet.getOrElse(defaultRssiSet)
+      getRealTimeActor(fatherName, duration)
       unstashAll()
-      context.become(idle(father, duration, rssi))
+      context.become(idle(father, fatherName, duration, rssi))
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init in 1 minute...")
@@ -97,35 +94,31 @@ class GroupActor(id:String) extends Actor with Stash{
 
   }
 
-  def idle(father: Option[ActorRef], durationLength: Int, rssiSet: Int) : Receive = {
+  def idle(father: Option[ActorRef], fatherName:String, durationLength: Int, rssiSet: Int) : Receive = {
     case msg@PutShoots(boxMac, shoots) =>
-//      laseConnectTime = System.currentTimeMillis()
-//      dataVolume += shoots.size
-      //      log.info(s"$unitId receive a shoot")
-      //      log.info(s"$dataVolume is dataVolume")
-//      log.debug(s"i got a msg:$msg")
-      if(uniterType != GroupType.box){
+      if(uniterType == GroupType.group){
         for(e <- shoots){
           if(boxInfo.contains(e.apMac))
             boxInfo(e.apMac) = e.t
           else
-            boxInfo += (e.apMac -> e.t)
+            boxInfo += (e.apMac -> e.t)    //boxInfo (mac, time) time是最新的
         }
       }else
         clientData ++= shoots
 
-      val send = if(sender().path.name == "deadLetters") "zero" else sender().path.name
-      //      log.debug(s"$logPrefix got data from $send.")
-      val target = shoots.filter(s => Math.abs(s.rssi(0)) < rssiSet)
+//      val send = if(sender().path.name == "deadLetters") "zero" else sender().path.name
+//      log.debug(s"$logPrefix got data from $send.")
+
+      val target = shoots.filter(s => Math.abs((s.rssi(0) + s.rssi(1)) / 2) < rssiSet)
 
       val abandonSize = shoots.size - target.size
       if(abandonSize != 0)
-//        log.debug(s"$logPrefix abandon data size ${abandonSize}, total size ${shoots.size}.")
+        log.debug(s"$logPrefix abandon data size $abandonSize, total size ${shoots.size}.")
 
       if(target.nonEmpty) {
         val r1 = PutShoots(boxMac, target)
         father.foreach(_ ! r1) //send data to fathers
-        getRealTimeActor(StatisticSymbol.realTime, durationLength).forward(r1)
+        getRealTimeActor(fatherName, durationLength).forward(r1)
       }
 
     case Terminated(child) =>

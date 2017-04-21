@@ -44,25 +44,30 @@ object RealTimeActor {
   case object FinishWork
 }
 
-class RealTimeActor(symbol:String) extends Actor with Stash{
+class RealTimeActor(fatherName:String) extends Actor with Stash{
   import RealTimeActor._
 
   private[this] val log = LoggerFactory.getLogger(this.getClass)
   private[this] val logPrefix = self.path
   private[this] val selfRef = context.self
 
-  private[this] val groupId = context.parent.path.name
+  private[this] val groupId = fatherName
 
-  private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
-  private var realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]() //(clientMac) -> duration
-  private val realTimeMacCache = collection.mutable.HashMap[String,Long]() //mac time
+  //(clientMac) -> duration(startTime, endTime)
+  private val durationCache = collection.mutable.HashMap[String,List[(Long,Long)]]()
 
-  private val visitDurationLent = 2 * 60 *1000
+  //(clientMac) -> duration(startTime, endTime)
+  private var realTimeDurationCache = collection.mutable.HashMap[String,List[(Long,Long)]]()
+
+  //mac -> time
+  private val realTimeMacCache = collection.mutable.HashMap[String,Long]()
+
+  private val visitDurationLent = AppSettings.visitDurationLent
   private val realTimeDurationLength =  9 * 60 *1000
   private val oneDurationLength = 1 * 60 * 60 *1000
 
-  private val countCache = collection.mutable.HashMap[Long,Int]() //(time) -> count
   private var lastFileDate = ""
+  private val countCache = collection.mutable.HashMap[Long,Int]() //(time) -> count
   private val unsureDurCache = collection.mutable.HashMap[String,List[(Long,Long)]]()
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String,(Long,Long)]()
 
@@ -123,9 +128,10 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     }else{
       log.debug(s"$logPrefix file $date has already been written before")
     }
+
     List(
       countCache,
-      durationCache    //is save count cache needed?
+      durationCache
     ).foreach{_.clear()}
 
     List(
@@ -229,12 +235,9 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
     realTimeDurationCache ++= FileUtil.readDuration(s"$groupId/realduration.txt")
 
     val start = DateTime.now.withTimeAtStartOfDay().getMillis
-    //TODO 需减小，要不后面都为0的话，取平均值会出错
     val end = System.currentTimeMillis()
 
-    val initCache = (start until end by AppSettings.realTimeCountInterval*60000).map(i => (i,0)).toMap
-    countCache ++= initCache
-    CountDao.getCountDetailByInterval(groupId,start,end).andThen{
+    CountDao.getCountDetailByInterval(groupId, start, end).andThen{
       case Success(res) =>
         val countList = res.map(i => (i.timestamp,i.count))
         countCache.++=(countList)
@@ -280,7 +283,6 @@ class RealTimeActor(symbol:String) extends Actor with Stash{
       Future{
         log.debug(s"$logPrefix shoots:${shoots.size}")
         realTimeDurationCache = updateDurationCache(shoots, realTimeDurationCache, realTimeDurationLength)
-        //        log.debug(s"$logPrefix realtimeDurationCache:$realtimeDurationCache")
       }.onComplete{
         case Success(_)=>
           selfRef ! FinishWork
