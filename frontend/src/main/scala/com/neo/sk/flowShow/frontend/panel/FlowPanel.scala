@@ -28,6 +28,7 @@ import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsAliases._
 import com.neo.sk.flowShow.frontend.utils.highcharts.config._
 import org.scalajs.jquery.{JQueryEventObject, jQuery}
 
+
 /**
   * Created by dry on 2017/4/10.
   */
@@ -53,7 +54,7 @@ object FlowPanel extends Panel{
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
           case msg@ComeIn(_) =>
@@ -130,8 +131,8 @@ object FlowPanel extends Panel{
   }
 
   def getRadom() = {
-    val time = new Date(System.currentTimeMillis()).getTime()
-    val a = (-3 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
+    val time = new Date().getTime()
+    val a = (-3 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = 0)}.toList
     a
   }
 

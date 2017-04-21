@@ -162,7 +162,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
 
   private def sendSocket(msg: PushData) = {
     try {
-      log.debug(s"i will send $msg to WebSocketActor")
       val socket = context.system.actorSelection("/user/webSocketManager")
       socket ! msg
     }catch{
@@ -198,7 +197,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       cache.put(clientMac, newDuration)
 
       if (cache.nonEmpty) {
-        val oldUnsureDuration = realTimeUnsureDurCache.getOrElse(clientMac,(0L,0L))
+        val oldUnsureDuration = realTimeUnsureDurCache.getOrElse(clientMac, (0L,0L))
         val newUnsureDuration = realTimeShootsCache.sortBy(_.t).foldLeft(oldUnsureDuration) { case (old, shoot) =>
           if (old._1 == 0) {
             (shoot.t, shoot.t)
@@ -298,15 +297,12 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       val endTime = DateTime.now.minusMillis(1).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
       for(time <- startTime to endTime by AppSettings.realTimeCountInterval*60000){
         //每隔1分钟，在countcache里面更新一条数据
-        countCache.put(time,0)
         val count  = realTimeDurationCache.filter{case (mac, iter) =>
           iter.exists{ case (start, end) =>
             end - start >= visitDurationLent &&
               time >= start && time < end
           }
         }.keys.size
-        //          c => c._2.exists(d => (time >= d._1 && time < d._2) || (d._1 == d._2 && d._2 <= time && time - d._2 < Config.realTimeCountInterval * 60000))).keys.size
-        //durationCache里面，在当前分钟停留，且总停留时间超过3分钟的人
         countCache.put(time,count)
       }
       val timeSet = (startTime to endTime by AppSettings.realTimeCountInterval*60000).toSet
@@ -345,7 +341,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       ).foreach(_.clear())
       new File(AppSettings.tempPath + s"$groupId/realduration.txt").getAbsoluteFile.delete()
 
-    case msg@GetCountDetail(groupId) =>
+    case msg@GetCountDetail(_) =>
       log.debug(s"i got a msg:$msg")
       val send = sender()
       val flow = getDetailFlow.toList.sortBy(_._1)
