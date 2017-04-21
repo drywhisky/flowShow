@@ -66,7 +66,7 @@ class GroupActor(id:String) extends Actor with Stash{
   def getRealTimeActor(symbol:String, historyDurationLength: Int): ActorRef = {
     val name = s"$symbol"
     context.child(name).getOrElse {
-      val child = context.actorOf(RealTimeActor.props(symbol), symbol)
+      val child = context.actorOf(RealTimeActor.props("RealTime"), "RealTime")
       context.watch(child)
       child
     }
