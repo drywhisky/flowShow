@@ -46,7 +46,7 @@ object AppSettings {
   val realTimeMacInterval = config.getInt("app.realTimeMacInterval")
 
   val tempPath = config.getString("app.tempPath")
-  val rssiValue = config.getInt("aap.rssiValue")
+  val rssiValue = config.getInt("app.rssiValue")
   val visitDurationLent = config.getInt("app.visitDurationLent")
 
   val slickConfig = config.getConfig("slick.db")
