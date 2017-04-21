@@ -54,19 +54,19 @@ object FlowPanel extends Panel{
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
           case msg@ComeIn(num) =>
             println(s"comeIn.i got a msg:$msg")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
           case msg@GetOut(num) =>
             println(s"i got a msg:$msg")
             jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
             }
 
           case x =>
@@ -136,8 +136,8 @@ object FlowPanel extends Panel{
     )
   }
 
-  def getRadom() = {
-    val time = new Date().getTime()
+  private def getRadom() = {
+    val time = new Date().getTime() + (8 * 3600 * 1000)
     val a = (-19 to 0).map{ i =>  SeriesSplineData(x = time + i * 1000, y = Math.random())}.toList
     a
   }

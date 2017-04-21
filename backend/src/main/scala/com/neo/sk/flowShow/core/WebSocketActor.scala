@@ -75,7 +75,6 @@ object WebSocketActor {
         case NewMac(groupId: String, mac: String) =>
           log.info(s"$mac come in: $groupId")
           inNum = inNum + 1
-          subscriber ! ComeIn(groupId)
 
         case LeaveMac(groupId: String, mac: Iterable[String]) =>
           log.info(s"$mac get out: $groupId")
