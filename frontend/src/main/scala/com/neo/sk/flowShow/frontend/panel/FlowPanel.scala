@@ -53,12 +53,12 @@ object FlowPanel extends Panel{
         messages match {
           case Heartbeat(id) =>
             println(s"i got a Heartbeat")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
 
           case msg@ComeIn(_) =>
             println(s"comeIn.i got a msg:$msg")
+            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime(), y = Math.random()), redraw = true, shift = true)).asInstanceOf[js.Any]
+            }
 
           case msg@GetOut(_) =>
             println(s"i got a msg:$msg")
