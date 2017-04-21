@@ -80,7 +80,7 @@ class GroupActor(id:String) extends Actor with Stash{
       context.setReceiveTimeout(Duration.Undefined)
       val duration = durationLength.getOrElse(defaultVisitDurationLent)
       val rssi = rssiSet.getOrElse(defaultRssiSet)
-      getRealTimeActor(fatherName, duration)
+      getRealTimeActor("RealTime", duration)
       unstashAll()
       context.become(idle(father, fatherName, duration, rssi))
 
@@ -118,7 +118,7 @@ class GroupActor(id:String) extends Actor with Stash{
       if(target.nonEmpty) {
         val r1 = PutShoots(boxMac, target)
         father.foreach(_ ! r1) //send data to fathers
-        getRealTimeActor(fatherName, durationLength).forward(r1)
+        getRealTimeActor("RealTime", durationLength).forward(r1)
       }
 
     case Terminated(child) =>
