@@ -18,6 +18,13 @@ object Routes {
 
   val getGroups = baseUrl + "/getGroups"
   val modifyGroup = baseUrl + "/modifyGroup"
+  val addGroup = baseUrl + "/addGroup"
+
+  def getBoxs(groupId:Long) = {
+    baseUrl + s"groupId:$groupId"
+  }
+  val modifyBox = baseUrl + "/modifyBox"
+  val addBox = baseUrl + "/addBox"
 
   val brandUrl = baseUrl + "/brandInfo"
   val ratioUrl = baseUrl + "/ratioInfo"

@@ -91,15 +91,23 @@ package object ptcl {
 
   case class ModifyGroup(id:Long, name:String, durationLength: Long)
 
+  case class AddGroup(name:String, durationLength: Long)
+
+  case class AddGroupRsp(id:Option[Long], timestamp:Option[Long], errCode: Int = 0, msg: String = "ok")
+
   case class GroupsRsp(data: List[Group],
                          errCode: Int = 0,
                          msg: String = "ok") extends Response
 
-  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, groupId: Long)
+  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int)
 
   case class BoxsRsp(data: List[Box],
                        errCode: Int = 0,
                        msg: String = "ok") extends Response
+
+  case class ModifyBox(id:Long, name:String, mac:String, rssi: Int)
+
+  case class AddBox(name:String, mac:String, rssi: Int)
 
 
 }
