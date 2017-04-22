@@ -59,19 +59,19 @@ trait CirceSupport {
     * @return unmarshaller for `A`
     */
 
-/*  implicit def circeUnmarshaller[A](
-    implicit decoder: Decoder[A]
-  ): FromEntityUnmarshaller[A] =
-    jsonStringUnmarshaller.map(jawn.decode(_).fold(throw _, identity))
- */
+  /*  implicit def circeUnmarshaller[A](
+      implicit decoder: Decoder[A]
+    ): FromEntityUnmarshaller[A] =
+      jsonStringUnmarshaller.map(jawn.decode(_).fold(throw _, identity))
+   */
 
 
 
   //out either.
   implicit def circeUnmarshaller[A](
-    implicit decoder: Decoder[A]
-  ): FromEntityUnmarshaller[Either[Error, A]] =
-    jsonStringUnmarshaller.map(decode[A])
+                                     implicit decoder: Decoder[A]
+                                   ): FromEntityUnmarshaller[Either[Error, A]] =
+  jsonStringUnmarshaller.map(decode[A])
 
 
 
@@ -84,8 +84,8 @@ trait CirceSupport {
     * @return marshaller for any `A` value
     */
   implicit def circeToEntityMarshaller[A](
-    implicit encoder: Encoder[A],
-    printer: Json => String = Printer.noSpaces.pretty
-  ): ToEntityMarshaller[A] =
+                                           implicit encoder: Encoder[A],
+                                           printer: Json => String = Printer.noSpaces.pretty
+                                         ): ToEntityMarshaller[A] =
     jsonStringMarshaller.compose(printer).compose(encoder.apply)
 }

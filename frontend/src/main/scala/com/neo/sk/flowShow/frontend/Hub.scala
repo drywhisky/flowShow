@@ -1,8 +1,9 @@
 package com.neo.sk.flowShow.frontend
 
-import com.neo.sk.flowShow.frontend.pages.HomePage
+import com.neo.sk.flowShow.frontend.pages.{HomePage, LoginPage, RegisterPage}
 import org.scalajs.dom
 import org.scalajs.dom.html.Heading
+
 import scala.scalajs.js
 
 /**
@@ -58,6 +59,8 @@ object Hub extends js.JSApp {
       //JsFunc.alert(s"here is Hub. full href: ${dom.document.location.href}")
       paths(0) match {
         case "user" => paths(1) match {
+          case "login" => LoginPage.render
+          case "register" => RegisterPage.render
           case "home" => HomePage.render
           case x => todo(s"user match error: ${paths.mkString("/")}")
         }

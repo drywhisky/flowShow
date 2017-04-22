@@ -10,6 +10,15 @@ object Routes {
 
   val baseUrl = "/flowShow/user"
 
+  val login = baseUrl + "/login"
+  val loginSubmit = baseUrl + "/loginSubmit"
+  val registerSubmit = baseUrl + "/registerSubmit"
+  val home = baseUrl + "/home"
+  val register = baseUrl + "/register"
+
+  val getGroups = baseUrl + "/getGroups"
+  val modifyGroup = baseUrl + "/modifyGroup"
+
   val brandUrl = baseUrl + "/brandInfo"
   val ratioUrl = baseUrl + "/ratioInfo"
   val frequencyUrl = baseUrl + "/frequencyInfo"

@@ -1,6 +1,6 @@
 package com.neo.sk.flowShow.frontend.utils
 
-import io.circe.{Decoder, Error}
+import io.circe.Decoder
 import org.scalajs.dom
 import org.scalajs.dom.experimental.{Headers, HttpMethod, RequestCredentials, RequestInit}
 
@@ -49,12 +49,30 @@ object Http {
 
   }
 
+  /*  def postJsonAndParse[T](
+      url: String,
+      bodyStr: String,
+      withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[Either[Error, T]] = {
+      import io.circe.parser._
+      postJson(url, bodyStr, withCookie).map(s => decode[T](s))
+    }*/
+
   def postJsonAndParse[T](
-    url: String,
-    bodyStr: String,
-    withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[Either[Error, T]] = {
+                           url: String,
+                           bodyStr: String,
+                           withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[T] = {
     import io.circe.parser._
-    postJson(url, bodyStr, withCookie).map(s => decode[T](s))
+    postJson(url, bodyStr, withCookie).map { s =>
+      decode[T](s) match {
+        case Right(rsp) =>
+          println(s"postJsonAndParse, result: $rsp")
+          rsp
+        case Left(error) =>
+          JsFunc.alert(s"错误的响应.")
+          println(s"response error: response=$s, error:[$error], ")
+          throw new IllegalArgumentException(s"parse error: $error")
+      }
+    }
   }
 
 
@@ -83,6 +101,13 @@ object Http {
   }
 
 
+  /*  def getAndParse[T](
+      url: String,
+      withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[Either[Error, T]] = {
+      import io.circe.parser._
+      get(url, withCookie).map(s => decode[T](s))
+    }*/
+
   def getAndParse[T](
                       url: String,
                       withCookie: Boolean = true)(implicit decoder: Decoder[T]): Future[T] = {
@@ -100,16 +125,16 @@ object Http {
   }
 
 
-/*  def getParams: Map[String, String] = {
-    val paramStr =
-      Option(dom.document.getElementById("urlSearch"))
-        .map(_.innerHTML).getOrElse(dom.window.location.search)
+  /*  def getParams: Map[String, String] = {
+      val paramStr =
+        Option(dom.document.getElementById("urlSearch"))
+          .map(_.innerHTML).getOrElse(dom.window.location.search)
 
-    val str1 = paramStr.substring(1)
-    val pairs = str1.split("&").filter(s => s.length > 0)
-    val tmpMap = pairs.map(_.split("=", 2)).filter(_.length == 2)
-    tmpMap.map(d => (d(0), d(1))).toMap
-  }*/
+      val str1 = paramStr.substring(1)
+      val pairs = str1.split("&").filter(s => s.length > 0)
+      val tmpMap = pairs.map(_.split("=", 2)).filter(_.length == 2)
+      tmpMap.map(d => (d(0), d(1))).toMap
+    }*/
 
 
 }

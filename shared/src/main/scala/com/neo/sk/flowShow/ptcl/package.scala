@@ -7,6 +7,8 @@ package com.neo.sk.flowShow
   */
 package object ptcl {
 
+  trait Request
+
   trait Response{
     val errCode: Int
     val msg: String
@@ -70,4 +72,34 @@ package object ptcl {
   case class RatioInfoRsp(data: Option[List[RatioInfo]], msg: String, errCode: Int) extends RspResult
 
   case class RealTimeInfoRsp(data: Option[List[RealTimeInfo]], msg: String, errCode: Int) extends RspResult
+
+
+  /**
+    * User
+    */
+
+  case class UserConfirm(account: String, psw: String) extends Request
+
+  case class UserRegisterInfo(account:String, password:String) extends Request
+
+
+  /**
+    * Groups and Boxs
+    */
+
+  case class Group(id: Long, name: String, createTime:Long, durationLength: Long)
+
+  case class ModifyGroup(id:Long, name:String, durationLength: Long)
+
+  case class GroupsRsp(data: List[Group],
+                         errCode: Int = 0,
+                         msg: String = "ok") extends Response
+
+  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, groupId: Long)
+
+  case class BoxsRsp(data: List[Box],
+                       errCode: Int = 0,
+                       msg: String = "ok") extends Response
+
+
 }

@@ -17,17 +17,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 trait BaseService extends ServiceUtils with SessionBase with CirceSupport{
 
-  private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.BaseService")
-  implicit val timeout: Timeout
-
-  val baseRoutes = pathPrefix("user")(
-    staticRoutes ~ getResidentInfo
-//      ~ getRatioInfo ~ getBrandInfo ~ getFrequencyInfo ~ getRealTimeInfo
-  )
-
-  private val staticRoutes = (path("home") & get & pathEndOrSingleSlash) {
-    getFromResource("html/index.html")
-  }
+//  private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.BaseService")
+//  implicit val timeout: Timeout
+//
+//  val baseRoutes = pathPrefix("user")(
+//    staticRoutes ~ getResidentInfo
+////      ~ getRatioInfo ~ getBrandInfo ~ getFrequencyInfo ~ getRealTimeInfo
+//  )
+//
+//  private val staticRoutes = (path("home") & get & pathEndOrSingleSlash) {
+//    getFromResource("html/index.html")
+//  }
 
   private val getResidentInfo = (path("residentInfo") & get & pathEndOrSingleSlash) {
 //    dealFutureResult {

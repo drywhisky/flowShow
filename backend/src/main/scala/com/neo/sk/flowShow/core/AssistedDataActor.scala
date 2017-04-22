@@ -87,121 +87,121 @@ class AssistedDataActor extends Actor with Stash{
   }
 
   def idle() : Receive = {
-    case msg@GetResidentInfo =>
-      log.debug(s"$logPrefix i got a msg: $msg.")
-      val peer = sender()
-
-      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
-        NyxClient.residentsInfo(a._2).map{
-          case Right(res) =>
-            res
-        }
-      })
-
-      f.onComplete{
-        case Success(res) =>
-          peer ! res
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-
-        case Failure(e) =>
-          log.error(s"GetResidentInfo error:$e")
-          peer ! "Error"
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-      }
-      switchState("busy", busy(), BusyTimeOut)
-
-    case msg@GetRatioInfo =>
-      log.debug(s"$logPrefix i got a msg: $msg.")
-      val peer = sender()
-
-      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
-        NyxClient.ratioInfo(a._2).map{
-          case Right(res) =>
-            res
-        }
-      })
-
-      f.onComplete{
-        case Success(res) =>
-          peer ! res
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-
-        case Failure(e) =>
-          log.error(s"GetRatioInfo error:$e")
-          peer ! "Error"
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-      }
-      switchState("busy", busy(), BusyTimeOut)
-
-    case msg@GetBrandInfo =>
-      log.debug(s"$logPrefix i got a msg: $msg.")
-      val peer = sender()
-
-      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
-        NyxClient.brandsInfo(a._2).map{
-          case Right(res) =>
-            res
-        }
-      })
-
-      f.onComplete{
-        case Success(res) =>
-          peer ! res
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-
-        case Failure(e) =>
-          log.error(s"GetBrandInfo error:$e")
-          peer ! "Error"
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-      }
-      switchState("busy", busy(), BusyTimeOut)
-
-    case msg@GetFrequencyInfo =>
-      log.debug(s"$logPrefix i got a msg: $msg.")
-      val peer = sender()
-
-      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
-        NyxClient.frequencyInfo(a._2).map{
-          case Right(res) =>
-            res
-        }
-      })
-
-      f.onComplete{
-        case Success(res) =>
-          peer ! res
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-
-        case Failure(e) =>
-          log.error(s"GetFrequencyInfo error:$e")
-          peer ! "Error"
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-      }
-      switchState("busy", busy(), BusyTimeOut)
-
-    case msg@GetRealTimeInfo =>
-      log.debug(s"$logPrefix i got a msg: $msg.")
-
-      val peer = sender()
-
-      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
-        NyxClient.realtimeDetail(a._2).map{
-          case Right(res) =>
-            res
-        }
-      })
-
-      f.onComplete{
-        case Success(res) =>
-          peer ! res
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-
-        case Failure(e) =>
-          log.error(s"GetRealTimeInfo error:$e")
-          peer ! "Error"
-          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
-      }
-      switchState("busy", busy(), BusyTimeOut)
+//    case msg@GetResidentInfo =>
+//      log.debug(s"$logPrefix i got a msg: $msg.")
+//      val peer = sender()
+//
+//      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
+//        NyxClient.residentsInfo(a._2).map{
+//          case Right(res) =>
+//            res
+//        }
+//      })
+//
+//      f.onComplete{
+//        case Success(res) =>
+//          peer ! res
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//
+//        case Failure(e) =>
+//          log.error(s"GetResidentInfo error:$e")
+//          peer ! "Error"
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//      }
+//      switchState("busy", busy(), BusyTimeOut)
+//
+//    case msg@GetRatioInfo =>
+//      log.debug(s"$logPrefix i got a msg: $msg.")
+//      val peer = sender()
+//
+//      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
+//        NyxClient.ratioInfo(a._2).map{
+//          case Right(res) =>
+//            res
+//        }
+//      })
+//
+//      f.onComplete{
+//        case Success(res) =>
+//          peer ! res
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//
+//        case Failure(e) =>
+//          log.error(s"GetRatioInfo error:$e")
+//          peer ! "Error"
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//      }
+//      switchState("busy", busy(), BusyTimeOut)
+//
+//    case msg@GetBrandInfo =>
+//      log.debug(s"$logPrefix i got a msg: $msg.")
+//      val peer = sender()
+//
+//      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
+//        NyxClient.brandsInfo(a._2).map{
+//          case Right(res) =>
+//            res
+//        }
+//      })
+//
+//      f.onComplete{
+//        case Success(res) =>
+//          peer ! res
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//
+//        case Failure(e) =>
+//          log.error(s"GetBrandInfo error:$e")
+//          peer ! "Error"
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//      }
+//      switchState("busy", busy(), BusyTimeOut)
+//
+//    case msg@GetFrequencyInfo =>
+//      log.debug(s"$logPrefix i got a msg: $msg.")
+//      val peer = sender()
+//
+//      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
+//        NyxClient.frequencyInfo(a._2).map{
+//          case Right(res) =>
+//            res
+//        }
+//      })
+//
+//      f.onComplete{
+//        case Success(res) =>
+//          peer ! res
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//
+//        case Failure(e) =>
+//          log.error(s"GetFrequencyInfo error:$e")
+//          peer ! "Error"
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//      }
+//      switchState("busy", busy(), BusyTimeOut)
+//
+//    case msg@GetRealTimeInfo =>
+//      log.debug(s"$logPrefix i got a msg: $msg.")
+//
+//      val peer = sender()
+//
+//      val f = Future.sequence(AppSettings.groupIdNameMap.toList.map{ a =>
+//        NyxClient.realtimeDetail(a._2).map{
+//          case Right(res) =>
+//            res
+//        }
+//      })
+//
+//      f.onComplete{
+//        case Success(res) =>
+//          peer ! res
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//
+//        case Failure(e) =>
+//          log.error(s"GetRealTimeInfo error:$e")
+//          peer ! "Error"
+//          selfRef ! SwitchState("idle", idle(), Duration.Undefined)
+//      }
+//      switchState("busy", busy(), BusyTimeOut)
 
     case msg@SwitchState(stateName: String, func: Receive, duration: Duration) =>
       switchState(stateName, func, duration)

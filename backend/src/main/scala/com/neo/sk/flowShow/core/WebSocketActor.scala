@@ -43,8 +43,8 @@ object WebSocketActor {
 
       val countTask = context.system.scheduler.schedule(0.seconds, 1.seconds){
         if(inNum != 0) {
-          inNum = 0
           subscriber ! ComeIn(inNum)
+          inNum = 0
         }
       }
 
