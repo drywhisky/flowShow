@@ -105,9 +105,9 @@ package object ptcl {
                        errCode: Int = 0,
                        msg: String = "ok") extends Response
 
-  case class ModifyBox(id:Long, name:String, mac:String, rssi: Int)
+  case class ModifyBox(id:Long, name:String, rssi:Int)
 
-  case class AddBox(name:String, mac:String, rssi: Int)
+  case class AddBox(name:String, mac:String, rssi:Int, groupId:Long)
 
 
 }

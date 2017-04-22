@@ -63,7 +63,7 @@ class GroupActor(id:String) extends Actor with Stash{
     log.info(s"$logPrefix stops.")
   }
 
-  def getRealTimeActor(symbol:String, historyDurationLength: Int): ActorRef = {
+  def getRealTimeActor(symbol:String, historyDurationLength: Long): ActorRef = {
     val name = s"$symbol"
     context.child(name).getOrElse {
       val child = context.actorOf(RealTimeActor.props("RealTime"), "RealTime")
@@ -94,7 +94,7 @@ class GroupActor(id:String) extends Actor with Stash{
 
   }
 
-  def idle(father: Option[ActorRef], fatherName:String, durationLength: Int, rssiSet: Int) : Receive = {
+  def idle(father: Option[ActorRef], fatherName:String, durationLength: Long, rssiSet: Int) : Receive = {
     case msg@PutShoots(boxMac, shoots) =>
       if(uniterType == GroupType.group){
         for(e <- shoots){

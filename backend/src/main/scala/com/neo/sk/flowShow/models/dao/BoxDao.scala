@@ -2,6 +2,7 @@ package com.neo.sk.flowShow.models.dao
 
 import com.neo.sk.flowShow.models.SlickTables._
 import com.neo.sk.utils.DBUtil.db
+import slick.dbio.DBIOAction
 import slick.jdbc.PostgresProfile.api._
 
 /**
@@ -15,6 +16,25 @@ object BoxDao {
 
   def listBoxs(groupId:Long, userId:Long) = db.run(
     tBoxs.filter(c => (c.groupId === groupId) && (c.userId === userId)).result
+  )
+
+  def addBox(name:String, mac:String, rssi:Int, userId:Long, groupId:Long, timestamp:Long) = {
+    val actions = for {
+      exists1 <- tBoxs.filter(_.boxMac === mac).exists.result
+      id <-
+      if(exists1)
+        DBIOAction.successful(-1l)
+      else
+        tBoxs.returning(tBoxs.filter(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi))
+    } yield {
+      id
+    }
+
+    db.run(actions)
+  }
+
+  def modifyBox(id:Long, name:String, rssi:Int) = db.run(
+    tBoxs.filter(_.boxId === id).map(r => (r.boxName, r.rssiSet)).update((name, rssi))
   )
 
 }

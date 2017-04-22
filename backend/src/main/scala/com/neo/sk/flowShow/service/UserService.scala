@@ -1,5 +1,6 @@
 package com.neo.sk.flowShow.service
 
+import akka.actor.ActorRef
 import akka.http.scaladsl.model.StatusCodes
 import com.neo.sk.utils.{CirceSupport, SecureUtil}
 import org.slf4j.LoggerFactory
@@ -10,6 +11,7 @@ import io.circe.generic.auto._
 import akka.http.scaladsl.server.Directives._
 import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao, UserDao}
 import com.neo.sk.flowShow.service.SessionBase.{UserSession, UserSessionKey}
+import com.neo.sk.flowShow.core.GroupManager._
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.circe.Error
 
@@ -20,9 +22,13 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
 
   private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.UserService")
 
+  val groupManager: ActorRef
+
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
-      getGroups ~ getBoxs
+      getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~
+      modifyBox
+
   )
 
   private val staticRoutes = (path("login" | "register") & get) {
@@ -124,6 +130,86 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
               complete(CommonRsp(104005, s"error.$t"))
           }
         }
+      }
+    }
+  }
+
+  private val addGroup = (path("addGroup") & post & pathEndOrSingleSlash) {
+    UserAction { user =>
+      entity(as[Either[Error, AddGroup]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(AddGroupMsg(req, user.uid)).map {
+              case (id: Long, time: Long) =>
+                complete(AddGroupRsp(id = Some(id), timestamp = Some(time)))
+
+              case "Error" =>
+                complete(AddGroupRsp(None, None, 104006, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(AddGroupRsp(None, None, 104002, "parse error."))
+      }
+    }
+  }
+
+  private val addBox = (path("addBox") & post & pathEndOrSingleSlash) {
+    UserAction { user =>
+      entity(as[Either[Error, AddBox]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(AddBoxMsg(req, user.uid)).map {
+              case (id: Long, time: Long) =>
+                complete(AddGroupRsp(id = Some(id), timestamp = Some(time)))
+
+              case "Error" =>
+                complete(AddGroupRsp(None, None, 104007, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(AddGroupRsp(None, None, 104002, "parse error."))
+      }
+    }
+  }
+
+  private val modifyGroup = (path("modifyGroup") & post & pathEndOrSingleSlash) {
+    UserAction { user =>
+      entity(as[Either[Error, ModifyGroup]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(ModifyGroupMsg(req)).map {
+              case "OK" =>
+                complete(CommonRsp())
+
+              case "Error" =>
+                complete(CommonRsp(104008, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(CommonRsp(104002, "parse error."))
+      }
+    }
+  }
+
+  private val modifyBox = (path("modifyBox") & post & pathEndOrSingleSlash) {
+    UserAction { user =>
+      entity(as[Either[Error, ModifyBox]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(ModifyBoxMsg(req)).map {
+              case "OK" =>
+                complete(CommonRsp())
+
+              case "Error" =>
+                complete(CommonRsp(104009, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(CommonRsp(104002, "parse error."))
       }
     }
   }

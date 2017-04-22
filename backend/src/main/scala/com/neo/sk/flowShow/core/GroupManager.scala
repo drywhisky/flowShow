@@ -1,15 +1,19 @@
 package com.neo.sk.flowShow.core
 
+import akka.actor.Actor.Receive
 import akka.actor.SupervisorStrategy.{Restart, Resume}
-import akka.actor.{Actor, ActorContext, ActorRef, OneForOneStrategy, Props, ReceiveTimeout, Stash, Terminated}
+import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, ReceiveTimeout, Stash, Terminated}
 import akka.util.Timeout
 import org.slf4j.LoggerFactory
 import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao}
 import com.neo.sk.flowShow.core.WsClient.SubscribeData
-import com.neo.sk.utils.{Shoot, PutShoots}
+import com.neo.sk.utils.{PutShoots, Shoot}
+
+import scala.util.{Failure, Success}
 import scala.collection.mutable
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.neo.sk.flowShow.ptcl._
 
 /**
   * Created by whisky on 17/4/14.
@@ -18,11 +22,21 @@ object GroupManager {
 
   def props(wsClient: ActorRef) = Props[GroupManager](new GroupManager(wsClient))
 
-  case class InitDone(maps: Map[String, Seq[String]], baseInfo: Map[String, (Option[Int], Option[Int])])
+  case class SwitchState(stateName:String, func:Receive, duration: Duration)
+
+  case class InitDone(maps: Map[String, Seq[String]], baseInfo: Map[String, (Option[Long], Option[Int])])
 
   case object FindMyInfo
 
-  case class GetMyInfo(father: Option[ActorRef], fatherName:String, durationLength: Option[Int], rssiSet: Option[Int])
+  case class GetMyInfo(father: Option[ActorRef], fatherName:String, durationLength: Option[Long], rssiSet: Option[Int])
+
+  case class AddGroupMsg(info: AddGroup, userId: Long)
+
+  case class AddBoxMsg(info: AddBox, userId: Long)
+
+  case class ModifyGroupMsg(info: ModifyGroup)
+
+  case class ModifyBoxMsg(info: ModifyBox)
 }
 
 class GroupManager(wsClient: ActorRef) extends Actor with Stash {
@@ -39,6 +53,15 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
 
   implicit val timeout = Timeout(5.seconds)
 
+  private[this] val BusyTimeOut = 1.minutes
+
+  private[this] def switchState(stateName:String, func:Receive, duration: Duration) ={
+    log.debug(s"$logPrefix becomes $stateName state.")
+    unstashAll()
+    context.become(func)
+    context.setReceiveTimeout(duration)
+  }
+
   private[this] def terminate(cause:String) = {
     log.info(s"$logPrefix will terminate because $cause.")
     context.stop(selfRef)
@@ -52,7 +75,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       groups <- GroupDao.listDistributedGroups
       boxs <- BoxDao.listDistributedBoxs
     } yield {
-      val groupInfo = groups.map(g => (g.groupId.toString, (Some(g.durationLength.toInt), None)))
+      val groupInfo = groups.map(g => (g.groupId.toString, (Some(g.durationLength), None)))
       val boxInfo = boxs.map(b => (b.boxMac, (None, Some(b.rssiSet))))
       val baseInfo = (groupInfo ++ boxInfo).toMap
       val groupBoxMap = boxs.groupBy(_.groupId).map{ case (groupId, iter) =>
@@ -128,7 +151,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       stash()
   }
 
-  def working(relations: Map[String, Option[String]], baseInfo: Map[String, (Option[Int], Option[Int])]) : Receive = {
+  def working(relations: Map[String, Option[String]], baseInfo: Map[String, (Option[Long], Option[Int])]) : Receive = {
 
     case msg@FindMyInfo =>
       log.debug(s"i got a msg:$msg")
@@ -138,11 +161,62 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       val (durationLength, rssiSet) = baseInfo.getOrElse(peer.path.name, (None, None))
       peer ! GetMyInfo(father, fatherName, durationLength, rssiSet)
 
+    case msg@AddGroupMsg(info, userId) =>
+      log.debug(s"i got a msg $msg")
+      val peer = sender()
+      val time = System.currentTimeMillis()
+      GroupDao.addGroup(info.name, info.durationLength, userId, time).onComplete{
+        case Success(id) =>
+          peer ! (id, time)
+          selfRef ! SwitchState("working", working(relations.+((id.toString, None)), baseInfo.+((id.toString, (Some(info.durationLength), None)))), Duration.Undefined)
+          getActor(id.toString)
+
+        case Failure(e) =>
+          log.debug(s"AddGroup error in databse")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
+
+    case msg@AddBoxMsg(info, userId) =>
+      log.debug(s"i got a msg $msg")
+      val peer = sender()
+      val time = System.currentTimeMillis()
+      BoxDao.addBox(info.name, info.mac, info.rssi, userId, info.groupId, time).map{
+        case Success(id) =>
+          peer ! (id, time)
+          selfRef ! SwitchState("working", working(relations.+((info.mac, Some(info.groupId.toString))), baseInfo.+((id.toString, (None, Some(info.rssi))))), Duration.Undefined)
+          //暂时不给盒子的group father发消息
+          getActor(info.mac)
+
+        case Failure(e) =>
+          log.debug(s"AddBox error in database.")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
+
+    case msg@ModifyGroupMsg(info) =>
+      log.debug(s"i got a msg $msg")
+
+
+    case msg@ModifyBoxMsg(info) =>
+      log.debug(s"i got a msg $msg")
+
     case Terminated(child) =>
       log.error(s"$logPrefix ${child.path.name} is dead.")
 
     case msg =>
       log.error(s"$logPrefix receive unknown msg: $msg")
+  }
+
+  def busy() : Receive = {
+    case msg@SwitchState(stateName: String, func: Receive, duration: Duration) =>
+      switchState(stateName, func, duration)
+
+    case msg =>
+      log.debug(s"$logPrefix i got an unknown msg: $msg and stash.")
+      stash()
   }
 
 

@@ -278,7 +278,7 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
       if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt).asJson.noSpaces
+        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId).asJson.noSpaces
         Http.postJsonAndParse[AddGroupRsp](Routes.addBox, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
@@ -307,7 +307,7 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
   private def editAction(id: Long, name: String, mac:String, time: Long, rssi: Int) : Unit= {
 
     val modalId = input(*.`type` := "text", *.cls := "form-control", *.value := id, *.disabled := true).render
-    val modalMac = input(*.`type` := "text", *.cls := "form-control", *.value := mac).render
+    val modalMac = input(*.`type` := "text", *.cls := "form-control", *.value := mac, *.disabled := true).render
     val modalName = input(*.`type` := "text", *.cls := "form-control", *.value := name).render
     val modalTime = input(*.`type` := "text", *.cls := "form-control", *.value := MyUtil.DateFormatter(new Date(time), "YYYY-MM-DD hh:mm:ss"), *.disabled := true).render
     val modalRssi = input(*.`type` := "text", *.cls := "form-control", *.value := rssi).render
@@ -343,7 +343,7 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
       if (modalName.value == "" || modalRssi.value == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = ModifyBox(id, modalName.value, modalMac.value, modalRssi.value.toInt).asJson.noSpaces
+        val data = ModifyBox(id, modalName.value, modalRssi.value.toInt).asJson.noSpaces
         Http.postJsonAndParse[CommonRsp](Routes.modifyBox, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
