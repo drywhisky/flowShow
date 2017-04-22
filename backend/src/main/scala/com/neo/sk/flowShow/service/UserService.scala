@@ -1,9 +1,6 @@
 package com.neo.sk.flowShow.service
 
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Directive, RequestContext}
-import akka.http.scaladsl.server
 import com.neo.sk.utils.{CirceSupport, SecureUtil}
 import org.slf4j.LoggerFactory
 import akka.pattern.ask
@@ -11,9 +8,8 @@ import akka.util.Timeout
 import com.neo.sk.flowShow.ptcl._
 import io.circe.generic.auto._
 import akka.http.scaladsl.server.Directives._
-import com.neo.sk.flowShow.models.dao.UserDao
+import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao, UserDao}
 import com.neo.sk.flowShow.service.SessionBase.{UserSession, UserSessionKey}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.circe.Error
 
@@ -25,7 +21,8 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
   private val log = LoggerFactory.getLogger("com.neo.sk.hw1701b.service.UserService")
 
   val userRoutes = pathPrefix("user")(
-    staticRoutes ~ loginSubmit ~ registerSubmit ~ logout
+    staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
+      getGroups ~ getBoxs
   )
 
   private val staticRoutes = (path("login" | "register") & get) {
@@ -94,5 +91,42 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
       redirect("/flowShow/user/login", StatusCodes.SeeOther)
     }
   }
+
+  private val getGroups = (path("getGroups") & get & pathEndOrSingleSlash) {
+    UserAction { user =>
+      dealFutureResult {
+        GroupDao.listGroupsByUserId(user.uid).map { res =>
+            val groupList = res.map {
+              r => Group(r.groupId, r.groupName, r.createTime, r.durationLength)
+            }.toList
+            complete(GroupsRsp(data = groupList))
+        }.recover{
+          case t =>
+            complete(CommonRsp(104004, s"error.$t"))
+        }
+      }
+    }
+  }
+
+  private val getBoxs = (path("getBoxs") & get & pathEndOrSingleSlash) {
+    UserAction { user =>
+      parameters(
+        'groupId.as[Long]
+      ) { case (groupId) =>
+        dealFutureResult {
+          BoxDao.listBoxs(groupId, user.uid).map { res =>
+            val boxList = res.map {
+              r => Box(r.boxId, r.boxName, r.boxMac, r.createTime, r.rssiSet)
+            }.toList
+            complete(BoxsRsp(data = boxList))
+          }.recover {
+            case t =>
+              complete(CommonRsp(104005, s"error.$t"))
+          }
+        }
+      }
+    }
+  }
+
 
 }

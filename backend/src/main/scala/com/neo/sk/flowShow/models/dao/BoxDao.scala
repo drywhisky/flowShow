@@ -13,4 +13,8 @@ object BoxDao {
     tBoxs.result
   )
 
+  def listBoxs(groupId:Long, userId:Long) = db.run(
+    tBoxs.filter(c => (c.groupId === groupId) && (c.userId === userId)).result
+  )
+
 }

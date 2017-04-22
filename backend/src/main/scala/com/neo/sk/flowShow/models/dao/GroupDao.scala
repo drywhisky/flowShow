@@ -14,4 +14,8 @@ object GroupDao {
     tGroups.filter(_.groupId =!= Constants.defaultGroupId).result
   )
 
+  def listGroupsByUserId(userId: Long) = db.run(
+    tGroups.filter(c => (c.groupId =!= Constants.defaultGroupId) && (c.userId === userId)).result
+  )
+
 }
