@@ -4,6 +4,8 @@ import com.neo.sk.flowShow.models.SlickTables._
 import com.neo.sk.utils.DBUtil.db
 import slick.dbio.DBIOAction
 import slick.jdbc.PostgresProfile.api._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 /**
   * Created by whisky on 17/4/14.
@@ -25,7 +27,7 @@ object BoxDao {
       if(exists1)
         DBIOAction.successful(-1l)
       else
-        tBoxs.returning(tBoxs.filter(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi))
+        tBoxs.returning(tBoxs.map(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi))
     } yield {
       id
     }

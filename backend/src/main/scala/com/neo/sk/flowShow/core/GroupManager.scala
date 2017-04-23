@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao}
 import com.neo.sk.flowShow.core.WsClient.SubscribeData
 import com.neo.sk.utils.{PutShoots, Shoot}
-
+import com.neo.sk.flowShow.core.GroupActor._
 import scala.util.{Failure, Success}
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -172,7 +172,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
           getActor(id.toString)
 
         case Failure(e) =>
-          log.debug(s"AddGroup error in databse")
+          log.debug(s"AddGroup error in database.$e")
           peer ! "Error"
           selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
       }
@@ -182,15 +182,21 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       log.debug(s"i got a msg $msg")
       val peer = sender()
       val time = System.currentTimeMillis()
-      BoxDao.addBox(info.name, info.mac, info.rssi, userId, info.groupId, time).map{
+      BoxDao.addBox(info.name, info.mac, info.rssi, userId, info.groupId, time).onComplete{
         case Success(id) =>
-          peer ! (id, time)
-          selfRef ! SwitchState("working", working(relations.+((info.mac, Some(info.groupId.toString))), baseInfo.+((id.toString, (None, Some(info.rssi))))), Duration.Undefined)
-          //暂时不给盒子的group father发消息
-          getActor(info.mac)
+          if(id != -1) {
+            peer ! (id, time)
+            selfRef ! SwitchState("working", working(relations.+((info.mac, Some(info.groupId.toString))), baseInfo.+((id.toString, (None, Some(info.rssi))))), Duration.Undefined)
+            //暂时不给盒子的group father发消息
+            getActor(info.mac)
+          }else{
+            log.debug(s"AddBox error in database.${info.mac} repeated.")
+            peer ! "Error"
+            selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+          }
 
         case Failure(e) =>
-          log.debug(s"AddBox error in database.")
+          log.debug(s"AddBox error in database.$e")
           peer ! "Error"
           selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
       }
@@ -198,10 +204,37 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
 
     case msg@ModifyGroupMsg(info) =>
       log.debug(s"i got a msg $msg")
+      val peer = sender()
+      GroupDao.modifyGroup(info.id, info.name, info.durationLength).onComplete{
+        case Success(_) =>
+          peer ! "OK"
+          getActor(info.id.toString) ! UpdateDuration(info.durationLength)
+          val newBaseInfo = baseInfo.updated(info.id.toString, (Some(info.durationLength), None))
+          selfRef ! SwitchState("working", working(relations, newBaseInfo), Duration.Undefined)
 
+        case Failure(e) =>
+          log.debug(s"ModifyGroup error in database.$e")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
 
     case msg@ModifyBoxMsg(info) =>
       log.debug(s"i got a msg $msg")
+      val peer = sender()
+      BoxDao.modifyBox(info.id, info.name, info.rssi).onComplete{
+        case Success(_) =>
+          peer ! "OK"
+          getActor(info.mac) ! UpdateRssi(info.rssi)
+          val newBaseInfo = baseInfo.updated(info.id.toString, (None, Some(info.rssi)))
+          selfRef ! SwitchState("working", working(relations, newBaseInfo), Duration.Undefined)
+
+        case Failure(e) =>
+          log.debug(s"ModifyBox error in database.$e")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
 
     case Terminated(child) =>
       log.error(s"$logPrefix ${child.path.name} is dead.")

@@ -24,6 +24,8 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
 
   val groupManager: ActorRef
 
+  implicit val timeout: Timeout
+
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
       getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~

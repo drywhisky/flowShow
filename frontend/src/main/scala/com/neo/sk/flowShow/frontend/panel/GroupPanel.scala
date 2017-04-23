@@ -343,7 +343,7 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
       if (modalName.value == "" || modalRssi.value == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = ModifyBox(id, modalName.value, modalRssi.value.toInt).asJson.noSpaces
+        val data = ModifyBox(id, mac, modalName.value, modalRssi.value.toInt).asJson.noSpaces
         Http.postJsonAndParse[CommonRsp](Routes.modifyBox, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")

@@ -15,6 +15,10 @@ object GroupActor {
 
   def props(id:String) = Props[GroupActor](new GroupActor(id))
 
+  case class UpdateDuration(duration: Long)
+
+  case class UpdateRssi(rssi: Int)
+
 }
 
 case object GroupType{
@@ -32,7 +36,7 @@ class GroupActor(id:String) extends Actor with Stash{
 
   private[this] val selfRef = context.self
 
-  private val defaultVisitDurationLent = AppSettings.visitDurationLent
+  private val defaultVisitDurationLent = AppSettings.visitDurationLent.toLong
   private val defaultRssiSet = AppSettings.rssiValue
 
   private val realTimeDurationLength =  9 * 60 *1000
@@ -120,6 +124,14 @@ class GroupActor(id:String) extends Actor with Stash{
         father.foreach(_ ! r1) //send data to fathers
         getRealTimeActor("RealTime", durationLength).forward(r1)
       }
+
+    case msg@UpdateDuration(newDuration: Long) =>
+      log.debug(s"i got a msg: $msg")
+      context.become(idle(father, fatherName, newDuration, rssiSet))
+
+    case msg@UpdateRssi(newRssi: Int) =>
+      log.debug(s"i got a msg: $msg")
+      context.become(idle(father, fatherName, durationLength, newRssi))
 
     case Terminated(child) =>
       context.unwatch(child)
