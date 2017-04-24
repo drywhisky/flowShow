@@ -13,7 +13,9 @@ import io.circe.generic.auto._
 import org.scalajs.dom.{MouseEvent, XMLHttpRequest, Event}
 import com.neo.sk.flowShow.frontend.utils.{Modal, MyUtil}
 import org.scalajs.dom.raw.FormData
+import org.scalajs.dom
 
+import org.scalajs.dom.html.IFrame
 import scala.collection.mutable
 import scala.scalajs.js.Date
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -314,70 +316,6 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
 
   private val editBox = div().render
 
-  createBoxButton.onclick = { e: MouseEvent =>
-
-    val modalName = input(*.`type` := "text", *.cls := "form-control").render
-    val modalMac = input(*.`type` := "text", *.cls := "form-control").render
-    val modalRssi = input(*.`type` := "text", *.cls := "form-control").render
-    val modalX = input(*.`type` := "text", *.cls := "form-control").render
-    val modalY = input(*.`type` := "text", *.cls := "form-control").render
-
-    val header = div(*.cls := "modal-title")("新建盒子")
-    val body = div(*.cls := "row", *.textAlign.center)(
-      form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
-        div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子名称"),
-          div(*.cls := "col-md-4")(modalName)
-        ),
-        div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子mac"),
-          div(*.cls := "col-md-4")(modalMac)
-        ),
-        div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("rssi"),
-          div(*.cls := "col-md-4")(modalRssi)
-        ),
-        div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标x"),
-          div(*.cls := "col-md-4")(modalX)
-        ),
-        div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标y"),
-          div(*.cls := "col-md-4")(modalY)
-        )
-      )
-    )
-
-    def clickFunction():Unit = {
-      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX.value == "" ||modalY.value == "") {
-        JsFunc.alert(s"error!")
-      } else {
-        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId, modalX.value.toInt, modalY.value.toInt).asJson.noSpaces
-        Http.postJsonAndParse[AddGroupRsp](Routes.addBox, data).map { rsp =>
-          if (rsp.errCode == 0) {
-            JsFunc.alert(s"success")
-            val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, modalX.value.toInt, modalY.value.toInt)
-            GroupPanel.BoxMap.put(newBox.id, newBox)
-            makeBoxList(GroupPanel.BoxMap)
-          } else {
-            JsFunc.alert(s"error: ${rsp.msg}")
-          }
-        }
-      }
-    }
-
-    val model = new Modal(
-      header.render,
-      body.render,
-      clickFunction,
-      ""
-    )
-
-    model.show
-    editBox.textContent = ""
-    editBox.appendChild(model.render)
-  }
-
   private def editAction(id: Long, name: String, mac:String, time: Long, rssi: Int, x: Int, y: Int) : Unit= {
 
     val modalId = input(*.`type` := "text", *.cls := "form-control", *.value := id, *.disabled := true).render
@@ -502,8 +440,81 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   def getImg(map:String) = {
     ImgSvg.innerHTML = ""
     ImgSvg.appendChild(
-      iframe(*.src := map, *.width := "100%", *.height := "300px").render
+      iframe(*.id := "svg", *.src := map, *.width := "100%", *.height := "300px", *.onclick := {
+        e: MouseEvent =>
+          getMouseXY(e)
+      }).render
     )
+  }
+
+  def getMouseXY(e : MouseEvent) = {
+    val x = e.clientX
+    val y = e.clientY
+    createBoxButton.click()
+  }
+
+  def newBox(x:Double, y:Double) = {
+
+    val modalName = input(*.`type` := "text", *.cls := "form-control").render
+    val modalMac = input(*.`type` := "text", *.cls := "form-control").render
+    val modalRssi = input(*.`type` := "text", *.cls := "form-control").render
+    val modalX = input(*.`type` := "text", *.cls := "form-control").render
+    val modalY = input(*.`type` := "text", *.cls := "form-control").render
+
+    val header = div(*.cls := "modal-title")("新建盒子")
+    val body = div(*.cls := "row", *.textAlign.center)(
+      form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子名称"),
+          div(*.cls := "col-md-4")(modalName)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子mac"),
+          div(*.cls := "col-md-4")(modalMac)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("rssi"),
+          div(*.cls := "col-md-4")(modalRssi)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标x"),
+          div(*.cls := "col-md-4")(modalX)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标y"),
+          div(*.cls := "col-md-4")(modalY)
+        )
+      )
+    )
+
+    def clickFunction(): Unit = {
+      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX.value == "" || modalY.value == "") {
+        JsFunc.alert(s"error!")
+      } else {
+        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId, modalX.value.toInt, modalY.value.toInt).asJson.noSpaces
+        Http.postJsonAndParse[AddGroupRsp](Routes.addBox, data).map { rsp =>
+          if (rsp.errCode == 0) {
+            JsFunc.alert(s"success")
+            val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, modalX.value.toInt, modalY.value.toInt)
+            GroupPanel.BoxMap.put(newBox.id, newBox)
+            makeBoxList(GroupPanel.BoxMap)
+          } else {
+            JsFunc.alert(s"error: ${rsp.msg}")
+          }
+        }
+      }
+    }
+
+    val model = new Modal(
+      header.render,
+      body.render,
+      clickFunction,
+      ""
+    )
+
+    model.show
+    editBox.textContent = ""
+    editBox.appendChild(model.render)
   }
 
   override protected def build(): Div = {
@@ -516,8 +527,7 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
             e.preventDefault()
             GroupPanel.SetContent(GroupListPanel.render)
           }, *.fontSize := "x-large"
-          )("区域管理/"),
-          h3(s"${name}区")
+          )(s"区域管理/${name}区")
         ),
         div(*.cls := "col-md-2 col-md-offset-5")(createBoxButton)
       ),
