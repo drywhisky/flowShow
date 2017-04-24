@@ -17,9 +17,9 @@ object HomePage extends Page {
   private def listItemClick(name: String): Unit = {
     println(s"HomePage item click: $name")
     val target = name match {
-      case "111" => FlowPanel.render
+      case "111" => GroupPanel.render
       case "222" => FlowPanel.render
-      case _ => FlowPanel.render
+      case _ => GroupPanel.render
     }
 
     panelBox.textContent = ""
@@ -34,7 +34,7 @@ object HomePage extends Page {
 
   private val menuList = new MenuList(itemList, listItemClick).render
 
-  private val panelBox = div(*.cls := "col-md-10")(FlowPanel.render).render
+  private val panelBox = div(*.cls := "col-md-10")(GroupPanel.render).render
 
   override def locationHash: String = ""
 
