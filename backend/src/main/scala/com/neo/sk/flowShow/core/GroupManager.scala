@@ -165,7 +165,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       log.debug(s"i got a msg $msg")
       val peer = sender()
       val time = System.currentTimeMillis()
-      GroupDao.addGroup(info.name, info.durationLength, userId, time).onComplete{
+      GroupDao.addGroup(info.name, info.durationLength, userId, time, info.map).onComplete{
         case Success(id) =>
           peer ! (id, time)
           selfRef ! SwitchState("working", working(relations.+((id.toString, None)), baseInfo.+((id.toString, (Some(info.durationLength), None)))), Duration.Undefined)
@@ -182,7 +182,7 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       log.debug(s"i got a msg $msg")
       val peer = sender()
       val time = System.currentTimeMillis()
-      BoxDao.addBox(info.name, info.mac, info.rssi, userId, info.groupId, time).onComplete{
+      BoxDao.addBox(info.name, info.mac, info.rssi, userId, info.groupId, time, info.x, info.y).onComplete{
         case Success(id) =>
           if(id != -1) {
             peer ! (id, time)

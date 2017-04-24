@@ -20,14 +20,14 @@ object BoxDao {
     tBoxs.filter(c => (c.groupId === groupId) && (c.userId === userId)).result
   )
 
-  def addBox(name:String, mac:String, rssi:Int, userId:Long, groupId:Long, timestamp:Long) = {
+  def addBox(name:String, mac:String, rssi:Int, userId:Long, groupId:Long, timestamp:Long, x: Int, y: Int) = {
     val actions = for {
       exists1 <- tBoxs.filter(_.boxMac === mac).exists.result
       id <-
       if(exists1)
         DBIOAction.successful(-1l)
       else
-        tBoxs.returning(tBoxs.map(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi))
+        tBoxs.returning(tBoxs.map(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi, x, y))
     } yield {
       id
     }

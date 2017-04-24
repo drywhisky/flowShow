@@ -29,7 +29,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
       getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~
-      modifyBox
+      modifyBox ~ imageUpload
 
   )
 
@@ -105,7 +105,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
       dealFutureResult {
         GroupDao.listGroupsByUserId(user.uid).map { res =>
             val groupList = res.map {
-              r => Group(r.groupId, r.groupName, r.createTime, r.durationLength)
+              r => Group(r.groupId, r.groupName, r.createTime, r.durationLength, r.map)
             }.toList
             complete(GroupsRsp(data = groupList))
         }.recover{
@@ -124,7 +124,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
         dealFutureResult {
           BoxDao.listBoxs(groupId, user.uid).map { res =>
             val boxList = res.map {
-              r => Box(r.boxId, r.boxName, r.boxMac, r.createTime, r.rssiSet)
+              r => Box(r.boxId, r.boxName, r.boxMac, r.createTime, r.rssiSet, r.x, r.y)
             }.toList
             complete(BoxsRsp(data = boxList))
           }.recover {
@@ -212,6 +212,18 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
 
         case Left(e) =>
           complete(CommonRsp(104002, "parse error."))
+      }
+    }
+  }
+
+  private val imageUpload = (path("imageUpload") & post & pathEndOrSingleSlash){
+    import com.neo.sk.utils.ImageUtil._
+    UserAction { _ =>
+      uploadedFile("fileUpload") {
+        case(metadata, tmpFile) =>
+          val imgName = getExtName(metadata.fileName).getOrElse("")
+          val destFile = storeTmpFIle(tmpFile, imgName)
+          complete(CommonRsp(0, destFile.getName))
       }
     }
   }
