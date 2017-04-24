@@ -135,7 +135,8 @@ object GroupListPanel extends Panel{
       val a = oReq.open("POST", Routes.imageUpload, true)
       println(s"a = $a")
 
-      oReq.onload =  { e:Event=>
+      oReq.onload = { e: Event =>
+        e.preventDefault()
         if (oReq.status == 200) {
           JsFunc.alert("上传成功！")
         } else {
@@ -144,7 +145,6 @@ object GroupListPanel extends Panel{
       }
       oReq.send(oData)
     }
-
 
     val header = div(*.cls := "modal-title")("更新区域信息")
     val body = div(*.cls := "row", *.textAlign.center)(
