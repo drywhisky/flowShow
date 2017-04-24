@@ -63,12 +63,17 @@ object GroupListPanel extends Panel{
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("区域名称"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域名称"),
           div(*.cls := "col-md-4")(modalName)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("预设驻留时长"),
-          div(*.cls := "col-md-4")(modalDua)
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("驻留时长"),
+          div(*.cls := "col-md-4")(
+            div(*.cls := "input-group")(
+              modalDua,
+              span(*.cls := "input-group-addon")("分钟")
+            )
+          )
         )
       )
     )
@@ -77,7 +82,7 @@ object GroupListPanel extends Panel{
       if (modalName.value == "" || modalDua.value == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = AddGroup(modalName.value, modalDua.value.toLong).asJson.noSpaces
+        val data = AddGroup(modalName.value, modalDua.value.toLong * 60000).asJson.noSpaces
         Http.postJsonAndParse[AddGroupRsp](Routes.addGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
@@ -117,20 +122,25 @@ object GroupListPanel extends Panel{
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("区域id"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域id"),
           div(*.cls := "col-md-4")(modalId)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("区域名称"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域名称"),
           div(*.cls := "col-md-4")(modalName)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("创建时间"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("创建时间"),
           div(*.cls := "col-md-4")(modalTime)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("预设驻留时长"),
-          div(*.cls := "col-md-4")(modalDua)
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("驻留时长(min)"),
+          div(*.cls := "col-md-4")(
+            div(*.cls := "input-group")(
+              modalDua,
+              span(*.cls := "input-group-addon")("分钟")
+            )
+          )
         )
       )
     )
@@ -167,7 +177,7 @@ object GroupListPanel extends Panel{
   private def makeGroupList(groups: mutable.HashMap[Long, Group]) : Unit= {
 
     def makeRow(group: Group) = {
-      val editButton = button(*.cls := "btn btn-info")("编辑").render
+      val editButton = button(*.cls := "btn btn-info", *.marginRight := "5px")("编辑").render
       val boxButton = button(*.cls := "btn btn-info")("查看盒子").render
 
 
@@ -186,7 +196,7 @@ object GroupListPanel extends Panel{
         td(group.name),
         td(MyUtil.DateFormatter(new Date(group.createTime), "YYYY-MM-DD hh:mm:ss")),
         td(group.durationLength),
-        td(editButton)
+        td(editButton, boxButton)
       )
     }
 
@@ -197,7 +207,7 @@ object GroupListPanel extends Panel{
             th(*.textAlign.center)("#"),
             th(*.textAlign.center)("名称"),
             th(*.textAlign.center)("创建时间"),
-            th(*.textAlign.center)("预设驻留时长"),
+            th(*.textAlign.center)("驻留时长"),
             th(*.textAlign.center)("操作")
           )
         ),
@@ -260,15 +270,15 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("盒子名称"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子名称"),
           div(*.cls := "col-md-4")(modalName)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("盒子mac"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子mac"),
           div(*.cls := "col-md-4")(modalMac)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("预设rssi"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("rssi"),
           div(*.cls := "col-md-4")(modalRssi)
         )
       )
@@ -317,23 +327,23 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("盒子id"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子id"),
           div(*.cls := "col-md-4")(modalId)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("盒子名称"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子名称"),
           div(*.cls := "col-md-4")(modalName)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("盒子mac"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("盒子mac"),
           div(*.cls := "col-md-4")(modalMac)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("创建时间"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("创建时间"),
           div(*.cls := "col-md-4")(modalTime)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label")("预设rssi"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("rssi"),
           div(*.cls := "col-md-4")(modalRssi)
         )
       )
@@ -397,7 +407,7 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
             th(*.textAlign.center)("名称"),
             th(*.textAlign.center)("mac"),
             th(*.textAlign.center)("创建时间"),
-            th(*.textAlign.center)("预设rssi"),
+            th(*.textAlign.center)("rssi"),
             th(*.textAlign.center)("操作")
           )
         ),
@@ -429,8 +439,15 @@ class BoxListPanel(groupId: Long, name: String) extends Panel {
     getBox(groupId)
     div(
       div(*.cls := "row")(
-        div(*.cls := "col-md-2")(h3(s"${name}盒子管理")),
-        div(*.cls := "col-md-2 col-md-offset-8")(createBoxButton)
+        div(*.cls := "col-md-5")(
+          a(*.onclick := { e: MouseEvent =>
+            e.preventDefault()
+            GroupPanel.SetContent(GroupListPanel.render)
+          }
+          )("区域管理/"),
+          h3(s"${name}区")
+        ),
+        div(*.cls := "col-md-2 col-md-offset-5")(createBoxButton)
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
         boxList
