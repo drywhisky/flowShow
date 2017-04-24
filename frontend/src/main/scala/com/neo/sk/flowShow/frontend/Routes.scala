@@ -20,7 +20,6 @@ object Routes {
   val getGroups = baseUrl + "/getGroups"
   val modifyGroup = baseUrl + "/modifyGroup"
   val addGroup = baseUrl + "/addGroup"
-  val imageUpload = baseUrl + "/imageUpload"
 
   def getBoxs(groupId:Long) = {
     baseUrl + s"/getBoxs?groupId=$groupId"

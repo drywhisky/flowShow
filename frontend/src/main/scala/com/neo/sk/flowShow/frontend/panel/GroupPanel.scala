@@ -2,7 +2,6 @@ package com.neo.sk.flowShow.frontend.panel
 
 import com.neo.sk.flowShow.frontend.Routes
 import com.neo.sk.flowShow.frontend.utils.Panel
-import org.scalajs.dom.html.Div
 import io.circe.syntax._
 import io.circe.generic.auto._
 
@@ -10,12 +9,13 @@ import scalatags.JsDom.short._
 import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
 import com.neo.sk.flowShow.ptcl._
 import io.circe.generic.auto._
-import org.scalajs.dom.{MouseEvent, XMLHttpRequest, Event}
+import org.scalajs.dom.{Event, MouseEvent, XMLHttpRequest}
 import com.neo.sk.flowShow.frontend.utils.{Modal, MyUtil}
 import org.scalajs.dom.raw.FormData
 import org.scalajs.dom
+import org.scalajs.dom.html.{IFrame, Div}
+import org.scalajs.dom.svg.SVG
 
-import org.scalajs.dom.html.IFrame
 import scala.collection.mutable
 import scala.scalajs.js.Date
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -440,13 +440,25 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   def getImg(map:String) = {
     ImgSvg.innerHTML = ""
     ImgSvg.appendChild(
-      iframe(*.id := "svg", *.src := map, *.width := "100%", *.height := "300px", *.onclick := {
-        e: MouseEvent =>
-          e.preventDefault()
-          println(s"iframe click.")
-          getMouseXY(e)
-      }).render
+      iframe(*.id := "svg", *.src := map, *.width := "100%", *.height := "300px"
+//        , *.onclick := { e: MouseEvent =>
+//          e.preventDefault()
+//          println(s"iframe click.")
+//          getMouseXY(e)
+//      }
+      ).render
     )
+  }
+
+  val svgPaths = dom.document.getElementById("svg").asInstanceOf[IFrame].contentDocument.getElementsByClassName("path")
+
+  (0 to svgPaths.length - 1).foreach{i =>
+    val path = svgPaths(i).asInstanceOf[SVG]
+    path.onclick = { e: MouseEvent =>
+      e.preventDefault()
+      println(s"iframe click.")
+      getMouseXY(e)
+    }
   }
 
   def getMouseXY(e : MouseEvent) = {
