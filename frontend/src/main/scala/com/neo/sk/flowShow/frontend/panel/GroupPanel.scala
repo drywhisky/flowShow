@@ -10,7 +10,7 @@ import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
 import com.neo.sk.flowShow.ptcl._
 import io.circe.generic.auto._
 import org.scalajs.dom.{Event, MouseEvent, XMLHttpRequest}
-import com.neo.sk.flowShow.frontend.utils.{Modal, MyUtil}
+import com.neo.sk.flowShow.frontend.utils.{Modal, MyUtil, Shortcut}
 import org.scalajs.dom.raw.FormData
 import org.scalajs.dom
 import org.scalajs.dom.html.{IFrame, Div}
@@ -423,8 +423,6 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   }
 
 
-  override def locationHash = ""
-
   private def getBox(groupId: Long) = {
     Http.getAndParse[BoxsRsp](Routes.getBoxs(groupId)).map { rsp =>
       if (rsp.errCode == 0) {
@@ -440,38 +438,18 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   def getImg(map:String) = {
     ImgSvg.innerHTML = ""
     ImgSvg.appendChild(
-      iframe(*.id := "svg", *.src := map, *.width := "100%", *.height := "300px"
-//        , *.onclick := { e: MouseEvent =>
-//          e.preventDefault()
-//          println(s"iframe click.")
-//          getMouseXY(e)
-//      }
-      ).render
+      iframe(*.id := "svg1", *.src := map, *.width := "100%", *.height := "300px").render
     )
   }
 
-  val svgPaths = dom.document.getElementById("svg").asInstanceOf[IFrame].contentDocument.getElementsByClassName("path")
-
-  (0 to svgPaths.length - 1).foreach{i =>
-    val path = svgPaths(i).asInstanceOf[SVG]
-    path.onclick = { e: MouseEvent =>
-      e.preventDefault()
-      println(s"iframe click.")
-      getMouseXY(e)
-    }
-  }
-
-  def getMouseXY(e : MouseEvent) = {
-    val x = e.clientX
-    val y = e.clientY
-    newBox(x, y)
-  }
-
-  def newBox(x:Double, y:Double) = {
+  createBoxButton.onclick = { e: MouseEvent =>
 
     val modalName = input(*.`type` := "text", *.cls := "form-control").render
     val modalMac = input(*.`type` := "text", *.cls := "form-control").render
     val modalRssi = input(*.`type` := "text", *.cls := "form-control").render
+    val modalX = input(*.`type` := "text", *.cls := "form-control").render
+    val modalY = input(*.`type` := "text", *.cls := "form-control").render
+
 
     val header = div(*.cls := "modal-title")("新建盒子")
     val body = div(*.cls := "row", *.textAlign.center)(
@@ -487,19 +465,27 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("rssi"),
           div(*.cls := "col-md-4")(modalRssi)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标x"),
+          div(*.cls := "col-md-4")(modalX)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标y"),
+          div(*.cls := "col-md-4")(modalY)
         )
       )
     )
 
     def clickFunction(): Unit = {
-      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "") {
+      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX == "" || modalY == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId, x, y).asJson.noSpaces
+        val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId, modalX.value.toDouble, modalY.value.toDouble).asJson.noSpaces
         Http.postJsonAndParse[AddGroupRsp](Routes.addBox, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, x, y)
+            val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, modalX.value.toDouble, modalY.value.toDouble)
             GroupPanel.BoxMap.put(newBox.id, newBox)
             makeBoxList(GroupPanel.BoxMap)
           } else {
