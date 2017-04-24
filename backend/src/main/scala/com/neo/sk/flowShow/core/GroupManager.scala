@@ -39,6 +39,7 @@ object GroupManager {
   case class ModifyBoxMsg(info: ModifyBox)
 }
 
+
 class GroupManager(wsClient: ActorRef) extends Actor with Stash {
 
   import GroupManager._
