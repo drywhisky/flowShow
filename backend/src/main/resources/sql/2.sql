@@ -16,7 +16,9 @@ CREATE TABLE boxs (
   create_time BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
   group_id BIGINT NOT NULL DEFAULT 0,
-  rssi_set int NOT NULL
+  rssi_set int NOT NULL,
+  x int NOT NULL ,
+  y int NOT NULL
 );
 ALTER SEQUENCE box_id_seq OWNED BY boxs.box_id;
 
@@ -26,7 +28,8 @@ create table groups (
   group_name VARCHAR(255) NOT NULL,
   user_id BIGINT NOT NULL,
   create_time BIGINT NOT NULL,
-  duration_length BIGINT NOT NULL
+  duration_length BIGINT NOT NULL,
+  map VARCHAR(255) NOT NULL
 );
 ALTER SEQUENCE group_id_seq OWNED BY groups.group_id;
 

@@ -124,6 +124,11 @@ object Http {
     }
   }
 
+  def parser[T](s: Future[String])(implicit decoder: Decoder[T]) = {
+    import io.circe.parser._
+    s.map(r => decode[T](r))
+  }
+
 
   /*  def getParams: Map[String, String] = {
       val paramStr =

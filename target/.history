@@ -148,3 +148,13 @@ compile
 ~re-start
 compile
 ~re-start
+compile
+st
+sbt
+compile
+~re-start
+pack
+start
+re-start
+start
+~re-start
