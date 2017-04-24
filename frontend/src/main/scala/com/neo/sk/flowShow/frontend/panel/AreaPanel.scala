@@ -5,29 +5,23 @@ import com.neo.sk.flowShow.frontend.utils.Panel
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
-import org.scalajs.dom.{Event, window}
+import org.scalajs.dom.{Event, MouseEvent, window}
 import io.circe.generic.auto._
 
 import scalatags.JsDom.short._
-import org.scalajs.dom.html.{Canvas, Div}
-import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, WebSocket}
+import org.scalajs.dom.html.Div
+import org.scalajs.dom.raw.{Document, MessageEvent, WebSocket}
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
-import com.neo.sk.flowShow.frontend.utils.MyUtil
-
-import js.JSConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
-import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
+import com.neo.sk.flowShow.frontend.utils.Http
 import com.neo.sk.flowShow.frontend.Routes
 
-import scala.collection.mutable
-import com.neo.sk.flowShow.frontend.utils.highcharts.CleanJsObject
 import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsUtils._
-import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsAliases._
 import com.neo.sk.flowShow.frontend.utils.highcharts.config._
-import org.scalajs.jquery.{JQueryEventObject, jQuery}
+import org.scalajs.jquery.jQuery
 
 /**
   * Created by whisky on 17/4/24.
@@ -36,71 +30,92 @@ object AreaPanel extends Panel {
 
   private val areaDiv = div().render
 
-  val range = div(*.cls := "layui-input-block")(div()).render
+  private val range = div(*.cls := "layui-input-block")(div()).render
 
-  var rangeIndex = select().render
+  private var rangeIndex = select().render
 
-  val dailyDataBox = div(div()).render
+  private val searchByDateButton = button(*.cls := "layui-btn")("查询").render
 
-  val searchByDateButton = button(*.cls := "layui-btn")("查询").render
+  private val searchByIdIncome =
+    div(
+      form(*.cls := "layui-form")(
+        div(*.cls := "layui-form-item")(
+          range
+        ),
+        div(*.cls := "layui-form-item")(
+          div(*.cls := "layui-input-block")(
+            searchByDateButton
+          )
+        )
+      )
+    ).render
 
-  val ws = new WebSocket(getWebsocketUrl(dom.document))
-
-  ws.onopen = { (e: Event) =>
-    println(s"ws.onopen...${e.timeStamp}")
+  searchByDateButton.onclick = {
+    e: MouseEvent =>
+      e.preventDefault()
+      val roomName = rangeIndex.value
+      openWs()
   }
 
-  ws.onmessage = { (e: MessageEvent) =>
+  def openWs() = {
+    val ws = new WebSocket(getWebsocketUrl(dom.document))
 
-    val wsMsg = parse[WebSocketMsg](e.data.toString)
+    ws.onopen = { (e: Event) =>
+      println(s"ws.onopen...${e.timeStamp}")
+    }
 
-    wsMsg match {
-      case Right(messages) =>
+    ws.onmessage = { (e: MessageEvent) =>
 
-        messages match {
-          case Heartbeat(id) =>
-            println(s"i got a Heartbeat")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+      val wsMsg = parse[WebSocketMsg](e.data.toString)
 
-          case msg@ComeIn(num) =>
-            println(s"comeIn.i got a msg:$msg")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+      wsMsg match {
+        case Right(messages) =>
 
-          case msg@GetOut(num) =>
-            println(s"i got a msg:$msg")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+          messages match {
+            case Heartbeat(id) =>
+              println(s"i got a Heartbeat")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
 
-          case x =>
-            println(s"i got a msg:$x")
-        }
+            case msg@ComeIn(num) =>
+              println(s"comeIn.i got a msg:$msg")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
 
-      case Left(e) =>
-        println(s"wsMsg match fail...$e")
+            case msg@GetOut(num) =>
+              println(s"i got a msg:$msg")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
+
+            case x =>
+              println(s"i got a msg:$x")
+          }
+
+        case Left(e) =>
+          println(s"wsMsg match fail...$e")
+
+      }
 
     }
 
-  }
+    ws.onclose = {
+      (e: Event) =>
+        window.alert("ws 断开")
+    }
 
-  ws.onclose = {
-    (e: Event) =>
-      window.alert("ws 断开")
-  }
+    def getWebsocketUrl(document: Document): String = {
+      val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
 
-  def getWebsocketUrl(document: Document): String = {
-    val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
+      s"$wsProtocol://${dom.document.location.host}/flowShow/ws/home"
+    }
 
-    s"$wsProtocol://${dom.document.location.host}/flowShow/ws/home"
-  }
-
-  def parse[T](s: String)(implicit decoder: Decoder[T]): Either[Error, T] = {
-    import io.circe.parser._
-    decode[T](s)
+    def parse[T](s: String)(implicit decoder: Decoder[T]): Either[Error, T] = {
+      import io.circe.parser._
+      decode[T](s)
+    }
   }
 
   def makeGroupsSelects(list: List[Group]) = {
