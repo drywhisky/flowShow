@@ -16,6 +16,7 @@ object Routes {
   val home = baseUrl + "/home"
   val register = baseUrl + "/register"
 
+  val imageUpload = baseUrl + "/imageUpload"
   val getGroups = baseUrl + "/getGroups"
   val modifyGroup = baseUrl + "/modifyGroup"
   val addGroup = baseUrl + "/addGroup"

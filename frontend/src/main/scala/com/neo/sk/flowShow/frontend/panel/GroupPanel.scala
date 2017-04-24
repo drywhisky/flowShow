@@ -6,12 +6,15 @@ import com.neo.sk.flowShow.frontend.utils.Panel
 import org.scalajs.dom.html.Div
 import io.circe.generic.auto._
 import io.circe.syntax._
+
 import scalatags.JsDom.short._
 import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
 import com.neo.sk.flowShow.ptcl._
 import io.circe.generic.auto._
-import org.scalajs.dom.MouseEvent
-import com.neo.sk.flowShow.frontend.utils.{MyUtil, Modal}
+import org.scalajs.dom.{Event, MouseEvent}
+import com.neo.sk.flowShow.frontend.utils.{Modal, MyUtil}
+import org.scalajs.dom.raw.{FormData, XMLHttpRequest}
+
 import scala.collection.mutable
 import scala.scalajs.js.Date
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -111,6 +114,36 @@ object GroupListPanel extends Panel{
     val modalName = input(*.`type` := "text", *.cls := "form-control", *.value := name).render
     val modalTime = input(*.`type` := "text", *.cls := "form-control", *.value := MyUtil.DateFormatter(new Date(time), "YYYY-MM-DD hh:mm:ss"), *.disabled := true).render
     val modalDua = input(*.`type` := "text", *.cls := "form-control", *.value := durationLength).render
+    val uploadButton = button(*.cls := "\"btn btn-warning",*.fontSize.small)("上传图片").render
+
+    uploadButton.onclick = {
+      e:MouseEvent =>
+        e.preventDefault()
+        upload()
+    }
+
+    val imageUpload =
+      form(*.enctype:="multipart/form-data",*.action:=Routes.imageUpload+imageUpload, *.method:="post", *.display.inline)(
+        input(*.`type`:="file",*.name:="fileUpload")
+      ).render
+
+    def upload() = {
+      println(s"upload execute !")
+      val oData = new FormData(imageUpload)
+      println(s"oData = $oData")
+      val oReq = new XMLHttpRequest()
+      val a = oReq.open("POST", Routes.imageUpload, true)
+      println(s"a = $a")
+
+      oReq.onload =  { e:Event=>
+        if (oReq.status == 200) {
+          JsFunc.alert("上传成功！")
+        } else {
+          JsFunc.alert("上传失败！")
+        }
+      }
+      oReq.send(oData)
+    }
 
 
     val header = div(*.cls := "modal-title")("更新区域信息")
@@ -123,6 +156,10 @@ object GroupListPanel extends Panel{
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label")("区域名称"),
           div(*.cls := "col-md-4")(modalName)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label")("区域地图"),
+          div(*.cls := "col-md-4")(uploadButton)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label")("创建时间"),
