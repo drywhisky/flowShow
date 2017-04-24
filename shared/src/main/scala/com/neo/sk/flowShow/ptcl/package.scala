@@ -99,7 +99,7 @@ package object ptcl {
                          errCode: Int = 0,
                          msg: String = "ok") extends Response
 
-  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, x: Int, y: Int)
+  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, x: Double, y: Double)
 
   case class BoxsRsp(data: List[Box],
                        errCode: Int = 0,
@@ -107,7 +107,7 @@ package object ptcl {
 
   case class ModifyBox(id:Long, mac:String, name:String, rssi:Int)
 
-  case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Int, y: Int)
+  case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Double, y: Double)
 
 
 }

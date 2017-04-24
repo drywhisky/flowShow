@@ -26,13 +26,13 @@ trait SlickTables {
     *  @param userId Database column user_id SqlType(int8)
     *  @param groupId Database column group_id SqlType(int8), Default(0)
     *  @param rssiSet Database column rssi_set SqlType(int4)
-    *  @param x Database column x SqlType(int4)
-    *  @param y Database column y SqlType(int4) */
-  case class rBoxs(boxId: Long,  boxName: String, boxMac: String, createTime: Long, userId: Long, groupId: Long = 0L, rssiSet: Int, x: Int, y: Int)
+    *  @param x Database column x SqlType(float8)
+    *  @param y Database column y SqlType(float8) */
+  case class rBoxs(boxId: Long, boxName: String, boxMac: String, createTime: Long, userId: Long, groupId: Long = 0L, rssiSet: Int, x: Double, y: Double)
   /** GetResult implicit for fetching rBoxs objects using plain SQL queries */
-  implicit def GetResultrBoxs(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rBoxs] = GR{
+  implicit def GetResultrBoxs(implicit e0: GR[Long], e1: GR[String], e2: GR[Int], e3: GR[Double]): GR[rBoxs] = GR{
     prs => import prs._
-      rBoxs.tupled((<<[Long], <<[String], <<[String], <<[Long], <<[Long], <<[Long], <<[Int], <<[Int], <<[Int]))
+      rBoxs.tupled((<<[Long], <<[String], <<[String], <<[Long], <<[Long], <<[Long], <<[Int], <<[Double], <<[Double]))
   }
   /** Table description of table boxs. Objects of this class serve as prototypes for rows in queries. */
   class tBoxs(_tableTag: Tag) extends profile.api.Table[rBoxs](_tableTag, "boxs") {
@@ -54,10 +54,10 @@ trait SlickTables {
     val groupId: Rep[Long] = column[Long]("group_id", O.Default(0L))
     /** Database column rssi_set SqlType(int4) */
     val rssiSet: Rep[Int] = column[Int]("rssi_set")
-    /** Database column x SqlType(int4) */
-    val x: Rep[Int] = column[Int]("x")
-    /** Database column y SqlType(int4) */
-    val y: Rep[Int] = column[Int]("y")
+    /** Database column x SqlType(float8) */
+    val x: Rep[Double] = column[Double]("x")
+    /** Database column y SqlType(float8) */
+    val y: Rep[Double] = column[Double]("y")
   }
   /** Collection-like TableQuery object for table tBoxs */
   lazy val tBoxs = new TableQuery(tag => new tBoxs(tag))

@@ -23,7 +23,7 @@ object Routes {
   val imageUpload = baseUrl + "/imageUpload"
 
   def getBoxs(groupId:Long) = {
-    baseUrl + s"groupId:$groupId"
+    baseUrl + s"/getBoxs?groupId=$groupId"
   }
   val modifyBox = baseUrl + "/modifyBox"
   val addBox = baseUrl + "/addBox"
