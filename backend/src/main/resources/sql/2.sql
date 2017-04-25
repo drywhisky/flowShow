@@ -17,8 +17,8 @@ CREATE TABLE boxs (
   user_id BIGINT NOT NULL,
   group_id BIGINT NOT NULL DEFAULT 0,
   rssi_set int NOT NULL,
-  x int NOT NULL ,
-  y int NOT NULL
+  x FLOAT NOT NULL ,
+  y FLOAT NOT NULL
 );
 ALTER SEQUENCE box_id_seq OWNED BY boxs.box_id;
 

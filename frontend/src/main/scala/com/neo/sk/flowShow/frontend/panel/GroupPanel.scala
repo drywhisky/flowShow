@@ -66,6 +66,9 @@ object GroupListPanel extends Panel{
     val modalName = input(*.`type` := "text", *.cls := "form-control").render
     val modalDua = input(*.`type` := "text", *.cls := "form-control").render
     val upLoadButton = button(*.cls := "btn btn-warning")("上传").render
+    val modalWidth = input(*.`type` := "text", *.cls := "form-control").render
+    val modalHeight = input(*.`type` := "text", *.cls := "form-control").render
+    val modalScala = input(*.`type` := "text", *.cls := "form-control").render
     var fileUrl = ""
 
     val floorSvg = div().render
@@ -128,15 +131,42 @@ object GroupListPanel extends Panel{
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域地图"),
           div(*.cls := "col-md-4")(upLoadButton, fileUpload, floorSvg)
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域宽度"),
+          div(*.cls := "col-md-4")(
+            div(*.cls := "input-group")(
+              modalWidth,
+              span(*.cls := "input-group-addon")("像素")
+            )
+          )
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域长度"),
+          div(*.cls := "col-md-4")(
+            div(*.cls := "input-group")(
+              modalHeight,
+              span(*.cls := "input-group-addon")("像素")
+            )
+          )
+        ),
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("比例尺"),
+          div(*.cls := "col-md-4")(
+            div(*.cls := "input-group")(
+              modalScala,
+              span(*.cls := "input-group-addon")("像素/厘米")
+            )
+          )
         )
       )
     )
 
     def clickFunction():Unit = {
-      if (modalName.value == "" || modalDua.value == "" || fileUrl == "") {
+      if (modalName.value == "" || modalDua.value == "" || fileUrl == "" || modalHeight.value == "" || modalWidth.value == "" || modalScala.value == "") {
         JsFunc.alert(s"error!")
       } else {
-        val data = AddGroup(modalName.value, modalDua.value.toLong * 60000, fileUrl).asJson.noSpaces
+        val data = AddGroup(modalName.value, modalDua.value.toLong * 60000, fileUrl, modalScala.value.toDouble, modalWidth.value.toDouble, modalHeight.value.toDouble).asJson.noSpaces
         Http.postJsonAndParse[AddGroupRsp](Routes.addGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")

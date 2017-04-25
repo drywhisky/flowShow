@@ -91,7 +91,7 @@ package object ptcl {
 
   case class ModifyGroup(id:Long, name:String, durationLength: Long)
 
-  case class AddGroup(name:String, durationLength: Long, map:String)
+  case class AddGroup(name:String, durationLength: Long, map:String, scala:Double, width:Double, height:Double)
 
   case class AddGroupRsp(id:Option[Long], timestamp:Option[Long], errCode: Int = 0, msg: String = "ok")
 
