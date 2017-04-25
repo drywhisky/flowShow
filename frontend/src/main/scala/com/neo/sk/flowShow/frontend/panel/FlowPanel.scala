@@ -4,7 +4,7 @@ import com.neo.sk.flowShow.frontend.utils.Panel
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
-import org.scalajs.dom.{Event, window}
+import org.scalajs.dom.{Event, MouseEvent, window}
 import io.circe.generic.auto._
 
 import scalatags.JsDom.short._
@@ -35,105 +35,114 @@ import org.scalajs.jquery.{JQueryEventObject, jQuery}
 object FlowPanel extends Panel{
 
   private val realTimeChart = div().render
-  private val realTimeMap = mutable.HashMap[Int, RealTimeInfo]()
 
-  val ws = new WebSocket(getWebsocketUrl(dom.document))
+  private val BoxMap = mutable.HashMap[String, Box]()
 
-  ws.onopen = { (e: Event) =>
-    println(s"ws.onopen...${e.timeStamp}")
+  private val rangeIndex = select(*.width := "100px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
+
+  private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
+
+  private val searchByIdIncome =
+    div(
+      form(*.cls := "form-inline")(
+        div(*.cls := "form-group")(
+          rangeIndex
+        ),
+        searchByDateButton
+      )
+    ).render
+
+  searchByDateButton.onclick = { e: MouseEvent =>
+    e.preventDefault()
+    val mac = rangeIndex.value
+    openWs(mac)
   }
 
-  ws.onmessage = { (e: MessageEvent) =>
+  def openWs(mac: String) = {
+    val ws = new WebSocket(getWebsocketUrl(dom.document, mac))
 
-    val wsMsg = parse[WebSocketMsg](e.data.toString)
+    ws.onopen = { (e: Event) =>
+      println(s"ws.onopen...${e.timeStamp}")
 
-    wsMsg match {
-      case Right(messages) =>
+      val drawChart = new HighchartsConfig {
 
-        messages match {
-          case Heartbeat(id) =>
-            println(s"i got a Heartbeat")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+        // Chart config
+        override val chart: Cfg[Chart] = Chart(`type` = "spline")
 
-          case msg@ComeIn(num) =>
-            println(s"comeIn.i got a msg:$msg")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+        // Chart title
+        override val title: Cfg[Title] = Title(text = "动态实时数据")
 
-          case msg@GetOut(num) =>
-            println(s"i got a msg:$msg")
-            jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-              jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
-            }
+        // X Axis settings
+        override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
 
-          case x =>
-            println(s"i got a msg:$x")
-        }
+        // Y Axis settings
+        override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 1.0, color = "#808080"))))
 
-      case Left(e) =>
-        println(s"wsMsg match fail...$e")
+        // Series
+        override val series: SeriesCfg = js.Array[AnySeries](
+          SeriesSpline(name = "随机",
+            data = getRadom().toJSArray
+          )
+        )
+      }
 
+      renderChart(drawChart, realTimeChart)
+
+    }
+
+    ws.onmessage = { (e: MessageEvent) =>
+
+      val wsMsg = parse[WebSocketMsg](e.data.toString)
+
+      wsMsg match {
+        case Right(messages) =>
+
+          messages match {
+            case Heartbeat(id) =>
+              println(s"i got a Heartbeat")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
+
+            case msg@ComeIn(num) =>
+              println(s"comeIn.i got a msg:$msg")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
+
+            case msg@GetOut(num) =>
+              println(s"i got a msg:$msg")
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
+
+            case x =>
+              println(s"i got a msg:$x")
+          }
+
+        case Left(e) =>
+          println(s"wsMsg match fail...$e")
+
+      }
+
+    }
+
+    ws.onclose = {
+      (e: Event) =>
+        window.alert("ws 断开")
     }
 
   }
 
-  ws.onclose = {
-    (e: Event) =>
-      window.alert("ws 断开")
-  }
-
-  def getWebsocketUrl(document: Document): String = {
+  def getWebsocketUrl(document: Document, mac: String): String = {
     val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
 
-    s"$wsProtocol://${dom.document.location.host}/flowShow/ws/home"
+    s"$wsProtocol://${dom.document.location.host}/flowShow/ws/home?subId=$mac"
   }
 
   def parse[T](s: String)(implicit decoder: Decoder[T]): Either[Error, T] = {
     import io.circe.parser._
     decode[T](s)
-  }
-
-
-//  private def initData() = {
-//    Http.getAndParse[RealTimeInfoRsp](Routes.realTimeUrl).map { rsp =>
-//      if (rsp.errCode == 0) {
-//        rsp.data match {
-//          case Some(r) =>
-//            realTimeMap ++= r.map(o => (o.groupId.toInt, o))
-//            drawRealTimeChart(realTimeChart, realTimeMap.get(11))
-//
-//          case None =>
-//            JsFunc.alert(s"rsp.data is None")
-//        }
-//      }else{
-//        JsFunc.alert(s"${rsp.msg}")
-//      }
-//    }
-//  }
-
-  val test = new HighchartsConfig {
-
-    // Chart config
-    override val chart: Cfg[Chart] = Chart(`type` = "spline")
-
-    // Chart title
-    override val title: Cfg[Title] = Title(text = "动态模拟实时数据")
-
-    // X Axis settings
-    override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
-
-    // Y Axis settings
-    override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 1.0, color = "#808080"))))
-
-    // Series
-    override val series: SeriesCfg = js.Array[AnySeries](
-      SeriesSpline(name = "随机",
-        data = getRadom().toJSArray
-      )
-    )
   }
 
   private def getRadom() = {
@@ -150,19 +159,38 @@ object FlowPanel extends Panel{
     container.appendChild(newContainer)
   }
 
+  def makeBoxsSelects(list: List[Box]) = {
+
+    def makeBoxSelects(box: Box) = {
+      rangeIndex.appendChild(option(s"${box.name}").render)
+    }
+
+    list.map(data => makeBoxSelects(data))
+
+  }
+
+  def getBoxList() = {
+    Http.getAndParse[BoxsRsp](Routes.getAllBoxs).map { rsp =>
+      if (rsp.errCode == 0) {
+        BoxMap ++= rsp.data.map(g => (g.name, g))
+        makeBoxsSelects(rsp.data)
+      }
+    }
+  }
+
   override def locationHash = ""
 
   override protected def build(): Div = {
-//    initData()
-    renderChart(test, realTimeChart)
+    getBoxList()
     div(
       div(*.cls := "row")(
         div(*.cls := "col-md-12", *.textAlign := "center")(
           h1(
-            span(*.cls := "artpip-highlight", *.color := "#13C5E4")("实时客流统计")
+            span(*.cls := "artpip-highlight", *.color := "#13C5E4")("单盒实时客流统计")
           )
         )
       ),
+      searchByIdIncome,
       div(*.cls := "row", *.width := "50%", *.height := "50%")(
         realTimeChart
       )

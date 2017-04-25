@@ -18,7 +18,8 @@ object HomePage extends Page {
     println(s"HomePage item click: $name")
     val target = name match {
       case "111" => GroupPanel.render
-      case "222" => FlowPanel.render
+      case "222" => AreaPanel.render
+      case "333" => FlowPanel.render
       case _ => GroupPanel.render
     }
 
@@ -29,7 +30,8 @@ object HomePage extends Page {
 
   private val itemList = List(
     ("区域管理", "111"),
-    ("数据呈现", "222")
+    ("区域数据呈现", "222"),
+    ("单盒数据呈现", "333")
   )
 
   private val menuList = new MenuList(itemList, listItemClick).render

@@ -170,7 +170,7 @@ object GroupListPanel extends Panel{
         Http.postJsonAndParse[AddGroupRsp](Routes.addGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            val newGroup = Group(rsp.id.getOrElse(0l), modalName.value, rsp.timestamp.getOrElse(0l), modalDua.value.toLong, fileUrl)
+            val newGroup = Group(rsp.id.getOrElse(0l), modalName.value, rsp.timestamp.getOrElse(0l), modalDua.value.toLong, fileUrl, modalScala.value.toDouble)
             GroupPanel.GroupMap.put(newGroup.id, newGroup)
             makeGroupList(GroupPanel.GroupMap)
           } else {
@@ -194,7 +194,7 @@ object GroupListPanel extends Panel{
   }
 
 
-  private def editAction(id: Long, name: String, time: Long, durationLength: Long, map:String) = {
+  private def editAction(id: Long, name: String, time: Long, durationLength: Long, map:String, scala:Double) = {
 
     val modalId = input(*.`type` := "text", *.cls := "form-control", *.value := id, *.disabled := true).render
     val modalName = input(*.`type` := "text", *.cls := "form-control", *.value := name).render
@@ -237,7 +237,7 @@ object GroupListPanel extends Panel{
         Http.postJsonAndParse[CommonRsp](Routes.modifyGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            GroupPanel.GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong, map))
+            GroupPanel.GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong, map, scala))
             makeGroupList(GroupPanel.GroupMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
@@ -267,12 +267,12 @@ object GroupListPanel extends Panel{
 
       editButton.onclick = { e: MouseEvent =>
         e.preventDefault()
-        editAction(group.id, group.name, group.createTime, group.durationLength, group.map)
+        editAction(group.id, group.name, group.createTime, group.durationLength, group.map, group.scala)
       }
 
       boxButton.onclick = { e: MouseEvent =>
         e.preventDefault()
-        GroupPanel.SetContent(new BoxListPanel(group.id, group.name, group.map).render)
+        GroupPanel.SetContent(new BoxListPanel(group.id, group.name, group.map, group.scala).render)
       }
 
       tr(
@@ -336,7 +336,9 @@ object GroupListPanel extends Panel{
 
 }
 
-class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
+class BoxListPanel(groupId: Long, name: String, map:String, scala:Double) extends Panel {
+
+  import scalatags.JsDom.svgTags._
 
   private val createBoxButton = button(*.cls := "btn btn-warning")("+添加盒子").render
 
@@ -345,6 +347,10 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   private val boxList = div(div()).render
 
   private val editBox = div().render
+
+  private val iFrame = iframe(*.id := "svg", *.src := map, *.width := "100%", *.height := "488px").render
+
+  private val container = g().render
 
   private def editAction(id: Long, name: String, mac:String, time: Long, rssi: Int, x: Double, y: Double) : Unit= {
 
@@ -414,6 +420,9 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   private def makeBoxList(boxs: mutable.HashMap[Long, Box]) : Unit = {
 
     def makeRow(box: Box) = {
+
+      container.appendChild(image(*.href := "/flowShow/static/img/router.png", *.width := "20px", *.height := "20px",scalatags.JsDom.svgAttrs.x := box.x * scala, scalatags.JsDom.svgAttrs.y := box.y * scala).render)
+
       val editButton = button(*.cls := "btn btn-info")("编辑").render
 
       editButton.onclick = { e: MouseEvent =>
@@ -444,14 +453,13 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
           )
         ),
         tbody(*.textAlign.center)(
-          boxs.toList.map(_._2).map(m => makeRow(m))
+          boxs.toList.map(_._2).map( m => makeRow(m))
         )
       )
     ).render
 
     boxList.replaceChild(newDiv, boxList.firstChild)
   }
-
 
   private def getBox(groupId: Long) = {
     Http.getAndParse[BoxsRsp](Routes.getBoxs(groupId)).map { rsp =>
@@ -468,8 +476,14 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
   def getImg(map:String) = {
     ImgSvg.innerHTML = ""
     ImgSvg.appendChild(
-      iframe(*.id := "svg1", *.src := map, *.width := "100%", *.height := "300px").render
+      iFrame
     )
+
+    Shortcut.scheduleOnce(delay, 5 * 1000)
+
+    def delay() = {
+      dom.document.getElementById("svg").asInstanceOf[IFrame].contentDocument.lastChild.appendChild(container)
+    }
   }
 
   createBoxButton.onclick = { e: MouseEvent =>
@@ -508,6 +522,8 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
     )
 
     def clickFunction(): Unit = {
+      import scalatags.JsDom.svgAttrs._
+
       if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX.value == "" || modalY.value == "") {
         JsFunc.alert(s"error!")
       } else {
@@ -517,6 +533,9 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
             JsFunc.alert(s"success")
             val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, modalX.value.toDouble, modalY.value.toDouble)
             GroupPanel.BoxMap.put(newBox.id, newBox)
+            container.appendChild(
+              image(*.href := "/flowShow/static/img/router.png", *.width := "20px", *.height := "20px", x := newBox.x * scala, y := newBox.y * scala).render
+            )
             makeBoxList(GroupPanel.BoxMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")

@@ -105,7 +105,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
       dealFutureResult {
         GroupDao.listGroupsByUserId(user.uid).map { res =>
             val groupList = res.map {
-              r => Group(r.groupId, r.groupName, r.createTime, r.durationLength, r.map)
+              r => Group(r.groupId, r.groupName, r.createTime, r.durationLength, r.map, r.scala)
             }.toList
             complete(GroupsRsp(data = groupList))
         }.recover{
@@ -224,6 +224,22 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
           val imgName = getExtName(metadata.fileName).getOrElse("")
           val destFile = storeTmpFIle(tmpFile, imgName)
           complete(CommonRsp(0, destFile.getName))
+      }
+    }
+  }
+
+  private val getAllBoxs = (path("getAllBoxs") & get & pathEndOrSingleSlash){
+    UserAction{ user =>
+      dealFutureResult {
+        BoxDao.listAllBoxs(user.uid).map { res =>
+          val boxList = res.map {
+            r => Box(r.boxId, r.boxName, r.boxMac, r.createTime, r.rssiSet, r.x, r.y)
+          }.toList
+          complete(BoxsRsp(data = boxList))
+        }.recover {
+          case t =>
+            complete(CommonRsp(104005, s"error.$t"))
+        }
       }
     }
   }

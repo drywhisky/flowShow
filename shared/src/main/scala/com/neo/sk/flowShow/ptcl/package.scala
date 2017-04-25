@@ -87,7 +87,7 @@ package object ptcl {
     * Groups and Boxs
     */
 
-  case class Group(id: Long, name: String, createTime:Long, durationLength: Long, map: String)
+  case class Group(id: Long, name: String, createTime:Long, durationLength: Long, map: String, scala:Double)
 
   case class ModifyGroup(id:Long, name:String, durationLength: Long)
 

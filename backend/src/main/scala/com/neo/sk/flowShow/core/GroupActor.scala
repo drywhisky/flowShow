@@ -116,8 +116,8 @@ class GroupActor(id:String) extends Actor with Stash{
       val target = shoots.filter(s => Math.abs((s.rssi(0) + s.rssi(1)) / 2) < rssiSet)
 
       val abandonSize = shoots.size - target.size
-      if(abandonSize != 0)
-        log.debug(s"$logPrefix abandon data size $abandonSize, total size ${shoots.size}.")
+//      if(abandonSize != 0)
+//        log.debug(s"$logPrefix abandon data size $abandonSize, total size ${shoots.size}.")
 
       if(target.nonEmpty) {
         val r1 = PutShoots(boxMac, target)
