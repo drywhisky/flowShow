@@ -14,7 +14,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = tBoxs.schema ++ tCountDetail.schema ++ tCountHistory.schema ++ tGroups.schema ++ tUsers.schema
+  lazy val schema: profile.SchemaDescription = Array(tBoxs.schema, tCountDetail.schema, tCountHistory.schema, tGroups.schema, tUserAction.schema, tUsers.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -26,13 +26,13 @@ trait SlickTables {
     *  @param userId Database column user_id SqlType(int8)
     *  @param groupId Database column group_id SqlType(int8), Default(0)
     *  @param rssiSet Database column rssi_set SqlType(int4)
-    *  @param x Database column x SqlType(float8)
-    *  @param y Database column y SqlType(float8) */
-  case class rBoxs(boxId: Long, boxName: String, boxMac: String, createTime: Long, userId: Long, groupId: Long = 0L, rssiSet: Int, x: Double, y: Double)
+    *  @param x Database column x SqlType(int4)
+    *  @param y Database column y SqlType(int4) */
+  case class rBoxs(boxId: Long, boxName: String, boxMac: String, createTime: Long, userId: Long, groupId: Long = 0L, rssiSet: Int, x: Int, y: Int)
   /** GetResult implicit for fetching rBoxs objects using plain SQL queries */
-  implicit def GetResultrBoxs(implicit e0: GR[Long], e1: GR[String], e2: GR[Int], e3: GR[Double]): GR[rBoxs] = GR{
+  implicit def GetResultrBoxs(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rBoxs] = GR{
     prs => import prs._
-      rBoxs.tupled((<<[Long], <<[String], <<[String], <<[Long], <<[Long], <<[Long], <<[Int], <<[Double], <<[Double]))
+      rBoxs.tupled((<<[Long], <<[String], <<[String], <<[Long], <<[Long], <<[Long], <<[Int], <<[Int], <<[Int]))
   }
   /** Table description of table boxs. Objects of this class serve as prototypes for rows in queries. */
   class tBoxs(_tableTag: Tag) extends profile.api.Table[rBoxs](_tableTag, "boxs") {
@@ -54,10 +54,10 @@ trait SlickTables {
     val groupId: Rep[Long] = column[Long]("group_id", O.Default(0L))
     /** Database column rssi_set SqlType(int4) */
     val rssiSet: Rep[Int] = column[Int]("rssi_set")
-    /** Database column x SqlType(float8) */
-    val x: Rep[Double] = column[Double]("x")
-    /** Database column y SqlType(float8) */
-    val y: Rep[Double] = column[Double]("y")
+    /** Database column x SqlType(int4) */
+    val x: Rep[Int] = column[Int]("x")
+    /** Database column y SqlType(int4) */
+    val y: Rep[Int] = column[Int]("y")
   }
   /** Collection-like TableQuery object for table tBoxs */
   lazy val tBoxs = new TableQuery(tag => new tBoxs(tag))
@@ -163,6 +163,38 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tGroups */
   lazy val tGroups = new TableQuery(tag => new tGroups(tag))
+
+  /** Entity class storing rows of table tUserAction
+    *  @param id Database column id SqlType(bigserial), AutoInc, PrimaryKey
+    *  @param cilentMac Database column cilent_mac SqlType(varchar), Length(255,true)
+    *  @param groupId Database column group_id SqlType(int8)
+    *  @param actionType Database column action_type SqlType(int4)
+    *  @param actionTime Database column action_time SqlType(int8) */
+  case class rUserAction(id: Long, cilentMac: String, groupId: Long, actionType: Int, actionTime: Long)
+  /** GetResult implicit for fetching rUserAction objects using plain SQL queries */
+  implicit def GetResultrUserAction(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rUserAction] = GR{
+    prs => import prs._
+      rUserAction.tupled((<<[Long], <<[String], <<[Long], <<[Int], <<[Long]))
+  }
+  /** Table description of table user_action. Objects of this class serve as prototypes for rows in queries. */
+  class tUserAction(_tableTag: Tag) extends profile.api.Table[rUserAction](_tableTag, "user_action") {
+    def * = (id, cilentMac, groupId, actionType, actionTime) <> (rUserAction.tupled, rUserAction.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(cilentMac), Rep.Some(groupId), Rep.Some(actionType), Rep.Some(actionTime)).shaped.<>({r=>import r._; _1.map(_=> rUserAction.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(bigserial), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column cilent_mac SqlType(varchar), Length(255,true) */
+    val cilentMac: Rep[String] = column[String]("cilent_mac", O.Length(255,varying=true))
+    /** Database column group_id SqlType(int8) */
+    val groupId: Rep[Long] = column[Long]("group_id")
+    /** Database column action_type SqlType(int4) */
+    val actionType: Rep[Int] = column[Int]("action_type")
+    /** Database column action_time SqlType(int8) */
+    val actionTime: Rep[Long] = column[Long]("action_time")
+  }
+  /** Collection-like TableQuery object for table tUserAction */
+  lazy val tUserAction = new TableQuery(tag => new tUserAction(tag))
 
   /** Entity class storing rows of table tUsers
     *  @param userId Database column user_id SqlType(bigserial), AutoInc, PrimaryKey

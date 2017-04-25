@@ -56,7 +56,7 @@ object HomePage extends Page {
         ),
         div(*.id := "main", *.style := "background-color: #282B3F; height: 90%")(
           div(*.cls := "featured-container", *.height := "100%")(
-            div(*.cls := "row alt", *.height := "90%")(
+            div(*.cls := "row alt", *.style := "background-color: #282B3F;")(
               div(*.cls := "col-md-2", *.textAlign.center)(
                 menuList
               ),

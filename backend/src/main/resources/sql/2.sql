@@ -50,6 +50,14 @@ CREATE TABLE count_history (
   timestamp BIGINT NOT NULL ,
   count int NOT NULL
 );
+
+CREATE TABLE user_action (
+  id BIGSERIAL PRIMARY KEY ,
+  cilent_mac VARCHAR(255) NOT NULL ,
+  group_id BIGINT NOT NULL ,
+  action_type Int NOT NULL ,
+  action_time BIGINT NOT NULL
+);
 --
 -- CREATE TABLE brand(
 --   id SERIAL PRIMARY KEY ,

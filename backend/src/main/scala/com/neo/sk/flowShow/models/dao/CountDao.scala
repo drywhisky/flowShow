@@ -23,4 +23,18 @@ object CountDao {
     tCountDetail.filter(r => r.groupId === groupId && r.timestamp >= startTime && r.timestamp < endTime).result
   }
 
+  def userIn(clientMac:String, groupId:Long, time:Long) = db.run(
+    tUserAction.+=(rUserAction(-1l, clientMac, groupId, ActionType.in, time))
+  )
+
+  def userOut(clientMac:String, groupId:Long, time: Long) = {
+    db.run(tUserAction.+=(rUserAction(-1l, clientMac, groupId, ActionType.out, time)))
+  }
+
+
+}
+
+object ActionType {
+  val in = 0
+  val out = 1
 }
