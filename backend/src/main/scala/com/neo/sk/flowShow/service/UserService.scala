@@ -29,7 +29,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
       getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~
-      modifyBox ~ imageUpload
+      modifyBox ~ imageUpload ~ getAllBoxs
 
   )
 

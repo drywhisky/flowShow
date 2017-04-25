@@ -26,7 +26,7 @@ object AreaPanel extends Panel {
 
   private val areaDiv = div(*.width := "100%", *.height := "100%").render
 
-  private val rangeIndex = select(*.width := "100px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
+  private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
@@ -36,7 +36,7 @@ object AreaPanel extends Panel {
 
   private val searchByIdIncome =
     div(
-      form(*.cls := "form-inline")(
+      form(*.cls := "form-inline", *.marginLeft := "8%")(
         div(*.cls := "form-group")(
           rangeIndex
         ),
@@ -49,6 +49,8 @@ object AreaPanel extends Panel {
       e.preventDefault()
       val roomName = rangeIndex.value
       val group = GroupMap.get(roomName).head
+
+      areaDiv.innerHTML = ""
 
       areaDiv.appendChild(
         iframe(*.id := "svg", *.src := group.map, *.width := "100%", *.height := "488px").render

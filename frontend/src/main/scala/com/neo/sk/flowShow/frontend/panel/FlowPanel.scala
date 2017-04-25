@@ -8,17 +8,16 @@ import org.scalajs.dom.{Event, MouseEvent, window}
 import io.circe.generic.auto._
 
 import scalatags.JsDom.short._
-import org.scalajs.dom.html.{Canvas, Div}
-import org.scalajs.dom.raw.{CanvasRenderingContext2D, Document, MessageEvent, WebSocket}
+import org.scalajs.dom.html.Div
+import org.scalajs.dom.raw.{Document, MessageEvent, WebSocket}
 
 import scala.scalajs.js
 import scala.scalajs.js.Date
-import com.neo.sk.flowShow.frontend.utils.MyUtil
 
 import js.JSConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
-import com.neo.sk.flowShow.frontend.utils.{Http, JsFunc}
+import com.neo.sk.flowShow.frontend.utils.Http
 import com.neo.sk.flowShow.frontend.Routes
 
 import scala.collection.mutable
@@ -36,15 +35,13 @@ object FlowPanel extends Panel{
 
   private val realTimeChart = div().render
 
-  private val BoxMap = mutable.HashMap[String, Box]()
-
-  private val rangeIndex = select(*.width := "100px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
+  private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
   private val searchByIdIncome =
     div(
-      form(*.cls := "form-inline")(
+      form(*.cls := "form-inline", *.marginLeft := "8%")(
         div(*.cls := "form-group")(
           rangeIndex
         ),
@@ -85,6 +82,8 @@ object FlowPanel extends Panel{
           )
         )
       }
+
+      realTimeChart.innerHTML = ""
 
       renderChart(drawChart, realTimeChart)
 
@@ -162,7 +161,7 @@ object FlowPanel extends Panel{
   def makeBoxsSelects(list: List[Box]) = {
 
     def makeBoxSelects(box: Box) = {
-      rangeIndex.appendChild(option(s"${box.name}").render)
+      rangeIndex.appendChild(option(s"${box.mac}").render)
     }
 
     list.map(data => makeBoxSelects(data))
@@ -172,7 +171,6 @@ object FlowPanel extends Panel{
   def getBoxList() = {
     Http.getAndParse[BoxsRsp](Routes.getAllBoxs).map { rsp =>
       if (rsp.errCode == 0) {
-        BoxMap ++= rsp.data.map(g => (g.name, g))
         makeBoxsSelects(rsp.data)
       }
     }
@@ -186,12 +184,12 @@ object FlowPanel extends Panel{
       div(*.cls := "row")(
         div(*.cls := "col-md-12", *.textAlign := "center")(
           h1(
-            span(*.cls := "artpip-highlight", *.color := "#13C5E4")("单盒实时客流统计")
+            span(*.cls := "artpip-highlight", *.color := "#13C5E4")("单盒实时客流呈现")
           )
         )
       ),
       searchByIdIncome,
-      div(*.cls := "row", *.width := "50%", *.height := "50%")(
+      div(*.cls := "row", *.width := "70%", *.height := "50%", *.marginLeft := "20%", *.marginTop := "3%")(
         realTimeChart
       )
     ).render
