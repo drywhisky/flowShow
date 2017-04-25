@@ -18,10 +18,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.flowShow.frontend.utils.Http
 import com.neo.sk.flowShow.frontend.Routes
-
 import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsUtils._
 import com.neo.sk.flowShow.frontend.utils.highcharts.config._
 import org.scalajs.jquery.jQuery
+
+import scala.collection.mutable
 
 /**
   * Created by whisky on 17/4/24.
@@ -35,6 +36,8 @@ object AreaPanel extends Panel {
   private var rangeIndex = select().render
 
   private val searchByDateButton = button(*.cls := "layui-btn")("查询").render
+
+  private val GroupMap = mutable.HashMap[String, Long]()
 
   private val searchByIdIncome =
     div(
@@ -54,48 +57,11 @@ object AreaPanel extends Panel {
     e: MouseEvent =>
       e.preventDefault()
       val roomName = rangeIndex.value
+      val a = GroupMap.getOrElse(roomName, 0)
       openWs()
   }
 
   def openWs() = {
-    val ws = new WebSocket(getWebsocketUrl(dom.document))
-
-    ws.onopen = { (e: Event) =>
-      println(s"ws.onopen...${e.timeStamp}")
-    }
-
-    ws.onmessage = { (e: MessageEvent) =>
-
-      val wsMsg = parse[WebSocketMsg](e.data.toString)
-
-      wsMsg match {
-        case Right(messages) =>
-
-          messages match {
-            case Heartbeat(id) =>
-              println(s"i got a Heartbeat")
-
-            case msg@ComeIn(num) =>
-              println(s"comeIn.i got a msg:$msg")
-
-            case msg@GetOut(num) =>
-              println(s"i got a msg:$msg")
-
-            case x =>
-              println(s"i got a msg:$x")
-          }
-
-        case Left(e) =>
-          println(s"wsMsg match fail...$e")
-
-      }
-
-    }
-
-    ws.onclose = {
-      (e: Event) =>
-        window.alert("ws 断开")
-    }
 
     def getWebsocketUrl(document: Document): String = {
       val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
@@ -125,6 +91,7 @@ object AreaPanel extends Panel {
   def getGroupList() = {
     Http.getAndParse[GroupsRsp](Routes.getGroups).map { rsp =>
       if (rsp.errCode == 0) {
+        GroupMap ++= rsp.data.map(g=> (g.name, g.id))
         makeGroupsSelects(rsp.data)
       } else {
         div(h5("getGroupList error")).render

@@ -29,7 +29,13 @@ trait WsService extends ServiceUtils with SessionBase with CirceSupport{
   implicit val timeout: Timeout
 
   private val home = (path("home") & get & pathEndOrSingleSlash) {
-    handleWebSocketMessages(websocketChatFlow(WebSocketActor.create(system).buildCode()))
+    UserAction { user =>
+      parameters(
+        'subId.as[String]
+      ) { case (subId) =>
+        handleWebSocketMessages(websocketChatFlow(WebSocketActor.create(system).buildCode(subId)))
+      }
+    }
   }
 
   def websocketChatFlow(flow: Flow[String, WebSocketMsg, Any]): Flow[Message, Message, Any] =

@@ -478,7 +478,7 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
     )
 
     def clickFunction(): Unit = {
-      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX == "" || modalY == "") {
+      if (modalName.value == "" || modalMac.value == "" || modalRssi.value == "" || modalX.value == "" || modalY.value == "") {
         JsFunc.alert(s"error!")
       } else {
         val data = AddBox(modalName.value, modalMac.value, modalRssi.value.toInt, groupId, modalX.value.toDouble, modalY.value.toDouble).asJson.noSpaces
@@ -506,6 +506,8 @@ class BoxListPanel(groupId: Long, name: String, map:String) extends Panel {
     editBox.textContent = ""
     editBox.appendChild(model.render)
   }
+
+  override def locationHash = ""
 
   override protected def build(): Div = {
     getBox(groupId)

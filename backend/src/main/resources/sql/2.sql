@@ -29,7 +29,10 @@ create table groups (
   user_id BIGINT NOT NULL,
   create_time BIGINT NOT NULL,
   duration_length BIGINT NOT NULL,
-  map VARCHAR(255) NOT NULL
+  map VARCHAR(255) NOT NULL,
+  scala FLOAT NOT NULL,
+  width FLOAT NOT NULL ,
+  height FLOAT NOT NULL
 );
 ALTER SEQUENCE group_id_seq OWNED BY groups.group_id;
 

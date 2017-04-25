@@ -20,7 +20,7 @@ import com.neo.sk.flowShow.core.WebSocketManager.{DeleterWsClient, RegisterWsCli
   */
 trait WebSocketActor {
 
-  def buildCode(): Flow[String, WebSocketMsg, Any]
+  def buildCode(subId: String): Flow[String, WebSocketMsg, Any]
 }
 
 object WebSocketActor {
@@ -59,10 +59,10 @@ object WebSocketActor {
 
       override def receive: Receive = {
 
-        case RegisterWebsocket(out) =>
+        case RegisterWebsocket(out, subId) =>
           log.debug("产生一个webSocket链接" + out)
           subscriber = out
-          webSocketManager ! RegisterWsClient(context.self)
+          webSocketManager ! RegisterWsClient(context.self, subId)
 
         case DeleteWebsocket(out) =>
           log.debug("断开一个webSocket 链接" + out)
@@ -90,15 +90,15 @@ object WebSocketActor {
     }))
 
     new WebSocketActor {
-      override def buildCode(): Flow[String, WebSocketMsg, Any] = {
+      override def buildCode(subId: String): Flow[String, WebSocketMsg, Any] = {
         val in =
           Flow[String]
-            .map( msg => Handle(msg))
+            .map( msg => Handle(subId))
             .to(Sink.actorRef[InnerMsg](dataWsActor, DeleteWebsocket))
 
         val out =
           Source.actorRef[WebSocketMsg](5, OverflowStrategy.dropHead)
-            .mapMaterializedValue(outActor => dataWsActor ! RegisterWebsocket(outActor))
+            .mapMaterializedValue(outActor => dataWsActor ! RegisterWebsocket(outActor, subId))
 
         Flow.fromSinkAndSource(in, out)
       }
@@ -108,7 +108,7 @@ object WebSocketActor {
 
   private trait InnerMsg
 
-  private case class RegisterWebsocket(out: ActorRef) extends InnerMsg
+  private case class RegisterWebsocket(out: ActorRef, subId:String) extends InnerMsg
 
   private case class DeleteWebsocket(out: ActorRef) extends InnerMsg
 
