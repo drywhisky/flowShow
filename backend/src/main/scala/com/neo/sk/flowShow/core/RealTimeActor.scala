@@ -11,7 +11,7 @@ import com.neo.sk.flowShow.common.AppSettings
 import scala.collection.mutable
 import com.neo.sk.flowShow.models.dao.CountDao
 import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, PushData}
-
+import com.neo.sk.flowShow.ptcl.NowInfo
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.utils.{PutShoots, Shoot}
@@ -30,7 +30,7 @@ object RealTimeActor {
   case object SaveTmpFile
   case object Clean
   case object InitDone
-  case object GetNowInfo
+  case class  GetNowInfo(groupId: Long)
 
   sealed trait State
   case object Init extends State
@@ -41,7 +41,6 @@ object RealTimeActor {
 
   case class GetCountDetail(groupId:String)
   case class CountDetailResult(flow:List[(Long,Int)],max:Int,total:Int,now:Int)
-  case class NowInfo(onlineSum: Int, inSum: Int, outSum: Int, maxOnline:Long)
 
   case object FinishWork
 }
@@ -370,7 +369,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       }
       send ! CountDetailResult(flow, max, total, now)
 
-    case msg@GetNowInfo =>
+    case msg@GetNowInfo(_) =>
       log.debug(s"i got a msg:$msg")
       val peer = sender()
       val onlineSum = realTimeMacCache.size

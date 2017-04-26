@@ -33,8 +33,6 @@ object AreaPanel extends Panel {
 
   private val GroupMap = mutable.HashMap[String, Group]()
 
-  private val container = g().render
-
   private val searchByIdIncome =
     div(
       form(*.cls := "form-inline", *.marginLeft := "8%")(
@@ -50,40 +48,8 @@ object AreaPanel extends Panel {
       e.preventDefault()
       val roomName = rangeIndex.value
       val group = GroupMap.get(roomName).head
+      openWs(group.id.toString)
 
-      areaDiv.innerHTML = ""
-
-      areaDiv.appendChild(
-        iframe(*.id := "svg", *.src := group.map, *.width := "100%", *.height := "488px").render
-      )
-
-      Shortcut.scheduleOnce(delay, 1 * 1000)
-
-      def delay() = {
-        dom.document.getElementById("svg").asInstanceOf[IFrame].contentDocument.lastChild.appendChild(container)
-        openWs(group.id.toString)
-      }
-
-      Http.getAndParse[BoxsRsp](Routes.getBoxs(group.id)).map { rsp =>
-        if (rsp.errCode == 0) {
-          rsp.data.foreach { i =>
-            container.appendChild(
-              image(*.href := "/flowShow/static/img/router.png", *.width := "20px", *.height := "20px", scalatags.JsDom.svgAttrs.x := i.x * group.scala, scalatags.JsDom.svgAttrs.y := i.y * group.scala).render
-            )
-            container.appendChild(
-              scalatags.JsDom.svgTags.circle(scalatags.JsDom.svgAttrs.cx := i.x * group.scala, scalatags.JsDom.svgAttrs.cy := i.y * group.scala, scalatags.JsDom.svgAttrs.r := getRadius(i.rssi) * group.scala, scalatags.JsDom.svgAttrs.fill := "#ccff99", scalatags.JsDom.svgAttrs.fillOpacity := 0.5).render
-            )
-            container.appendChild(
-              scalatags.JsDom.svgTags.text(*.id := s"${i.mac}", scalatags.JsDom.svgAttrs.x := (i.x + 5) * group.scala, scalatags.JsDom.svgAttrs.y := (i.y + 5) * group.scala).render
-            )
-          }
-        }
-      }
-  }
-
-  def getRadius(rssi: Int) = {
-    Math.pow(10, (-30 - rssi) / (10 * 2.1)) * 100
-    //Math.pow(10, (referenceRSSI - rssi1) / (10 * distanceLoss))
   }
 
   def openWs(subId: String) = {
@@ -109,6 +75,9 @@ object AreaPanel extends Panel {
               println(s"comeIn.i got a msg:$msg")
 
             case msg@GetOut(num) =>
+              println(s"i got a msg:$msg")
+
+            case msg@NowInfo(onlineSum, inSum, outSum, maxOnline) =>
               println(s"i got a msg:$msg")
 
             case x =>
