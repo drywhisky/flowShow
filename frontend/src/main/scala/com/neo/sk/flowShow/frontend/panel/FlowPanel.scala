@@ -103,16 +103,16 @@ object FlowPanel extends Panel{
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = Math.random(), color = "red"), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
-            case msg@ComeIn(num) =>
+            case msg@ComeIn(num, time) =>
               println(s"comeIn.i got a msg:$msg")
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 1, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
             case msg@GetOut(num) =>
               println(s"i got a msg:$msg")
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) ⇒
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date().getTime()+ (8 * 3600 * 1000), y = 0 - num.length, color = "yellow"), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
             case x =>

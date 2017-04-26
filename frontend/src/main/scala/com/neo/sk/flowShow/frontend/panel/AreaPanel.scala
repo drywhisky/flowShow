@@ -1,5 +1,7 @@
 package com.neo.sk.flowShow.frontend.panel
 
+import java.util.Date
+
 import com.neo.sk.flowShow.frontend.utils.Panel
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
@@ -27,11 +29,15 @@ object AreaPanel extends Panel {
 
   private val areaDiv = div(*.cls := "row")().render
 
+  private val onLineDiv = div(*.cls := "row")().render
+
   private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
   private val GroupMap = mutable.HashMap[String, Group]()
+
+  private val onLineMap = mutable.HashMap[String, Long]()
 
   private val searchByIdIncome =
     div(
@@ -71,20 +77,30 @@ object AreaPanel extends Panel {
             case Heartbeat(id) =>
               println(s"i got a Heartbeat")
 
-            case msg@ComeIn(num) =>
+            case msg@ComeIn(mac, time) =>
               println(s"comeIn.i got a msg:$msg")
+              onLineMap.put(mac, time)
 
-            case msg@GetOut(num) =>
+            case msg@GetOut(macs) =>
               println(s"i got a msg:$msg")
+              macs.map{ m => onLineMap.remove(m)}
 
-            case msg@NowInfo(onlineSum, inSum, outSum, maxOnline) =>
+            case msg@NowInfo(onlineSum, inSum, outSum) =>
               println(s"i got a msg:$msg")
+              onLineMap ++= onlineSum.map(a => (a._1, a._2))
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
                   span(s"区域内人数:${onlineSum.length}"),
                   span(s"进区域人数:$inSum"),
-                  span(s"出区域人数:$outSum")
+                  span(s"出区域人数:$outSum"),
+                  span(s"驻留时长:${System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2}")
+                ).render
+              )
+              onLineDiv.innerHTML = ""
+              onLineDiv.appendChild(
+                div(
+                  onlineSum.foreach(i => span(i._1))
                 ).render
               )
 
@@ -96,7 +112,6 @@ object AreaPanel extends Panel {
           println(s"wsMsg match fail...$e")
 
       }
-
     }
 
     ws.onclose = {
@@ -150,7 +165,8 @@ object AreaPanel extends Panel {
       ),
       searchByIdIncome,
       div(*.cls := "row", *.width := "100%", *.height := "488px")(
-        areaDiv
+        areaDiv,
+        onLineDiv
       )
     ).render
   }

@@ -37,16 +37,7 @@ object WebSocketActor {
 
       private[this] var subscriber: ActorRef = _
 
-      private[this] var inNum = 0
-
       val heartbeatTick = context.system.scheduler.schedule(5.seconds, 5.seconds, self, Tick)
-
-      val countTask = context.system.scheduler.schedule(0.seconds, 1.seconds){
-        if(inNum != 0) {
-          subscriber ! ComeIn(inNum)
-          inNum = 0
-        }
-      }
 
       override def preStart(): Unit = {
         log.info(s"$log starts.")
@@ -74,15 +65,15 @@ object WebSocketActor {
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
 
-        case NewMac(groupId: String, mac: String) =>
+        case NewMac(groupId: String, mac: String, time: Long) =>
           log.info(s"$mac come in: $groupId")
-          inNum = inNum + 1
+          subscriber ! ComeIn(mac, time)
 
         case LeaveMac(groupId: String, mac: Iterable[String]) =>
           log.info(s"$mac get out: $groupId")
-          subscriber ! GetOut(mac.toList.length)
+          subscriber ! GetOut(mac.toList)
 
-        case msg@NowInfo(_, _, _, _) =>
+        case msg@NowInfo(_, _, _) =>
           log.info(s"i got a msg:$msg")
           subscriber ! msg
 

@@ -22,11 +22,11 @@ package object ptcl {
   //"heartbeat"
   case class Heartbeat(id: String) extends WebSocketMsg
 
-  case class ComeIn(data:Int) extends WebSocketMsg
+  case class ComeIn(data: String, time:Long) extends WebSocketMsg
 
-  case class GetOut(data:Int) extends WebSocketMsg
+  case class GetOut(data: List[String]) extends WebSocketMsg
 
-  case class NowInfo(onlineSum:List[String], inSum: Int, outSum: Int, maxOnline:Long) extends WebSocketMsg
+  case class NowInfo(onlineSum:List[(String, Long)], inSum: Int, outSum: Int) extends WebSocketMsg
 
 
   sealed trait DataFromNyx
