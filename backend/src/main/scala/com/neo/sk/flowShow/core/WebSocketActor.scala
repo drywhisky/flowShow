@@ -66,8 +66,8 @@ object WebSocketActor {
           val realActor = context.system.actorSelection(s"/user/groupManager/$subId/RealTime")
           realActor ! GetNowInfo(subId.toLong)
 
-        case DeleteWebsocket(out) =>
-          log.debug("断开一个webSocket 链接" + out)
+        case DeleteWebsocket=>
+          log.debug("断开一个webSocket 链接")
           webSocketManager ! DeleterWsClient(context.self)
           self ! PoisonPill
 
@@ -116,7 +116,7 @@ object WebSocketActor {
 
   private case class RegisterWebsocket(out: ActorRef, subId:String) extends InnerMsg
 
-  private case class DeleteWebsocket(out: ActorRef) extends InnerMsg
+  private case object DeleteWebsocket extends InnerMsg
 
   private case class Handle(msg: String) extends InnerMsg
 

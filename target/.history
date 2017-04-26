@@ -176,3 +176,5 @@ d
 ~re-start
 COMPILE
 compile
+~re-start
+compile

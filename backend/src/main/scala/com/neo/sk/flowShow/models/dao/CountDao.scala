@@ -24,17 +24,20 @@ object CountDao {
   }
 
   def userIn(clientMac:String, groupId:Long, time:Long) = db.run(
-    tUserAction.+=(rUserAction(-1l, clientMac, groupId, ActionType.in, time))
+    tUserAction.+=(rUserAction(-1l, clientMac, groupId, time, None))
   )
 
   def userOut(clientMac:String, groupId:Long, time: Long) = {
-    db.run(tUserAction.+=(rUserAction(-1l, clientMac, groupId, ActionType.out, time)))
+    val actions = for {
+      r1 <- tUserAction.filter(r => (r.cilentMac === clientMac) && (r.groupId === groupId)).map(_.id).max.result
+      r2 <- tUserAction.filter(_.id === r1).map(_.outTime).update(Some(time))
+    } yield{
+      r2
+    }
+
+    db.run(actions.transactionally)
+
   }
 
 
-}
-
-object ActionType {
-  val in = 0
-  val out = 1
 }

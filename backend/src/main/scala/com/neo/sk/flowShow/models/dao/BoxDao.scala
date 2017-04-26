@@ -31,7 +31,7 @@ object BoxDao {
       if(exists1)
         DBIOAction.successful(-1l)
       else
-        tBoxs.returning(tBoxs.map(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi, x.toInt, y.toInt))
+        tBoxs.returning(tBoxs.map(_.boxId)).+=(rBoxs(-1l, name, mac, timestamp, userId, groupId, rssi, x, y))
     } yield {
       id
     }

@@ -223,7 +223,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
 
         val oldDuration = cache.getOrElse(clientMac, List())
-        if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent) {
+        if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent && realTimeMacCache.get(clientMac).isEmpty) {
           cache.put(clientMac, oldDuration.::(newUnsureDuration))
           if (needSend2Socket) {
             val t = newUnsureDuration._2
@@ -232,7 +232,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
             CountDao.userIn(clientMac, groupId.toLong, System.currentTimeMillis())
           }
-          realTimeUnsureDurCache.remove(clientMac)
         } else {
           realTimeUnsureDurCache.put(clientMac, newUnsureDuration)
         }
@@ -273,6 +272,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             cur - c._2 > realTimeDurationLength
           }.keys
           realTimeMacCache.--=(leaveMac)
+          realTimeUnsureDurCache.--=(leaveMac)
           if (leaveMac.nonEmpty) {
             sendSocket(LeaveMac(groupId, leaveMac))
             leaveMac.foreach { i =>
@@ -375,12 +375,13 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       val onlineSum = realTimeMacCache.size
       val inSum = clientMacIn.values.sum
       val outSum = clientMacOut.values.sum
-      val maxOnlineCouple = realTimeDurationCache.values.maxBy { l =>
-        l.foreach {
-          m => m._2 - m._1
+      val maxOnline = {
+        if (realTimeUnsureDurCache.nonEmpty) {
+          val maxOnlineCouple = realTimeUnsureDurCache.values.maxBy (l => l._2 - l._1)
+          maxOnlineCouple._2 - maxOnlineCouple._1
         }
-      }.maxBy(l => l._2 - l._1)
-      val maxOnline = maxOnlineCouple._2 - maxOnlineCouple._1
+        else 0
+      }
       peer ! NowInfo(onlineSum, inSum, outSum, maxOnline)
 
     case ReceiveTimeout =>
