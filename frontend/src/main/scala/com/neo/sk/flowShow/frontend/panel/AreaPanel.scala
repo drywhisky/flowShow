@@ -25,7 +25,7 @@ import scalatags.JsDom.svgTags.{g, image}
   */
 object AreaPanel extends Panel {
 
-  private val areaDiv = div(*.width := "100%", *.height := "100%").render
+  private val areaDiv = div(*.cls := "row")().render
 
   private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
@@ -79,6 +79,14 @@ object AreaPanel extends Panel {
 
             case msg@NowInfo(onlineSum, inSum, outSum, maxOnline) =>
               println(s"i got a msg:$msg")
+              areaDiv.innerHTML = ""
+              areaDiv.appendChild(
+                div(
+                  span(s"区域内人数:${onlineSum.length}"),
+                  span(s"进区域人数:$inSum"),
+                  span(s"出区域人数:$outSum")
+                ).render
+              )
 
             case x =>
               println(s"i got a msg:$x")

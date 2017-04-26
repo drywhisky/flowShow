@@ -11,12 +11,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 object CountDao {
 
-  def addCountDetail(groupId: String, timeSet: Set[Long], count: Map[Long, Int]) = {
-    val record = count.map(c => rCountDetail(-1L,groupId,c._1,c._2))
-    for{
-      _ <- db.run(tCountDetail.filter(c => c.timestamp.inSet(timeSet) && c.groupId === groupId).delete)
-      _ <- db.run(tCountDetail ++= record)
-    }yield ()
+  def addCountDetail(groupId: String, count: (Long, Int)) = {
+    db.run(tCountDetail.+=(rCountDetail(-1l, groupId, count._1, count._2)))
   }
 
   def getCountDetailByInterval(groupId: String, startTime: Long, endTime: Long) = db.run{

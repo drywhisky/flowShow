@@ -63,6 +63,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private val clientMacIn = collection.mutable.HashMap[String, Int]()
   private val clientMacOut = collection.mutable.HashMap[String, Int]()
 
+  private var maxStay = 0l
+
   private val visitDurationLent = AppSettings.visitDurationLent
   //持续两分钟收到算进店
   private val realTimeDurationLength = 5 * 60 * 1000 ///五分钟没有收到上报数据算离开
@@ -105,7 +107,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     time - now
   }
 
-  private val countTask = context.system.scheduler.schedule(countDelay.millis, 5.minutes, self, CountDetailFlow)
+  private val countTask = context.system.scheduler.schedule(countDelay.millis, 10.seconds, self, CountDetailFlow)
 
   private val saveTempFileTask = context.system.scheduler.schedule(saveDelay.millis, 1.minutes, self, SaveTmpFile)
 
@@ -195,15 +197,14 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
 
         val oldDuration = cache.getOrElse(clientMac, List())
-        if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent && realTimeMacCache.get(clientMac).isEmpty) {
+        if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent) {
           cache.put(clientMac, oldDuration.::(newUnsureDuration))
-          if (needSend2Socket) {
-            val t = newUnsureDuration._2
-            realTimeMacCache.put(clientMac, t)
+          if (needSend2Socket && realTimeMacCache.get(clientMac).isEmpty) {
             sendSocket(NewMac(groupId, clientMac))
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
             CountDao.userIn(clientMac, groupId.toLong, System.currentTimeMillis())
           }
+          realTimeMacCache.put(clientMac, newUnsureDuration._2)
         } else {
           realTimeUnsureDurCache.put(clientMac, newUnsureDuration)
         }
@@ -248,6 +249,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           if (leaveMac.nonEmpty) {
             sendSocket(LeaveMac(groupId, leaveMac))
             leaveMac.foreach { i =>
+              realTimeUnsureDurCache.remove(i)
               clientMacOut.put(i, clientMacIn.getOrElse(i, 0) + 1)
               CountDao.userOut(i, groupId.toLong, System.currentTimeMillis())
             }
@@ -281,12 +283,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       }
       context.become(busy())
 
-    case msg@CountDetailFlow => ///五分钟启动一次任务
+    case msg@CountDetailFlow => ///10s启动一次.每隔10秒，在countcache里面更新一条数据
       log.debug(s"i got a msg:$msg")
-      val startTime = DateTime.now.minusMinutes(60).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
-      val endTime = DateTime.now.minusMillis(1).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
-      for (time <- startTime to endTime by AppSettings.realTimeCountInterval * 60000) {
-        //每隔1分钟，在countcache里面更新一条数据
+      val time = DateTime.now.minusSeconds(10).getMillis
         val count = realTimeDurationCache.filter { case (mac, iter) =>
           iter.exists { case (start, end) =>
             end - start >= visitDurationLent &&
@@ -294,12 +293,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           }
         }.keys.size
         countCache.put(time, count)
-      }
-      val timeSet = (startTime to endTime by AppSettings.realTimeCountInterval * 60000).toSet
       //取当天且人数不为0的时刻插入表格
-      val record = countCache.filter(c => timeSet.contains(c._1) && c._2 != 0).toMap
-      CountDao.addCountDetail(groupId, timeSet, record)
-      log.info(s"$logPrefix add count detail size ${record.size}")
+      val record = countCache.filter(c => c._1 == time && c._2 != 0).head
+      CountDao.addCountDetail(groupId, record)
 
     case msg@SaveTmpFile =>
       log.debug(s"i got a msg:$msg")
@@ -318,17 +314,17 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     case msg@GetNowInfo(_) =>
       log.debug(s"i got a msg:$msg")
       val peer = sender()
-      val onlineSum = realTimeMacCache.size
+      val onlineSum = realTimeMacCache.toList.map(_._1)
       val inSum = clientMacIn.values.sum
       val outSum = clientMacOut.values.sum
-      val maxOnline = {
+      maxStay = {
         if (realTimeUnsureDurCache.nonEmpty) {
           val maxOnlineCouple = realTimeUnsureDurCache.values.maxBy (l => l._2 - l._1)
           maxOnlineCouple._2 - maxOnlineCouple._1
         }
         else 0
       }
-      peer ! NowInfo(onlineSum, inSum, outSum, maxOnline)
+      peer ! NowInfo(onlineSum, inSum, outSum, maxStay)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

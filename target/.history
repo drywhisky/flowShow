@@ -178,3 +178,10 @@ COMPILE
 compile
 ~re-start
 compile
+~re-start
+d
+fd
+d
+ddd
+ddfdddddd
+compile

@@ -23,7 +23,7 @@ object WebSocketManager {
 
   case class NewMac(groupId:String,mac:String) extends PushData
 
-  case class LeaveMac(groupId:String,mac:Iterable[String]) extends PushData
+  case class LeaveMac(groupId:String, mac:Iterable[String]) extends PushData
 
 }
 
