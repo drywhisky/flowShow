@@ -28,7 +28,6 @@ object RealTimeActor {
 
   case object CountDetailFlow
   case object SaveTmpFile
-  case object Clean
   case object InitDone
   case class  GetNowInfo(groupId: Long)
 
@@ -55,9 +54,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private[this] val groupId = context.parent.path.name
 
   //(clientMac) -> duration(startTime, endTime)
-  private val durationCache = collection.mutable.HashMap[String, List[(Long, Long)]]()
-
-  //(clientMac) -> duration(startTime, endTime)
   private var realTimeDurationCache = collection.mutable.HashMap[String, List[(Long, Long)]]()
 
   //mac -> time
@@ -71,10 +67,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   //持续两分钟收到算进店
   private val realTimeDurationLength = 5 * 60 * 1000 ///五分钟没有收到上报数据算离开
 
-  private var lastFileDate = ""
   private val countCache = collection.mutable.HashMap[Long, Int]()
+
   //(time) -> count
-  private val unsureDurCache = collection.mutable.HashMap[String, List[(Long, Long)]]()
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String, (Long, Long)]()
 
   private val reg = "[0-9]*".r
@@ -114,37 +109,14 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
 
   private val saveTempFileTask = context.system.scheduler.schedule(saveDelay.millis, 1.minutes, self, SaveTmpFile)
 
-  private val cleanTask = context.system.scheduler.schedule(cleanDelay.millis, 24.hours, self, Clean)
-
   override def postStop(): Unit = {
     log.info(s"$logPrefix stops.")
-    val date = DateTime.now.toString("yyyyMMdd")
-    if (date != lastFileDate) {
-      FileUtil.saveDuration(s"$groupId/duration-$date.txt", groupId,
-        durationCache.flatMap { duration =>
-          val newDuration = duration._2.filter(d => d._2 - d._1 > visitDurationLent)
-          if (newDuration.nonEmpty) {
-            Some(duration._1, newDuration)
-          } else {
-            None
-          }
-        }.toMap)
-      lastFileDate = date
-    } else {
-      log.debug(s"$logPrefix file $date has already been written before")
-    }
 
-    List(
-      countCache,
-      durationCache
-    ).foreach {
-      _.clear()
-    }
+    countCache.clear()
 
     List(
       countTask,
-      saveTempFileTask,
-      cleanTask
+      saveTempFileTask
     ).foreach {
       _.cancel()
     }
@@ -332,32 +304,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     case msg@SaveTmpFile =>
       log.debug(s"i got a msg:$msg")
       FileUtil.saveDuration(s"$groupId/realduration.txt", groupId, realTimeDurationCache.toMap)
-
-    case msg@Clean =>
-      log.debug(s"i got a msg:$msg")
-      val date = DateTime.now.toString("yyyyMMdd")
-      if (date != lastFileDate) {
-        FileUtil.saveDuration(s"$groupId/duration-$date.txt", groupId,
-          durationCache.flatMap { duration =>
-            val newDuration = duration._2.filter(d => d._2 - d._1 > visitDurationLent)
-            if (newDuration.nonEmpty) {
-              Some(duration._1, newDuration)
-            } else {
-              None
-            }
-          }.toMap)
-        lastFileDate = date
-      } else {
-        log.debug(s"$logPrefix file $date has already been written before")
-      }
-      List(
-        durationCache,
-        unsureDurCache,
-        countCache,
-        realTimeDurationCache,
-        realTimeUnsureDurCache
-      ).foreach(_.clear())
-      new File(AppSettings.tempPath + s"$groupId/realduration.txt").getAbsoluteFile.delete()
 
     case msg@GetCountDetail(_) =>
       log.debug(s"i got a msg:$msg")
