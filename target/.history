@@ -174,3 +174,5 @@ compile
 ~re-start
 d
 ~re-start
+COMPILE
+compile

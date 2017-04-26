@@ -4,7 +4,6 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import org.slf4j.LoggerFactory
-import akka.pattern.ask
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
@@ -13,7 +12,7 @@ import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.utils.SecureUtil
 import akka.actor.PoisonPill
 import com.neo.sk.flowShow.Boot.webSocketManager
-import com.neo.sk.flowShow.core.RealTimeActor.{GetNowInfo}
+import com.neo.sk.flowShow.core.RealTimeActor.GetNowInfo
 import com.neo.sk.flowShow.core.WebSocketManager.{DeleterWsClient, RegisterWsClient}
 
 /**
@@ -63,12 +62,9 @@ object WebSocketActor {
         case RegisterWebsocket(out, subId) =>
           log.debug("产生一个webSocket链接" + out)
           subscriber = out
-          val realActor = context.system.actorSelection(s"/user/groupManager/$subId/RealTime")
-          (realActor ? GetNowInfo(subId.toLong)).map{
-            case msg@NowInfo(_, _, _, _) =>
-              out ! msg
-          }
           webSocketManager ! RegisterWsClient(context.self, subId)
+          val realActor = context.system.actorSelection(s"/user/groupManager/$subId/RealTime")
+          realActor ! GetNowInfo(subId.toLong)
 
         case DeleteWebsocket(out) =>
           log.debug("断开一个webSocket 链接" + out)
@@ -85,6 +81,10 @@ object WebSocketActor {
         case LeaveMac(groupId: String, mac: Iterable[String]) =>
           log.info(s"$mac get out: $groupId")
           subscriber ! GetOut(mac.toList.length)
+
+        case msg@NowInfo(_, _, _, _) =>
+          log.info(s"i got a msg:$msg")
+          subscriber ! msg
 
         case Handle(msg) =>
           log.info(s"$id got msg $msg.")

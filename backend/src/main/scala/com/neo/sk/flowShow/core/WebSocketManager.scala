@@ -1,8 +1,12 @@
 package com.neo.sk.flowShow.core
 
 import akka.actor.{Actor, ActorRef, Props}
+import com.neo.sk.flowShow.core.RealTimeActor.GetNowInfo
+import com.neo.sk.flowShow.ptcl.NowInfo
 import org.slf4j.LoggerFactory
-import scala.collection.mutable.ListBuffer
+import akka.pattern.ask
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.mutable
 
 /**
