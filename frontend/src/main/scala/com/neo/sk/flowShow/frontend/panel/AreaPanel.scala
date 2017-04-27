@@ -10,7 +10,6 @@ import io.circe.generic.auto._
 import scalatags.JsDom.short._
 import org.scalajs.dom.html.{Div, IFrame}
 import org.scalajs.dom.raw.{Document, MessageEvent, WebSocket}
-import com.neo.sk.flowShow.frontend.utils.Shortcut
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
