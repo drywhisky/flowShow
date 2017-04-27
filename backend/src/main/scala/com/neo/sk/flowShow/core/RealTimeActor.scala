@@ -2,7 +2,8 @@ package com.neo.sk.flowShow.core
 
 import java.io.File
 
-import akka.actor.{Actor, ActorContext, Props, ReceiveTimeout, Stash}
+import akka.actor.SupervisorStrategy.{Restart, Resume}
+import akka.actor.{Actor, ActorContext, OneForOneStrategy, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
@@ -12,6 +13,7 @@ import scala.collection.mutable
 import com.neo.sk.flowShow.models.dao.CountDao
 import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, PushData}
 import com.neo.sk.flowShow.ptcl.NowInfo
+
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.utils.{PutShoots, Shoot}
@@ -82,6 +84,18 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   if (!targetDir.exists) {
     targetDir.mkdirs()
   }
+
+  override val supervisorStrategy =
+    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
+      case _: ArithmeticException => Resume
+      case e: Exception =>
+        log.error(s"$logPrefix child dead abnormal", e)
+        Restart
+
+      case msg =>
+        log.error(s"$logPrefix received unknow $msg")
+        Restart
+    }
 
   def countDelay = {
     val time = DateTime.now.plusMinutes(AppSettings.realTimeCountInterval).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
@@ -242,10 +256,10 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           val leaveMac = realTimeMacCache.filter { c =>
             cur - c._2 > realTimeDurationLength
           }.keys
-          realTimeMacCache.--=(leaveMac)
-          realTimeUnsureDurCache.--=(leaveMac)
           if (leaveMac.nonEmpty) {
             sendSocket(LeaveMac(groupId, leaveMac))
+            realTimeMacCache.--=(leaveMac)
+            realTimeUnsureDurCache.--=(leaveMac)
             leaveMac.foreach { i =>
               realTimeUnsureDurCache.remove(i)
               clientMacOut.put(i, clientMacOut.getOrElse(i, 0))

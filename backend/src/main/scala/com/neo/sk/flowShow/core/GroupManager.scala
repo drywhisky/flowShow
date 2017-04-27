@@ -7,7 +7,6 @@ import akka.util.Timeout
 import org.slf4j.LoggerFactory
 import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao}
 import com.neo.sk.flowShow.core.WsClient.SubscribeData
-import com.neo.sk.utils.{PutShoots, Shoot}
 import com.neo.sk.flowShow.core.GroupActor._
 import scala.util.{Failure, Success}
 import scala.collection.mutable
@@ -95,17 +94,17 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
     log.info(s"$logPrefix stops.")
   }
 
-//  override val supervisorStrategy =
-//    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
-//      case _: ArithmeticException => Resume
-//      case e: Exception =>
-//        log.error(s"$logPrefix child dead abnormal", e)
-//        Restart
-//
-//      case msg =>
-//        log.error(s"$logPrefix received unknow $msg")
-//        Restart
-//    }
+  override val supervisorStrategy =
+    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
+      case _: ArithmeticException => Resume
+      case e: Exception =>
+        log.error(s"$logPrefix child dead abnormal", e)
+        Restart
+
+      case msg =>
+        log.error(s"$logPrefix received unknow $msg")
+        Restart
+    }
 
 
   def getActor(id: String) : ActorRef = {

@@ -7,11 +7,5 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://127.0.0.1:5432/flowshow</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="flowshow@127.0.0.1" uuid="e6d9bc6c-357d-4a16-8e9d-761df626c774">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://127.0.0.1:5432/flowshow</jdbc-url>
-    </data-source>
   </component>
 </project>
