@@ -35,7 +35,7 @@ object AreaPanel extends Panel {
 
   private val areaDiv = div(*.cls := "row info-blips")().render
 
-  private val onLineDiv = div(*.cls := "col-md-2 col-md-offset-2", *.backgroundColor := "#282B3F")().render
+  private val onLineDiv = div(*.cls := "col-md-2 col-md-offset-1", *.backgroundColor := "#282B3F")().render
 
   private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
@@ -54,6 +54,7 @@ object AreaPanel extends Panel {
   private var outPerson = 0
 
   private var stayTime = 0l
+
 
   private val searchByIdIncome =
     div(
@@ -101,20 +102,34 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"区域内人数:$onlinePerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"进区域人数:$inPerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"出区域人数:$outPerson")
                   ),
-                  div(*.cls := "col-md-2")(
-                    p(s"驻留时长:$stayTime")
+                  div(*.cls := "col-md-3")(
+                    p(s"驻留时长:${stayTime/1000}s")
                   )
                 ).render
               )
+              val newDiv = div(
+                table(*.cls := "table")(
+                  thead(
+                    tr(
+                      th(*.textAlign.center)("在线mac")
+                    )
+                  ),
+                  tbody(*.textAlign.center)(
+                    onLineMap.toList.map( m => makeRow(m._1))
+                  )
+                )
+              ).render
+              onLineDiv.innerHTML = ""
+              onLineDiv.appendChild(newDiv)
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(time).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
@@ -124,24 +139,37 @@ object AreaPanel extends Panel {
               macs.map{ m => onLineMap.remove(m)}
               outPerson = outPerson + macs.length
               onlinePerson = onlinePerson - macs.length
-              stayTime = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
+              stayTime = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).reverse.head._2
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"区域内人数:$onlinePerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"进区域人数:$inPerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"出区域人数:$outPerson")
                   ),
-                  div(*.cls := "col-md-2")(
-                    p(s"驻留时长:$stayTime")
+                  div(*.cls := "col-md-3")(
+                    p(s"驻留时长:${stayTime/1000}s")
                   )
                 ).render
               )
+              val newDiv = div(
+                table(*.cls := "table")(
+                  thead(
+                    tr(
+                      th(*.textAlign.center)("在线mac")
+                    )
+                  ),
+                  tbody(*.textAlign.center)(
+                    onLineMap.toList.map( m => makeRow(m._1))
+                  )
+                )
+              ).render
+              onLineDiv.innerHTML = ""
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
@@ -152,21 +180,21 @@ object AreaPanel extends Panel {
               onlinePerson = onlineSum.length
               inPerson = inSum
               outPerson = outSum
-              stayTime = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
+              stayTime = System.currentTimeMillis() - onlineSum.sortBy(_._2).reverse.head._2
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"区域内人数:$onlinePerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"进区域人数:$inPerson")
                   ),
-                  div(*.cls := "col-md-2")(
+                  div(*.cls := "col-md-3")(
                     p(s"出区域人数:$outPerson")
                   ),
-                  div(*.cls := "col-md-2")(
-                    p(s"驻留时长:$stayTime")
+                  div(*.cls := "col-md-3")(
+                    p(s"驻留时长:${stayTime/1000}s")
                   )
                 ).render
               )
@@ -223,7 +251,7 @@ object AreaPanel extends Panel {
       override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
 
       // Y Axis settings
-      override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 1.0, color = "#808080"))))
+      override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 0.5, color = "#808080"))))
 
       // Series
       override val series: SeriesCfg = js.Array[AnySeries](

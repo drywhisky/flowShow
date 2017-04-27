@@ -326,7 +326,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
         else List()
       }
-      val pastOnLine = countCache.toList.sortBy(_._1).take(6)
+      val pastOnLine = countCache.toList.sortBy(_._1).reverse.take(10)
       peer ! NowInfo(online, inSum, outSum, pastOnLine)
 
     case ReceiveTimeout =>
