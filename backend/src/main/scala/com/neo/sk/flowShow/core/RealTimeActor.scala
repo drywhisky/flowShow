@@ -304,7 +304,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
               time >= start && time < end
           }
         }.keys.size
-        countCache.put(time, count)
+      countCache.put(time, count)
+      val cleanTime = DateTime.now.minusMinutes(2).getMillis
+      countCache.filter(_._1 < cleanTime).clear()
       //取当天且人数不为0的时刻插入表格
       val record = countCache.filter(c => c._1 == time && c._2 != 0).head
       CountDao.addCountDetail(groupId, record)
@@ -337,7 +339,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
         else List()
       }
-      peer ! NowInfo(online, inSum, outSum)
+      val pastOnLine = countCache.toList.sortBy(_._1).take(6)
+      peer ! NowInfo(online, inSum, outSum, pastOnLine)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

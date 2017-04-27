@@ -18,9 +18,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.flowShow.frontend.utils.Http
 import com.neo.sk.flowShow.frontend.Routes
+import com.neo.sk.flowShow.frontend.utils.highcharts.CleanJsObject
+import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsUtils._
+import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsAliases._
+import com.neo.sk.flowShow.frontend.utils.highcharts.config._
+import org.scalajs.jquery.{JQueryEventObject, jQuery}
 
 import scala.collection.mutable
-import scalatags.JsDom.svgTags.{g, image}
+import scala.scalajs.js
+import js.JSConverters._
+import scala.scalajs.js.Date
+
 
 /**
   * Created by whisky on 17/4/24.
@@ -29,11 +37,13 @@ object AreaPanel extends Panel {
 
   private val areaDiv = div(*.cls := "row")().render
 
-  private val onLineDiv = div(*.cls := "row")().render
+  private val onLineDiv = div(*.cls := "col-md-5 col-md-offset-7", *.backgroundColor := "#282B3F")().render
 
   private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
+
+  private val realTimeChart = div(*.cls := "row").render
 
   private val GroupMap = mutable.HashMap[String, Group]()
 
@@ -112,11 +122,11 @@ object AreaPanel extends Panel {
                   span(s"区域内人数:$onlinePerson"),
                   span(s"进区域人数:$inPerson"),
                   span(s"出区域人数:$outPerson"),
-                  span(s"驻留时长:$stayTime")
+                  span(s"驻留时长:${stayTime/1000}s")
                 ).render
               )
 
-            case msg@NowInfo(onlineSum, inSum, outSum) =>
+            case msg@NowInfo(onlineSum, inSum, outSum, pastOnline) =>
               println(s"i got a msg:$msg")
               onLineMap ++= onlineSum.map(a => (a._1, a._2))
               onlinePerson = onlineSum.length
@@ -146,6 +156,7 @@ object AreaPanel extends Panel {
               ).render
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
+              drawChart(pastOnline)
 
             case x =>
               println(s"i got a msg:$x")
@@ -168,6 +179,52 @@ object AreaPanel extends Panel {
     tr(
       td(mac)
     )
+  }
+
+  def drawChart(pastData: List[(Long, Int)]) = {
+
+    val drawChart = new HighchartsConfig {
+
+      // Chart config
+      override val chart: Cfg[Chart] = Chart(`type` = "spline")
+
+      // Chart title
+      override val title: Cfg[Title] = Title(text = "动态实时数据")
+
+      // X Axis settings
+      override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
+
+      // Y Axis settings
+      override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 1.0, color = "#808080"))))
+
+      // Series
+      override val series: SeriesCfg = js.Array[AnySeries](
+        SeriesSpline(name = "数据",
+          data = getdata(pastData).toJSArray
+        )
+      )
+    }
+
+    realTimeChart.innerHTML = ""
+
+    renderChart(drawChart, realTimeChart)
+  }
+
+  private def getdata(pastData: List[(Long, Int)]) = {
+    import scala.scalajs.js.Date
+
+    pastData.map{ i =>
+      val time = new Date(i._1).getTime()
+      SeriesSplineData(x = time, y = i._2)
+    }
+  }
+
+  private def renderChart(chartConfig: CleanJsObject[js.Object], container:Div) = {
+    dom.console.log(chartConfig)
+    val newContainer = div().render
+    jQuery(newContainer).highcharts(chartConfig)
+    container.innerHTML = ""
+    container.appendChild(newContainer)
   }
 
   def getWebsocketUrl(document: Document, subId: String): String = {
@@ -213,8 +270,11 @@ object AreaPanel extends Panel {
         )
       ),
       searchByIdIncome,
-      div(*.cls := "row", *.width := "100%", *.height := "488px")(
-        areaDiv,
+      div(*.cls := "row", *.width := "100%", *.backgroundColor := "#282B3F")(
+        div(*.cls := "col-md-5", *.backgroundColor := "#282B3F")(
+          areaDiv,
+          realTimeChart
+        ),
         onLineDiv
       )
     ).render

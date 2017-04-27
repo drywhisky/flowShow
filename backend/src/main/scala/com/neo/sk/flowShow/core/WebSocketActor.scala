@@ -73,7 +73,7 @@ object WebSocketActor {
           log.info(s"$mac get out: $groupId")
           subscriber ! GetOut(mac.toList)
 
-        case msg@NowInfo(_, _, _) =>
+        case msg@NowInfo(_, _, _, _) =>
           log.info(s"i got a msg:$msg")
           subscriber ! msg
 
