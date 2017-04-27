@@ -270,7 +270,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   def idle(): Receive = {
     case msg@PutShoots(apMac, shoots) =>
       Future {
-        log.debug(s"$logPrefix shoots:${shoots.size}")
+//        log.debug(s"$logPrefix shoots:${shoots.size}")
         realTimeDurationCache = updateDurationCache(shoots, realTimeDurationCache, realTimeDurationLength)
       }.onComplete {
         case Success(_) =>
