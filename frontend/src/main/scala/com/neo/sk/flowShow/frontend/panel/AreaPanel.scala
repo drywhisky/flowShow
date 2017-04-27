@@ -108,7 +108,7 @@ object AreaPanel extends Panel {
                 ).render
               )
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(time).getTime(), y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(time).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
             case msg@GetOut(macs) =>
@@ -127,7 +127,7 @@ object AreaPanel extends Panel {
                 ).render
               )
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime(), y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
             case msg@NowInfo(onlineSum, inSum, outSum, pastOnline) =>
@@ -218,7 +218,7 @@ object AreaPanel extends Panel {
     import scala.scalajs.js.Date
 
     pastData.map{ i =>
-      SeriesSplineData(x = new Date(i._1).getTime(), y = i._2)
+      SeriesSplineData(x = new Date(i._1).getTime() + (8 * 3600 * 1000) , y = i._2)
     }
   }
 

@@ -1,10 +1,12 @@
 package com.neo.sk.flowShow.core
 
-import akka.actor.{Actor, ActorRef, Props, ReceiveTimeout, Stash, Terminated}
+import akka.actor.SupervisorStrategy.{Restart, Resume}
+import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, ReceiveTimeout, Stash, Terminated}
 import com.neo.sk.flowShow.common.AppSettings
 import com.neo.sk.flowShow.core.GroupManager.{FindMyInfo, GetMyInfo}
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.{PutShoots, Shoot}
+
 import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
 

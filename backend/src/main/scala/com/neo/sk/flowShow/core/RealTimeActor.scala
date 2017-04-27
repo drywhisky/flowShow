@@ -85,18 +85,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     targetDir.mkdirs()
   }
 
-  override val supervisorStrategy =
-    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
-      case _: ArithmeticException => Resume
-      case e: Exception =>
-        log.error(s"$logPrefix child dead abnormal", e)
-        Restart
-
-      case msg =>
-        log.error(s"$logPrefix received unknow $msg")
-        Restart
-    }
-
   def countDelay = {
     val time = DateTime.now.plusMinutes(AppSettings.realTimeCountInterval).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
     val now = DateTime.now.getMillis
@@ -229,7 +217,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     log.info(s"$logPrefix starting...")
     realTimeDurationCache ++= FileUtil.readDuration(s"$groupId/realduration.txt")
 
-    val start = DateTime.now.withTimeAtStartOfDay().getMillis
+    val start = DateTime.now.minusMinutes(5).getMillis
     val end = System.currentTimeMillis()
 
     CountDao.getCountDetailByInterval(groupId, start, end).andThen {
@@ -298,12 +286,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
     case msg@CountDetailFlow => ///10s启动一次.每隔10秒，在countcache里面更新一条数据
       log.debug(s"i got a msg:$msg")
       val time = DateTime.now.minusSeconds(10).getMillis
-        val count = realTimeDurationCache.filter { case (mac, iter) =>
-          iter.exists { case (start, end) =>
-            end - start >= visitDurationLent &&
-              time >= start && time < end
-          }
-        }.keys.size
+      val count = realTimeMacCache.size
       countCache.put(time, count)
       val cleanTime = DateTime.now.minusMinutes(2).getMillis
       countCache.filter(_._1 < cleanTime).clear()
