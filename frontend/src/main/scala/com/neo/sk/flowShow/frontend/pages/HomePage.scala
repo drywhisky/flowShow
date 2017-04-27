@@ -31,7 +31,7 @@ object HomePage extends Page {
   private val itemList = List(
     ("区域管理", "111"),
     ("区域数据呈现", "222"),
-    ("单盒数据呈现", "333")
+    ("用户行为跟踪", "333")
   )
 
   private val menuList = new MenuList(itemList, listItemClick).render

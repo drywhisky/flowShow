@@ -28,11 +28,7 @@ object Routes {
   val modifyBox = baseUrl + "/modifyBox"
   val addBox = baseUrl + "/addBox"
 
-  val brandUrl = baseUrl + "/brandInfo"
-  val ratioUrl = baseUrl + "/ratioInfo"
-  val frequencyUrl = baseUrl + "/frequencyInfo"
-  val residentUrl = baseUrl + "/residentInfo"
-  val realTimeUrl = baseUrl + "/realTimeInfo"
+  val getHistory = baseUrl + "/getHistory"
 
 
 }

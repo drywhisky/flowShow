@@ -112,4 +112,12 @@ package object ptcl {
   case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Double, y: Double)
 
 
+  /**
+    * userHistory
+    */
+
+  case class UserHistory(uId: Long, mac: String, group: String, inTime: Long, outTime: Option[Long])
+
+  case class UserHistoryRsp(data:List[UserHistory], errCode: Int = 0, msg: String = "ok")
+
 }
