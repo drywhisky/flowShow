@@ -252,7 +252,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             realTimeUnsureDurCache.--=(leaveMac)
             leaveMac.foreach { i =>
               realTimeUnsureDurCache.remove(i)
-              clientMacOut.put(i, clientMacOut.getOrElse(i, 0))
+              clientMacOut.put(i, clientMacOut.getOrElse(i, 0) + 1)
               CountDao.userOut(i, groupId.toLong, System.currentTimeMillis())
             }
           }

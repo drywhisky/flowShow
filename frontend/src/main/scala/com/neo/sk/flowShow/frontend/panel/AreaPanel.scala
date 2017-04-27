@@ -102,17 +102,21 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3")(
-                    p(s"区域内人数:$onlinePerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
+                    p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"进区域人数:$inPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
+                    p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"出区域人数:$outPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
+                    p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"驻留时长:${stayTime/1000}s")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    p(s"驻留时长(s)")
                   )
                 ).render
               )
@@ -131,7 +135,7 @@ object AreaPanel extends Panel {
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(time).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
             case msg@GetOut(macs) =>
@@ -143,17 +147,21 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3")(
-                    p(s"区域内人数:$onlinePerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
+                    p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"进区域人数:$inPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
+                    p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"出区域人数:$outPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
+                    p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"驻留时长:${stayTime/1000}s")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    p(s"驻留时长(s)")
                   )
                 ).render
               )
@@ -170,6 +178,7 @@ object AreaPanel extends Panel {
                 )
               ).render
               onLineDiv.innerHTML = ""
+              onLineDiv.appendChild(newDiv)
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
@@ -184,17 +193,21 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3")(
-                    p(s"区域内人数:$onlinePerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
+                    p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"进区域人数:$inPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
+                    p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"出区域人数:$outPerson")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
+                    p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3")(
-                    p(s"驻留时长:${stayTime/1000}s")
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    p(s"驻留时长(s)")
                   )
                 ).render
               )
@@ -248,7 +261,7 @@ object AreaPanel extends Panel {
       override val title: Cfg[Title] = Title(text = "动态实时数据")
 
       // X Axis settings
-      override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime", tickPixelInterval = 150))
+      override val xAxis: CfgArray[XAxis] = js.Array(XAxis(`type` = "datetime"))
 
       // Y Axis settings
       override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "值"), plotLines = js.Array(YAxisPlotLines(value = 0.0, width = 0.5, color = "#808080"))))
@@ -269,7 +282,7 @@ object AreaPanel extends Panel {
   private def getdata(pastData: List[(Long, Int)]) = {
     import scala.scalajs.js.Date
 
-    pastData.map{ i =>
+    pastData.sortBy(_._1).map{ i =>
       SeriesSplineData(x = new Date(i._1).getTime() + (8 * 3600 * 1000) , y = i._2)
     }
   }
