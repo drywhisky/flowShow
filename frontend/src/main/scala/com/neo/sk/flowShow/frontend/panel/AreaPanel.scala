@@ -1,7 +1,5 @@
 package com.neo.sk.flowShow.frontend.panel
 
-import java.util.Date
-
 import com.neo.sk.flowShow.frontend.utils.Panel
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
@@ -109,6 +107,9 @@ object AreaPanel extends Panel {
                   span(s"驻留时长:$stayTime")
                 ).render
               )
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(time).getTime(), y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
 
             case msg@GetOut(macs) =>
               println(s"i got a msg:$msg")
@@ -125,6 +126,9 @@ object AreaPanel extends Panel {
                   span(s"驻留时长:${stayTime/1000}s")
                 ).render
               )
+              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
+                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime(), y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+              }
 
             case msg@NowInfo(onlineSum, inSum, outSum, pastOnline) =>
               println(s"i got a msg:$msg")
@@ -214,8 +218,7 @@ object AreaPanel extends Panel {
     import scala.scalajs.js.Date
 
     pastData.map{ i =>
-      val time = new Date(i._1).getTime()
-      SeriesSplineData(x = time, y = i._2)
+      SeriesSplineData(x = new Date(i._1).getTime(), y = i._2)
     }
   }
 
