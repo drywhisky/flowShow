@@ -201,9 +201,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent) {
           cache.put(clientMac, oldDuration.::(newUnsureDuration))
           if (needSend2Socket && realTimeMacCache.get(clientMac).isEmpty) {
-            sendSocket(NewMac(groupId, clientMac, newUnsureDuration._1))
+            sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2))
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
-            CountDao.userIn(clientMac, groupId.toLong, System.currentTimeMillis())
+            CountDao.userIn(clientMac, groupId.toLong, newUnsureDuration._2)
           }
           realTimeMacCache.put(clientMac, newUnsureDuration._2)
         } else {
