@@ -97,12 +97,25 @@ object AreaPanel extends Panel {
                   span(s"驻留时长:${System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2}")
                 ).render
               )
+              val newDiv = div(
+                table(*.cls := "table")(
+                  thead(
+                    tr(
+                      th(*.textAlign.center)("#"),
+                      th(*.textAlign.center)("名称"),
+                      th(*.textAlign.center)("mac"),
+                      th(*.textAlign.center)("创建时间"),
+                      th(*.textAlign.center)("rssi"),
+                      th(*.textAlign.center)("操作")
+                    )
+                  ),
+                  tbody(*.textAlign.center)(
+                    onlineSum.map( m => makeRow(m._1))
+                  )
+                )
+              ).render
               onLineDiv.innerHTML = ""
-              onLineDiv.appendChild(
-                div(
-                  onlineSum.foreach(i => span(i._1))
-                ).render
-              )
+              onLineDiv.appendChild(newDiv)
 
             case x =>
               println(s"i got a msg:$x")
@@ -119,6 +132,12 @@ object AreaPanel extends Panel {
         window.alert("ws 断开")
     }
 
+  }
+
+  def makeRow(mac: String) = {
+    tr(
+      td(mac)
+    )
   }
 
   def getWebsocketUrl(document: Document, subId: String): String = {
