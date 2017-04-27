@@ -88,4 +88,8 @@ object Shortcut {
     dom.window.setTimeout(() => f(), delayMillisecond)
   }
 
+  def schedule(f: () => Any, delayMillisecond: Long): Int = {
+    dom.window.setInterval(() => f(), delayMillisecond)
+  }
+
 }

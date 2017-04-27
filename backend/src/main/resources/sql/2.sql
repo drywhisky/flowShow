@@ -49,7 +49,7 @@ CREATE TABLE user_action (
   cilent_mac VARCHAR(255) NOT NULL ,
   group_id BIGINT NOT NULL ,
   in_time BIGINT NOT NULL ,
-  out_time BIGINT NOT NULL
+  out_time BIGINT
 );
 --
 -- CREATE TABLE brand(

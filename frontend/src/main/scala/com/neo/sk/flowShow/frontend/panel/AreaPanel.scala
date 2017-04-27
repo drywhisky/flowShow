@@ -1,6 +1,6 @@
 package com.neo.sk.flowShow.frontend.panel
 
-import com.neo.sk.flowShow.frontend.utils.Panel
+import com.neo.sk.flowShow.frontend.utils.{Http, Panel, Shortcut}
 import com.neo.sk.flowShow.ptcl.{ComeIn, GetOut, Heartbeat, WebSocketMsg}
 import io.circe.{Decoder, Error}
 import org.scalajs.dom
@@ -13,7 +13,6 @@ import org.scalajs.dom.raw.{Document, MessageEvent, WebSocket}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.neo.sk.flowShow.ptcl._
-import com.neo.sk.flowShow.frontend.utils.Http
 import com.neo.sk.flowShow.frontend.Routes
 import com.neo.sk.flowShow.frontend.utils.highcharts.CleanJsObject
 import com.neo.sk.flowShow.frontend.utils.highcharts.HighchartsUtils._
@@ -52,8 +51,7 @@ object AreaPanel extends Panel {
 
   private var outPerson = 0
 
-  private var stayTime = 0l
-
+  private var stayTime = (0l, 0l)  //(historyMax, NowMax)
 
   private val searchByIdIncome =
     div(
@@ -114,7 +112,7 @@ object AreaPanel extends Panel {
                     p(s"出区域人数")
                   ),
                   div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._2/1000),
                     p(s"驻留时长(s)")
                   )
                 ).render
@@ -142,7 +140,8 @@ object AreaPanel extends Panel {
               macs.map{ m => onLineMap.remove(m)}
               outPerson = outPerson + macs.length
               onlinePerson = onlinePerson - macs.length
-              stayTime = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
+              val timeTmp = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
+              stayTime = (stayTime._1, timeTmp)
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
@@ -159,7 +158,7 @@ object AreaPanel extends Panel {
                     p(s"出区域人数")
                   ),
                   div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._1/1000),
                     p(s"驻留时长(s)")
                   )
                 ).render
@@ -188,7 +187,8 @@ object AreaPanel extends Panel {
               onlinePerson = onlineSum.length
               inPerson = inSum
               outPerson = outSum
-              stayTime = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
+              val timeTmp = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
+              stayTime = (timeTmp, timeTmp)
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
@@ -205,7 +205,7 @@ object AreaPanel extends Panel {
                     p(s"出区域人数")
                   ),
                   div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime/1000),
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._2/1000),
                     p(s"驻留时长(s)")
                   )
                 ).render
@@ -225,6 +225,7 @@ object AreaPanel extends Panel {
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
               drawChart(pastOnline)
+              Shortcut.schedule(scheduleTask, 1000)
 
             case x =>
               println(s"i got a msg:$x")
@@ -243,7 +244,18 @@ object AreaPanel extends Panel {
 
   }
 
-  def makeRow(mac: String) = {
+  private def scheduleTask() = {
+    val stayDiv = dom.document.getElementById("stayTime").asInstanceOf[Div]
+    val timeTmp = stayTime._2 + 1000
+    if(timeTmp > stayTime._1) {
+      stayTime = (timeTmp, timeTmp)
+      stayDiv.innerHTML = s"${stayTime._2 / 1000}"
+    } else {
+      stayDiv.innerHTML = s"${stayTime._1 / 1000}"
+    }
+  }
+
+  private def makeRow(mac: String) = {
     tr(
       td(mac)
     )
