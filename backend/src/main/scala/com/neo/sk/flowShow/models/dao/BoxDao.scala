@@ -24,7 +24,7 @@ object BoxDao {
     tBoxs.filter(_.userId === userId).result
   )
 
-  def addBox(name:String, mac:String, rssi:Int, userId:Long, groupId:Long, timestamp:Long, x: Double, y: Double) = {
+  def addBox(name:String, mac:String, rssi:Int, userId:Long, groupId:Long, timestamp:Long, x: Option[Double], y: Option[Double]) = {
     val actions = for {
       exists1 <- tBoxs.filter(_.boxMac === mac).exists.result
       id <-

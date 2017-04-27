@@ -18,7 +18,7 @@ object GroupDao {
     tGroups.filter(c => (c.groupId =!= Constants.defaultGroupId) && (c.userId === userId)).result
   )
 
-  def addGroup(name:String, duration:Long, userId:Long, timestamp:Long, map: String, scala:Double, width:Double, height:Double) = db.run(
+  def addGroup(name:String, duration:Long, userId:Long, timestamp:Long, map: Option[String], scala:Option[Double], width:Option[Double], height:Option[Double]) = db.run(
     tGroups.returning(tGroups.map(_.groupId)).+=(rGroups(-1l, name, userId, timestamp, duration, map, scala, width, height))
   )
 

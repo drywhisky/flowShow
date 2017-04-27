@@ -17,8 +17,8 @@ CREATE TABLE boxs (
   user_id BIGINT NOT NULL,
   group_id BIGINT NOT NULL DEFAULT 0,
   rssi_set int NOT NULL,
-  x FLOAT NOT NULL ,
-  y FLOAT NOT NULL
+  x FLOAT ,
+  y FLOAT
 );
 ALTER SEQUENCE box_id_seq OWNED BY boxs.box_id;
 
@@ -29,10 +29,10 @@ create table groups (
   user_id BIGINT NOT NULL,
   create_time BIGINT NOT NULL,
   duration_length BIGINT NOT NULL,
-  map VARCHAR(255) NOT NULL,
-  scala FLOAT NOT NULL,
-  width FLOAT NOT NULL ,
-  height FLOAT NOT NULL
+  map VARCHAR(255) ,
+  scala FLOAT ,
+  width FLOAT ,
+  height FLOAT
 );
 ALTER SEQUENCE group_id_seq OWNED BY groups.group_id;
 

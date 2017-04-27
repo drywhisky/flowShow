@@ -89,11 +89,11 @@ package object ptcl {
     * Groups and Boxs
     */
 
-  case class Group(id: Long, name: String, createTime:Long, durationLength: Long, map: String, scala:Double)
+  case class Group(id: Long, name: String, createTime:Long, durationLength: Long, map: Option[String], scala: Option[Double])
 
   case class ModifyGroup(id:Long, name:String, durationLength: Long)
 
-  case class AddGroup(name:String, durationLength: Long, map:String, scala:Double, width:Double, height:Double)
+  case class AddGroup(name:String, durationLength: Long, map:Option[String], scala:Option[Double], width:Option[Double], height:Option[Double])
 
   case class AddGroupRsp(id:Option[Long], timestamp:Option[Long], errCode: Int = 0, msg: String = "ok")
 
@@ -101,7 +101,7 @@ package object ptcl {
                          errCode: Int = 0,
                          msg: String = "ok") extends Response
 
-  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, x: Double, y: Double)
+  case class Box(id: Long, name: String, mac:String, createTime:Long, rssi: Int, x: Option[Double], y: Option[Double])
 
   case class BoxsRsp(data: List[Box],
                        errCode: Int = 0,
@@ -109,7 +109,7 @@ package object ptcl {
 
   case class ModifyBox(id:Long, mac:String, name:String, rssi:Int)
 
-  case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Double, y: Double)
+  case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Option[Double], y: Option[Double])
 
 
   /**
