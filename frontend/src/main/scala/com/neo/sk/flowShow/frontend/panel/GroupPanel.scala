@@ -129,11 +129,11 @@ object GroupListPanel extends Panel{
           )
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域地图"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("地图(可选)"),
           div(*.cls := "col-md-4")(upLoadButton, fileUpload, floorSvg)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域宽度"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("宽度(可选)"),
           div(*.cls := "col-md-4")(
             div(*.cls := "input-group")(
               modalWidth,
@@ -142,7 +142,7 @@ object GroupListPanel extends Panel{
           )
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("区域长度"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("长度(可选)"),
           div(*.cls := "col-md-4")(
             div(*.cls := "input-group")(
               modalHeight,
@@ -151,7 +151,7 @@ object GroupListPanel extends Panel{
           )
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("比例尺"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("比例尺(可选)"),
           div(*.cls := "col-md-4")(
             div(*.cls := "input-group")(
               modalScala,
@@ -163,7 +163,7 @@ object GroupListPanel extends Panel{
     )
 
     def clickFunction():Unit = {
-      if (modalName.value == "" || modalDua.value == "" || fileUrl == "" || modalHeight.value == "") {
+      if (modalName.value == "" || modalDua.value == "") {
         JsFunc.alert(s"error!")
       } else {
         val fileUrlValue = if(fileUrl == "") None else Some(fileUrl)
@@ -300,7 +300,7 @@ object GroupListPanel extends Panel{
           )
         ),
         tbody(*.textAlign.center)(
-          groups.toList.map(_._2).map(m => makeRow(m))
+          groups.toList.map(_._2).sortBy(_.id).map(m => makeRow(m))
         )
       )
     ).render
@@ -463,7 +463,7 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
           )
         ),
         tbody(*.textAlign.center)(
-          boxs.toList.map(_._2).map( m => makeRow(m))
+          boxs.toList.map(_._2).sortBy(_.id).map( m => makeRow(m))
         )
       )
     ).render
@@ -521,11 +521,11 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
           div(*.cls := "col-md-4")(modalRssi)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标x"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标x(可选)"),
           div(*.cls := "col-md-4")(modalX)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标y"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("坐标y(可选)"),
           div(*.cls := "col-md-4")(modalY)
         )
       )
