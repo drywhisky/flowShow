@@ -2,7 +2,8 @@ package com.neo.sk.flowShow.core
 
 import java.io.File
 
-import akka.actor.SupervisorStrategy.{Restart, Resume}
+
+
 import akka.actor.{Actor, ActorContext, OneForOneStrategy, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
@@ -86,7 +87,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   }
 
   def countDelay = {
-    val time = DateTime.now.plusMinutes(AppSettings.realTimeCountInterval).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
+    val time = DateTime.now.plusMinutes(2).withSecondOfMinute(0).withMillisOfSecond(0).getMillis
     val now = DateTime.now.getMillis
     time - now
   }
@@ -286,14 +287,16 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
 
     case msg@CountDetailFlow => ///10s启动一次.每隔10秒，在countcache里面更新一条数据
       log.debug(s"i got a msg:$msg")
-      val time = DateTime.now.minusSeconds(10).getMillis
-      val count = realTimeMacCache.size
-      countCache.put(time, count)
-      val cleanTime = DateTime.now.minusMinutes(2).getMillis
-      countCache.filter(_._1 < cleanTime).clear()
-      //取当天且人数不为0的时刻插入表格
-      val record = countCache.filter(c => c._1 == time && c._2 != 0).head
-      CountDao.addCountDetail(groupId, record)
+      if(realTimeMacCache.nonEmpty) {
+        val time = System.currentTimeMillis()
+        val count = realTimeMacCache.size
+        countCache.put(time, count)
+        val cleanTime = DateTime.now.minusMinutes(2).getMillis
+        countCache.filter(_._1 < cleanTime).clear()
+        //取当天且人数不为0的时刻插入表格
+        val record = countCache.filter(c => c._1 == time && c._2 != 0).head
+        CountDao.addCountDetail(groupId, record)
+      }
 
     case msg@SaveTmpFile =>
       log.debug(s"i got a msg:$msg")

@@ -33,9 +33,9 @@ import scala.scalajs.js.Date
   */
 object AreaPanel extends Panel {
 
-  private val areaDiv = div(*.cls := "row")().render
+  private val areaDiv = div(*.cls := "row info-blips")().render
 
-  private val onLineDiv = div(*.cls := "col-md-5 col-md-offset-7", *.backgroundColor := "#282B3F")().render
+  private val onLineDiv = div(*.cls := "col-md-2 col-md-offset-2", *.backgroundColor := "#282B3F")().render
 
   private val rangeIndex = select(*.width := "150px", *.color := "black", *.height := "30px", *.marginRight := "10px").render
 
@@ -101,10 +101,18 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  span(s"区域内人数:$onlinePerson"),
-                  span(s"进区域人数:$inPerson"),
-                  span(s"出区域人数:$outPerson"),
-                  span(s"驻留时长:$stayTime")
+                  div(*.cls := "col-md-2")(
+                    p(s"区域内人数:$onlinePerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"进区域人数:$inPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"出区域人数:$outPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"驻留时长:$stayTime")
+                  )
                 ).render
               )
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
@@ -120,10 +128,18 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  span(s"区域内人数:$onlinePerson"),
-                  span(s"进区域人数:$inPerson"),
-                  span(s"出区域人数:$outPerson"),
-                  span(s"驻留时长:${stayTime/1000}s")
+                  div(*.cls := "col-md-2")(
+                    p(s"区域内人数:$onlinePerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"进区域人数:$inPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"出区域人数:$outPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"驻留时长:$stayTime")
+                  )
                 ).render
               )
               jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
@@ -140,10 +156,18 @@ object AreaPanel extends Panel {
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  span(s"区域内人数:$onlinePerson"),
-                  span(s"进区域人数:$inPerson"),
-                  span(s"出区域人数:$outPerson"),
-                  span(s"驻留时长:$stayTime")
+                  div(*.cls := "col-md-2")(
+                    p(s"区域内人数:$onlinePerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"进区域人数:$inPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"出区域人数:$outPerson")
+                  ),
+                  div(*.cls := "col-md-2")(
+                    p(s"驻留时长:$stayTime")
+                  )
                 ).render
               )
               val newDiv = div(
@@ -274,7 +298,7 @@ object AreaPanel extends Panel {
       ),
       searchByIdIncome,
       div(*.cls := "row", *.width := "100%", *.backgroundColor := "#282B3F")(
-        div(*.cls := "col-md-5", *.backgroundColor := "#282B3F")(
+        div(*.cls := "col-md-8", *.backgroundColor := "#282B3F")(
           areaDiv,
           realTimeChart
         ),
