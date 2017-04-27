@@ -44,6 +44,18 @@ class GroupActor(id:String) extends Actor with Stash{
   private val realTimeDurationLength =  9 * 60 *1000
   private val oneDurationLength = 1 * 60 * 60 *1000
 
+  override val supervisorStrategy =
+    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
+      case _: ArithmeticException => Resume
+      case e: Exception =>
+        log.error(s"$logPrefix child dead abnormal", e)
+        Restart
+
+      case msg =>
+        log.error(s"$logPrefix received unknow $msg")
+        Restart
+    }
+
   val numPattern="[0-9]+".r
 
   private[this] val uniterType =

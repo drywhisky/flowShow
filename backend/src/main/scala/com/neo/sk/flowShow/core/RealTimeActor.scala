@@ -238,6 +238,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   def init(): Receive = {
     case msg@InitDone =>
       log.info(s"$logPrefix init done")
+      context.setReceiveTimeout(Duration.Undefined)
       if (needSend2Socket) {
         context.system.scheduler.schedule(0.seconds, AppSettings.realTimeMacInterval.seconds) {
           val cur = System.currentTimeMillis()

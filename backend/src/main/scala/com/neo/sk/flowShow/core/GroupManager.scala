@@ -94,6 +94,19 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
     log.info(s"$logPrefix stops.")
   }
 
+  override val supervisorStrategy =
+    OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
+      case _: ArithmeticException => Resume
+      case e: Exception =>
+        log.error(s"$logPrefix child dead abnormal", e)
+        Restart
+
+      case msg =>
+        log.error(s"$logPrefix received unknow $msg")
+        Restart
+    }
+
+
   def getActor(id: String) : ActorRef = {
     context.child(id).getOrElse {
       val child = context.actorOf(GroupActor.props(id), id)
