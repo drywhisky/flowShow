@@ -139,7 +139,7 @@ object AreaPanel extends Panel {
               macs.map{ m => onLineMap.remove(m)}
               outPerson = outPerson + macs.length
               onlinePerson = onlinePerson - macs.length
-              stayTime = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).reverse.head._2
+              stayTime = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
@@ -180,7 +180,7 @@ object AreaPanel extends Panel {
               onlinePerson = onlineSum.length
               inPerson = inSum
               outPerson = outSum
-              stayTime = System.currentTimeMillis() - onlineSum.sortBy(_._2).reverse.head._2
+              stayTime = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
