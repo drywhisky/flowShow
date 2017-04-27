@@ -28,7 +28,9 @@ object Routes {
   val modifyBox = baseUrl + "/modifyBox"
   val addBox = baseUrl + "/addBox"
 
-  val getHistory = baseUrl + "/getHistory"
+  def getHistory(mac:String) = {
+    baseUrl + s"/getHistory?mac=$mac"
+  }
 
 
 }

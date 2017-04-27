@@ -116,7 +116,7 @@ package object ptcl {
     * userHistory
     */
 
-  case class UserHistory(uId: Long, mac: String, group: String, inTime: Long, outTime: Option[Long])
+  case class UserHistory(mac: String, groupName: String, inTime: Long, outTime: Option[Long])
 
   case class UserHistoryRsp(data:List[UserHistory], errCode: Int = 0, msg: String = "ok")
 

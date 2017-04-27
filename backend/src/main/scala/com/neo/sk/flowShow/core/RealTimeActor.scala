@@ -2,16 +2,14 @@ package com.neo.sk.flowShow.core
 
 import java.io.File
 
-
-
-import akka.actor.{Actor, ActorContext, OneForOneStrategy, Props, ReceiveTimeout, Stash}
+import akka.actor.{Actor, Props, ReceiveTimeout, Stash}
 import com.github.nscala_time.time.Imports.DateTime
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.FileUtil
 import com.neo.sk.flowShow.common.AppSettings
 
 import scala.collection.mutable
-import com.neo.sk.flowShow.models.dao.CountDao
+import com.neo.sk.flowShow.models.dao.{CountDao, GroupDao}
 import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, PushData}
 import com.neo.sk.flowShow.ptcl.NowInfo
 
@@ -33,6 +31,7 @@ object RealTimeActor {
   case object SaveTmpFile
   case object InitDone
   case class  GetNowInfo(groupId: Long)
+  case object CleanAction
 
   sealed trait State
   case object Init extends State
@@ -258,6 +257,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           }
         } //一秒钟检查一次是否离开
       }
+      GroupDao.cleanLast()
       unstashAll()
       context.become(idle())
 

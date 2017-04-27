@@ -26,4 +26,8 @@ object GroupDao {
     tGroups.filter(_.groupId === id).map(r => (r.groupName, r.durationLength)).update((name, duration))
   )
 
+  def cleanLast() = db.run{
+    tUserAction.filter(_.outTime.isEmpty === true).delete
+  }
+
 }

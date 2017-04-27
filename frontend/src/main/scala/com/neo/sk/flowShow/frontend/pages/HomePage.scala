@@ -19,7 +19,7 @@ object HomePage extends Page {
     val target = name match {
       case "111" => GroupPanel.render
       case "222" => AreaPanel.render
-      case "333" => FlowPanel.render
+      case "333" => HistoryPanel.render
       case _ => GroupPanel.render
     }
 

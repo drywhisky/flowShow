@@ -30,6 +30,18 @@ object UserDao {
     db.run(actions)
   }
 
+  def getUserHistory(mac: String, userId: Long) = {
+    val actions = {
+      tUserAction join tGroups on { (userAction, groups) =>
+        (groups.groupId === userAction.groupId) &&
+          (groups.userId === userId) &&
+          (userAction.cilentMac === mac)
+      }
+    }.result
+
+    db.run(actions)
+  }
+
 
 
 }

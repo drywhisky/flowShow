@@ -29,7 +29,7 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
       getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~
-      modifyBox ~ imageUpload ~ getAllBoxs
+      modifyBox ~ imageUpload ~ getAllBoxs ~ getHistory
 
   )
 
@@ -239,6 +239,26 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
         }.recover {
           case t =>
             complete(CommonRsp(104005, s"error.$t"))
+        }
+      }
+    }
+  }
+
+  private val getHistory = (path("getHistory") & get & pathEndOrSingleSlash) {
+    UserAction { user =>
+      parameters(
+        'mac.as[String]
+      ) { case (mac) =>
+        dealFutureResult{
+          UserDao.getUserHistory(mac, user.uid).map{ res =>
+            val historyList = res.map{
+              r => UserHistory(mac, r._2.groupName, r._1.inTime, r._1.outTime)
+            }.toList
+            complete(UserHistoryRsp(data = historyList))
+          }.recover {
+            case t =>
+              complete(CommonRsp(104005, s"error.$t"))
+          }
         }
       }
     }

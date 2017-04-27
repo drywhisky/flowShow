@@ -4,8 +4,10 @@ import akka.actor.SupervisorStrategy.{Restart, Resume}
 import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, ReceiveTimeout, Stash, Terminated}
 import com.neo.sk.flowShow.common.AppSettings
 import com.neo.sk.flowShow.core.GroupManager.{FindMyInfo, GetMyInfo}
+import com.neo.sk.flowShow.models.dao.GroupDao
 import org.slf4j.LoggerFactory
 import com.neo.sk.utils.{PutShoots, Shoot}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
@@ -40,9 +42,6 @@ class GroupActor(id:String) extends Actor with Stash{
 
   private val defaultVisitDurationLent = AppSettings.visitDurationLent.toLong
   private val defaultRssiSet = AppSettings.rssiValue
-
-  private val realTimeDurationLength =  9 * 60 *1000
-  private val oneDurationLength = 1 * 60 * 60 *1000
 
   override val supervisorStrategy =
     OneForOneStrategy(maxNrOfRetries = 10, withinTimeRange = 1.minutes) {
