@@ -34,10 +34,6 @@ object GroupPanel extends Panel{
 
   private val tmp = GroupListPanel.render
 
-  val GroupMap = mutable.HashMap[Long, Group]()
-
-  val BoxMap = mutable.HashMap[Long, Box]()
-
   currentDiv.appendChild(tmp)
 
   def SetContent(component:Div) = {
@@ -57,6 +53,8 @@ object GroupListPanel extends Panel{
   private val groupList = div(div()).render
 
   private val editBox = div().render
+
+  private val GroupMap = mutable.HashMap[Long, Group]()
 
   private val createGroupButton = button(*.cls := "btn btn-warning")("+添加区域").render
 
@@ -175,8 +173,8 @@ object GroupListPanel extends Panel{
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
             val newGroup = Group(rsp.id.getOrElse(0l), modalName.value, rsp.timestamp.getOrElse(0l), modalDua.value.toLong, fileUrlValue, scalaValue)
-            GroupPanel.GroupMap.put(newGroup.id, newGroup)
-            makeGroupList(GroupPanel.GroupMap)
+            GroupMap.put(newGroup.id, newGroup)
+            makeGroupList(GroupMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
           }
@@ -203,7 +201,7 @@ object GroupListPanel extends Panel{
     val modalId = input(*.`type` := "text", *.cls := "form-control", *.value := id, *.disabled := true).render
     val modalName = input(*.`type` := "text", *.cls := "form-control", *.value := name).render
     val modalTime = input(*.`type` := "text", *.cls := "form-control", *.value := MyUtil.DateFormatter(new Date(time), "YYYY-MM-DD hh:mm:ss"), *.disabled := true).render
-    val modalDua = input(*.`type` := "text", *.cls := "form-control", *.value := durationLength).render
+    val modalDua = input(*.`type` := "text", *.cls := "form-control", *.value := durationLength / 1000).render
 
 
     val header = div(*.cls := "modal-title")("更新区域信息")
@@ -241,8 +239,8 @@ object GroupListPanel extends Panel{
         Http.postJsonAndParse[CommonRsp](Routes.modifyGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            GroupPanel.GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong * 1000, map, scala))
-            makeGroupList(GroupPanel.GroupMap)
+            GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong * 1000, map, scala))
+            makeGroupList(GroupMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
           }
@@ -283,7 +281,7 @@ object GroupListPanel extends Panel{
         td(group.id),
         td(group.name),
         td(MyUtil.DateFormatter(new Date(group.createTime), "YYYY-MM-DD hh:mm:ss")),
-        td(group.durationLength),
+        td(group.durationLength / 1000),
         td(editButton, boxButton)
       )
     }
@@ -312,8 +310,8 @@ object GroupListPanel extends Panel{
     Http.getAndParse[GroupsRsp](Routes.getGroups).map { rsp =>
       if (rsp.errCode == 0) {
         println(s"success")
-        GroupPanel.GroupMap ++= rsp.data.map( g => (g.id, g))
-        makeGroupList(GroupPanel.GroupMap)
+        GroupMap ++= rsp.data.map( g => (g.id, g))
+        makeGroupList(GroupMap)
       } else {
         println(s"getCategoryList error: ${rsp.msg}")
       }
@@ -351,6 +349,8 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
   private val boxList = div().render
 
   private val editBox = div().render
+
+  private val BoxMap = mutable.HashMap[Long, Box]()
 
   private var iFrame = iframe(*.id := "svg", *.width := "100%", *.height := "488px").render
 
@@ -403,8 +403,8 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
         Http.postJsonAndParse[CommonRsp](Routes.modifyBox, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            GroupPanel.BoxMap.update(id, Box(id, modalName.value, mac, time, modalRssi.value.toInt, x, y))
-            makeBoxList(GroupPanel.BoxMap)
+            BoxMap.update(id, Box(id, modalName.value, mac, time, modalRssi.value.toInt, x, y))
+            makeBoxList(BoxMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
           }
@@ -476,8 +476,8 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
     Http.getAndParse[BoxsRsp](Routes.getBoxs(groupId)).map { rsp =>
       if (rsp.errCode == 0) {
         println(s"success")
-        GroupPanel.BoxMap ++= rsp.data.map(g => (g.id, g))
-        makeBoxList(GroupPanel.BoxMap)
+        BoxMap ++= rsp.data.map(g => (g.id, g))
+        makeBoxList(BoxMap)
       } else {
         println(s"getCategoryList error: ${rsp.msg}")
       }
@@ -545,13 +545,13 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
             val newBox = Box(rsp.id.getOrElse(0l), modalName.value, modalMac.value, rsp.timestamp.getOrElse(0l), modalRssi.value.toInt, xValue, yValue)
-            GroupPanel.BoxMap.put(newBox.id, newBox)
+            BoxMap.put(newBox.id, newBox)
             if(newBox.x.nonEmpty && newBox.y.nonEmpty && scala.nonEmpty) {
               container.appendChild(
                 image(*.href := "/flowShow/static/img/router.png", *.width := "20px", *.height := "20px", x := newBox.x.get * scala.get, y := newBox.y.get * scala.get).render
               )
             }
-            makeBoxList(GroupPanel.BoxMap)
+            makeBoxList(BoxMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
           }

@@ -25,10 +25,10 @@ import scala.scalajs.js
 import js.JSConverters._
 import scala.scalajs.js.Date
 
-
 /**
   * Created by whisky on 17/4/24.
   */
+
 object AreaPanel extends Panel {
 
   private val areaDiv = div(*.cls := "row info-blips")().render
