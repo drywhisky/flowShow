@@ -247,11 +247,18 @@ object AreaPanel extends Panel {
   private def scheduleTask() = {
     val stayDiv = dom.document.getElementById("stayTime").asInstanceOf[Div]
     val timeTmp = stayTime._2 + 1000
-    if(timeTmp > stayTime._1) {
+    val newTime = if(timeTmp > stayTime._1) {
       stayTime = (timeTmp, timeTmp)
-      stayDiv.innerHTML = s"${stayTime._2 / 1000}"
+      stayTime._2 / 1000
     } else {
-      stayDiv.innerHTML = s"${stayTime._1 / 1000}"
+      stayTime = (stayTime._1, timeTmp)
+      stayTime._1 / 1000
+    }
+    try{
+      stayDiv.innerHTML = s"$newTime"
+    } catch {
+      case e:Exception =>
+        println(s"$e")
     }
   }
 

@@ -124,7 +124,7 @@ object GroupListPanel extends Panel{
           div(*.cls := "col-md-4")(
             div(*.cls := "input-group")(
               modalDua,
-              span(*.cls := "input-group-addon")("分钟")
+              span(*.cls := "input-group-addon")("秒")
             )
           )
         ),
@@ -170,7 +170,7 @@ object GroupListPanel extends Panel{
         val scalaValue = if(modalScala.value == "") None else Some(modalScala.value.toDouble)
         val widthValue = if(modalWidth.value == "") None else Some(modalWidth.value.toDouble)
         val heightValue = if(modalHeight.value == "") None else Some(modalHeight.value.toDouble)
-        val data = AddGroup(modalName.value, modalDua.value.toLong * 60000, fileUrlValue, scalaValue, widthValue, heightValue).asJson.noSpaces
+        val data = AddGroup(modalName.value, modalDua.value.toLong * 1000, fileUrlValue, scalaValue, widthValue, heightValue).asJson.noSpaces
         Http.postJsonAndParse[AddGroupRsp](Routes.addGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
@@ -222,11 +222,11 @@ object GroupListPanel extends Panel{
           div(*.cls := "col-md-4")(modalTime)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
-          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("驻留时长(min)"),
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("驻留时长"),
           div(*.cls := "col-md-4")(
             div(*.cls := "input-group")(
               modalDua,
-              span(*.cls := "input-group-addon")("分钟")
+              span(*.cls := "input-group-addon")("秒")
             )
           )
         )
@@ -241,7 +241,7 @@ object GroupListPanel extends Panel{
         Http.postJsonAndParse[CommonRsp](Routes.modifyGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            GroupPanel.GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong, map, scala))
+            GroupPanel.GroupMap.update(id, Group(id, modalName.value, time, modalDua.value.toLong * 1000, map, scala))
             makeGroupList(GroupPanel.GroupMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
@@ -295,7 +295,7 @@ object GroupListPanel extends Panel{
             th(*.textAlign.center)("#"),
             th(*.textAlign.center)("名称"),
             th(*.textAlign.center)("创建时间"),
-            th(*.textAlign.center)("驻留时长"),
+            th(*.textAlign.center)("驻留时长(秒)"),
             th(*.textAlign.center)("操作")
           )
         ),
@@ -348,7 +348,7 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
 
   private val ImgSvg = div(*.width := "100%").render
 
-  private val boxList = div(div()).render
+  private val boxList = div().render
 
   private val editBox = div().render
 
@@ -468,7 +468,8 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
       )
     ).render
 
-    boxList.replaceChild(newDiv, boxList.firstChild)
+    boxList.innerHTML = ""
+    boxList.appendChild(newDiv)
   }
 
   private def getBox(groupId: Long) = {

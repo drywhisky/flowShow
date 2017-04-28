@@ -194,3 +194,5 @@ compile
 ~re-start
 compile
 ~re-start
+c
+~re-start
