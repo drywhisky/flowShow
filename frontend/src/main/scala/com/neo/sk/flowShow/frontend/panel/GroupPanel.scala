@@ -63,7 +63,6 @@ object GroupListPanel extends Panel{
 
     val modalName = input(*.`type` := "text", *.cls := "form-control").render
     val modalDua = input(*.`type` := "text", *.cls := "form-control").render
-    val upLoadButton = button(*.cls := "btn btn-warning")("上传").render
     val modalWidth = input(*.`type` := "text", *.cls := "form-control").render
     val modalHeight = input(*.`type` := "text", *.cls := "form-control").render
     val modalScala = input(*.`type` := "text", *.cls := "form-control").render
@@ -76,8 +75,13 @@ object GroupListPanel extends Panel{
       file
     ).render
 
+    fileUpload.onchange = { e: Event =>
+      uploadFile()
+    }
+
     @js.native
-    def uploadFile(url: String) ={
+    def uploadFile() ={
+      val url = Routes.imageUpload
       val oData = new FormData(fileUpload)
       val oReq = new XMLHttpRequest()
       oReq.open("POST", url, true)
@@ -104,12 +108,6 @@ object GroupListPanel extends Panel{
       }
     }
 
-    upLoadButton.onclick = { e: MouseEvent =>
-      e.preventDefault()
-      uploadFile(Routes.imageUpload)
-    }
-
-
     val header = div(*.cls := "modal-title")("新建区域")
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
@@ -128,7 +126,7 @@ object GroupListPanel extends Panel{
         ),
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("地图(可选)"),
-          div(*.cls := "col-md-4")(upLoadButton, fileUpload, floorSvg)
+          div(*.cls := "col-md-4")(fileUpload, floorSvg)
         ),
         div(*.cls := "form-group", *.textAlign.center)(
           label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("宽度(可选)"),
