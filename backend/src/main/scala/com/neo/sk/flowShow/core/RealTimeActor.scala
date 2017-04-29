@@ -65,6 +65,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private val clientMacIn = collection.mutable.HashMap[String, Int]()
   private val clientMacOut = collection.mutable.HashMap[String, Int]()
 
+  private val oldPeopleList = collection.mutable.ListBuffer[(String)]()
+
   private val visitDurationLent = AppSettings.visitDurationLent
   //持续两分钟收到算进店
   private val realTimeDurationLength = 5 * 60 * 1000 ///五分钟没有收到上报数据算离开
@@ -201,6 +203,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           cache.put(clientMac, oldDuration.::(newUnsureDuration))
           if (needSend2Socket && realTimeMacCache.get(clientMac).isEmpty) {
             sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2))
+            oldPeopleList += clientMac
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
             CountDao.userIn(clientMac, groupId.toLong, newUnsureDuration._2)
           }
@@ -257,9 +260,18 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           }
         } //一秒钟检查一次是否离开
       }
-      GroupDao.cleanLast()
+      GroupDao.cleanLast(groupId.toLong).andThen{
+        case Success(r) =>
+          oldPeopleList ++= r
+
+        case Failure(e) =>
+          log.debug(s"get OldPeopleList error.$e")
+
+      }.onComplete{
+        case _ =>
+          context.become(idle())
+      }
       unstashAll()
-      context.become(idle())
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

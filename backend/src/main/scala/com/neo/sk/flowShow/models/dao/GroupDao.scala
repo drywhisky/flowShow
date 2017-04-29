@@ -4,6 +4,7 @@ import com.neo.sk.flowShow.common.Constants
 import com.neo.sk.flowShow.models.SlickTables._
 import com.neo.sk.utils.DBUtil.db
 import slick.jdbc.PostgresProfile.api._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by whisky on 17/4/14.
@@ -26,8 +27,14 @@ object GroupDao {
     tGroups.filter(_.groupId === id).map(r => (r.groupName, r.durationLength)).update((name, duration))
   )
 
-  def cleanLast() = db.run{
-    tUserAction.filter(_.outTime.isEmpty === true).delete
+  def cleanLast(groupId: Long) = {
+    val actions = for {
+      _ <- tUserAction.filter(_.outTime.isEmpty === true).delete
+      r2 <- tUserAction.filter(_.groupId === groupId).map(_.cilentMac).distinct.result
+    } yield {
+      r2
+    }
+    db.run(actions.transactionally)
   }
 
 }
