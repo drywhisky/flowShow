@@ -26,7 +26,7 @@ package object ptcl {
 
   case class GetOut(data: List[String]) extends WebSocketMsg
 
-  case class NowInfo(onlineSum:List[(String, Long)], inSum: Int, outSum: Int, pastOnline: List[(Long, Int)]) extends WebSocketMsg
+  case class NowInfo(onlineSum:List[(String, Long)], inSum: Int, outSum: Int, oldSum: Int, pastOnline: List[(Long, Int)]) extends WebSocketMsg
 
 
   sealed trait DataFromNyx

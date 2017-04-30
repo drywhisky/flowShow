@@ -76,6 +76,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   //(time) -> count
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String, (Long, Long)]()
 
+  private var oldPeopleSum = 0
+
   private val reg = "[0-9]*".r
   private val needSend2Socket = if (reg.pattern.matcher(groupId).matches()) true else {
     realTimeMacCache.clear()
@@ -205,9 +207,10 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2))
             oldPeopleList += clientMac
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
+            realTimeUnsureDurCache.put(clientMac, newUnsureDuration) ///记录最后一次的时间
             CountDao.userIn(clientMac, groupId.toLong, newUnsureDuration._2)
           }
-          realTimeMacCache.put(clientMac, newUnsureDuration._2)
+          realTimeMacCache.put(clientMac, newUnsureDuration._2) //记录最新的时间
         } else {
           realTimeUnsureDurCache.put(clientMac, newUnsureDuration)
         }
@@ -338,8 +341,11 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
         else List()
       }
+      realTimeMacCache.keys.map { i =>
+        if (oldPeopleList.contains(i)) oldPeopleSum + 1
+      }
       val pastOnLine = countCache.toList.sortBy(_._1).reverse.take(10)
-      peer ! NowInfo(online, inSum, outSum, pastOnLine)
+      peer ! NowInfo(online, inSum, outSum, oldPeopleSum, pastOnLine)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

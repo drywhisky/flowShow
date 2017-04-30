@@ -41,6 +41,8 @@ object AreaPanel extends Panel {
 
   private val realTimeChart = div(*.cls := "row").render
 
+  private val oldPeopleChart = div(*.cls := "row").render
+
   private val GroupMap = mutable.HashMap[String, Group]()
 
   private val onLineMap = mutable.HashMap[String, Long]()
@@ -50,6 +52,8 @@ object AreaPanel extends Panel {
   private var inPerson = 0
 
   private var outPerson = 0
+
+  private var oldPerson = 0
 
   private var stayTime = (0l, 0l)  //(historyMax, NowMax)
 
@@ -70,6 +74,41 @@ object AreaPanel extends Panel {
       val group = GroupMap.get(roomName).head
       openWs(group.id.toString)
 
+  }
+
+  private def drawOldChart(oldPerson: Int, allPerson: Int) = {
+
+    val drawChart = new HighchartsConfig {
+
+      // Chart config
+      override val chart: Cfg[Chart] = Chart(`type` = "pie", options3d = ChartOptions3d(alpha = 45, beta = 0, enabled = true))
+
+      // Chart title
+      override val title: Cfg[Title] = Title(text = "区域新老客比")
+
+      override val tooltip: Cfg[Tooltip] = Tooltip(pointFormat = "{series.name}: <b>{point.percentage:.1f}%</b>")
+
+      override val plotOptions: Cfg[PlotOptions] = PlotOptions(pie = PlotOptionsPie(
+        allowPointSelect = true,
+        cursor = "pointer",
+        depth = 35,
+        dataLabels = PlotOptionsPieDataLabels(enabled = true, format = "{point.name}"),
+        size = "100%"
+      ))
+      // Series
+      override val series: SeriesCfg = js.Array[AnySeries](
+        SeriesPie(name = "数据",
+          data = js.Array[SeriesPieData](
+            SeriesPieData(y = oldPerson, name = "老客户"),
+            SeriesPieData(y = allPerson - oldPerson, name = "新客户")
+          )
+        )
+      )
+    }
+
+    oldPeopleChart.innerHTML = ""
+
+    renderChart(drawChart, oldPeopleChart)
   }
 
   def openWs(subId: String) = {
@@ -181,12 +220,13 @@ object AreaPanel extends Panel {
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
-            case msg@NowInfo(onlineSum, inSum, outSum, pastOnline) =>
+            case msg@NowInfo(onlineSum, inSum, outSum, oldSum, pastOnline) =>
               println(s"i got a msg:$msg")
               onLineMap ++= onlineSum.map(a => (a._1, a._2))
               onlinePerson = onlineSum.length
               inPerson = inSum
               outPerson = outSum
+              oldPerson = oldSum
               val timeTmp = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
               stayTime = (timeTmp, timeTmp)
               areaDiv.innerHTML = ""
@@ -225,6 +265,7 @@ object AreaPanel extends Panel {
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
               drawChart(pastOnline)
+              drawOldChart(oldPerson, onlinePerson)
               Shortcut.schedule(scheduleTask, 1000)
 
             case x =>
@@ -359,7 +400,8 @@ object AreaPanel extends Panel {
       div(*.cls := "row", *.width := "100%", *.backgroundColor := "#282B3F")(
         div(*.cls := "col-md-8", *.backgroundColor := "#282B3F")(
           areaDiv,
-          realTimeChart
+          realTimeChart,
+          oldPeopleChart
         ),
         onLineDiv
       )
