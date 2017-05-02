@@ -22,7 +22,7 @@ package object ptcl {
   //"heartbeat"
   case class Heartbeat(id: String) extends WebSocketMsg
 
-  case class ComeIn(data: String, time:Long) extends WebSocketMsg
+  case class ComeIn(data: String, time:Long, oldOrNot: Boolean) extends WebSocketMsg
 
   case class GetOut(data: List[String]) extends WebSocketMsg
 

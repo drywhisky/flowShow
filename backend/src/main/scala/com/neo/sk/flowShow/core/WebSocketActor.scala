@@ -65,9 +65,9 @@ object WebSocketActor {
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
 
-        case NewMac(groupId: String, mac: String, time: Long) =>
+        case NewMac(groupId: String, mac: String, time: Long, oldOrNot: Boolean) =>
           log.info(s"$mac come in: $groupId")
-          subscriber ! ComeIn(mac, time)
+          subscriber ! ComeIn(mac, time, oldOrNot)
 
         case LeaveMac(groupId: String, mac: Iterable[String]) =>
           log.info(s"$mac get out: $groupId")

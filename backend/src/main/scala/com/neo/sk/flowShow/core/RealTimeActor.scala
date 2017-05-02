@@ -204,8 +204,12 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         if (newUnsureDuration._2 - newUnsureDuration._1 >= visitDurationLent) {
           cache.put(clientMac, oldDuration.::(newUnsureDuration))
           if (needSend2Socket && realTimeMacCache.get(clientMac).isEmpty) {
-            sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2))
-            oldPeopleList += clientMac
+            val oldOrNot = if(oldPeopleList.contains(clientMac)) true
+            else{
+              oldPeopleList += clientMac
+              false
+            }
+            sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2, oldOrNot))
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
             realTimeUnsureDurCache.put(clientMac, newUnsureDuration) ///记录最后一次的时间
             CountDao.userIn(clientMac, groupId.toLong, newUnsureDuration._2)
@@ -301,7 +305,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       context.become(busy())
 
     case msg@CountDetailFlow => ///10s启动一次.每隔10秒，在countcache里面更新一条数据
-      log.debug(s"i got a msg:$msg")
       if(realTimeMacCache.nonEmpty) {
         val time = System.currentTimeMillis()
         val count = realTimeMacCache.size
@@ -310,7 +313,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         countCache.filter(_._1 < cleanTime).clear()
         //取当天且人数不为0的时刻插入表格
         val record = countCache.filter(c => c._1 == time && c._2 != 0).head
-        CountDao.addCountDetail(groupId, record)
+//        CountDao.addCountDetail(groupId, record)
       }
 
     case msg@SaveTmpFile =>
@@ -341,8 +344,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         }
         else List()
       }
-      realTimeMacCache.keys.map { i =>
-        if (oldPeopleList.contains(i)) oldPeopleSum + 1
+      realTimeMacCache.keys.foreach { i =>
+        if (oldPeopleList.contains(i)) oldPeopleSum += 1
       }
       val pastOnLine = countCache.toList.sortBy(_._1).reverse.take(10)
       peer ! NowInfo(online, inSum, outSum, oldPeopleSum, pastOnLine)

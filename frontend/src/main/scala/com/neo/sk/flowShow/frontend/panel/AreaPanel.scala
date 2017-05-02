@@ -39,9 +39,9 @@ object AreaPanel extends Panel {
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
-  private val realTimeChart = div(*.cls := "row").render
+  private val realTimeChart = div(*.cls := "row")().render
 
-  private val oldPeopleChart = div(*.cls := "row").render
+  private val oldPeopleChart = div(*.cls := "row")().render
 
   private val GroupMap = mutable.HashMap[String, Group]()
 
@@ -127,14 +127,17 @@ object AreaPanel extends Panel {
         case Right(messages) =>
 
           messages match {
-            case Heartbeat(id) =>
-              println(s"i got a Heartbeat")
+            case Heartbeat(_) =>
+                //do nothing
 
-            case msg@ComeIn(mac, time) =>
+            case msg@ComeIn(mac, time, oldOrNot) =>
               println(s"comeIn.i got a msg:$msg")
+              val oldOldPerson = oldPerson
+              val oldOnlinePerson = onlinePerson
               onLineMap.put(mac, time)
-              inPerson = inPerson + 1
-              onlinePerson = onlinePerson + 1
+              inPerson +=  1
+              onlinePerson += 1
+              if(oldOrNot) oldPerson += 1
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
@@ -170,7 +173,10 @@ object AreaPanel extends Panel {
               ).render
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
-              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
+              if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
+                drawOldChart(oldPerson, onlinePerson)
+
+              jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
@@ -216,7 +222,7 @@ object AreaPanel extends Panel {
               ).render
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
-              jQuery("div[data-highcharts-chart]").each { (_: Int, e: dom.Element) =>
+              jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 

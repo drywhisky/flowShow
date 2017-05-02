@@ -21,7 +21,7 @@ object WebSocketManager {
 
   sealed trait PushData
 
-  case class NewMac(groupId:String, mac:String, time:Long) extends PushData
+  case class NewMac(groupId: String, mac: String, time: Long, oldOrNot: Boolean) extends PushData
 
   case class LeaveMac(groupId:String, mac:Iterable[String]) extends PushData
 
@@ -52,7 +52,7 @@ class WebSocketManager extends Actor{
       log.debug("RegisterWsClient")
       actorList.put(peer, subId)
 
-    case msg@NewMac(groupId, _, _) =>
+    case msg@NewMac(groupId, _, _, _) =>
       log.debug(s"i got a msg:$msg")
       actorList.filter(_._2 == groupId).foreach( _._1 ! msg)
 
