@@ -173,6 +173,7 @@ object AreaPanel extends Panel {
               ).render
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
+
               if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
                 drawOldChart(oldPerson, onlinePerson)
 
@@ -180,11 +181,14 @@ object AreaPanel extends Panel {
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }
 
-            case msg@GetOut(macs) =>
+            case msg@GetOut(macs, oldSum) =>
               println(s"i got a msg:$msg")
+              val oldOldPerson = oldPerson
+              val oldOnlinePerson = onlinePerson
               macs.map{ m => onLineMap.remove(m)}
               outPerson = outPerson + macs.length
               onlinePerson = onlinePerson - macs.length
+              if(oldSum != 0) oldPerson = oldPerson - oldSum
               val timeTmp = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
               stayTime = (stayTime._1, timeTmp)
               areaDiv.innerHTML = ""
@@ -222,6 +226,10 @@ object AreaPanel extends Panel {
               ).render
               onLineDiv.innerHTML = ""
               onLineDiv.appendChild(newDiv)
+
+              if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
+                drawOldChart(oldPerson, onlinePerson)
+
               jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
                 jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
               }

@@ -24,7 +24,7 @@ package object ptcl {
 
   case class ComeIn(data: String, time:Long, oldOrNot: Boolean) extends WebSocketMsg
 
-  case class GetOut(data: List[String]) extends WebSocketMsg
+  case class GetOut(data: List[String], oldNum: Int) extends WebSocketMsg
 
   case class NowInfo(onlineSum:List[(String, Long)], inSum: Int, outSum: Int, oldSum: Int, pastOnline: List[(Long, Int)]) extends WebSocketMsg
 

@@ -23,7 +23,7 @@ object WebSocketManager {
 
   case class NewMac(groupId: String, mac: String, time: Long, oldOrNot: Boolean) extends PushData
 
-  case class LeaveMac(groupId:String, mac:Iterable[String]) extends PushData
+  case class LeaveMac(groupId:String, mac:Iterable[String], oldNum: Int) extends PushData
 
 }
 
@@ -56,7 +56,7 @@ class WebSocketManager extends Actor{
       log.debug(s"i got a msg:$msg")
       actorList.filter(_._2 == groupId).foreach( _._1 ! msg)
 
-    case msg@LeaveMac(groupId, _) =>
+    case msg@LeaveMac(groupId, _, _) =>
       log.debug(s"i got a msg:$msg")
       actorList.filter(_._2 == groupId)foreach( _._1 ! msg)
 
