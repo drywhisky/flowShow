@@ -154,7 +154,9 @@ object AreaPanel extends Panel {
                     p(s"出区域人数")
                   ),
                   div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._2/1000),
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
                     p(s"驻留时长(s)")
                   )
                 ).render
@@ -207,7 +209,9 @@ object AreaPanel extends Panel {
                     p(s"出区域人数")
                   ),
                   div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._1/1000),
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
                     p(s"驻留时长(s)")
                   )
                 ).render
@@ -302,7 +306,7 @@ object AreaPanel extends Panel {
   private def scheduleTask() = {
     val stayDiv = dom.document.getElementById("stayTime").asInstanceOf[Div]
     val timeTmp = stayTime._2 + 1000
-    val newTime = if(timeTmp > stayTime._1) {
+    val newTime = if(timeTmp >= stayTime._1) {
       stayTime = (timeTmp, timeTmp)
       stayTime._2 / 1000
     } else {
