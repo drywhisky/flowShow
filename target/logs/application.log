@@ -1,0 +1,509 @@
+2017-05-02 13:44:25.350 1992 INFO  net.sf.ehcache.CacheManager [main]  - The CacheManager shutdown hook is enabled because net.sf.ehcache.enableShutdownHook is set to true.
+2017-05-02 13:44:26.319 2961 INFO  akka.event.slf4j.Slf4jLogger [appSystem-akka.actor.default-dispatcher-4]  - Slf4jLogger started
+2017-05-02 13:44:26.409 3051 INFO  com.neo.sk.flowShow.Boot$ [appSystem-akka.actor.default-dispatcher-5] Boot$(akka://appSystem) - Starting.
+2017-05-02 13:44:26.412 3054 INFO  com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/webSocketManager
+2017-05-02 13:44:26.412 3054 INFO  com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - akka://appSystem/user/groupManager starts.
+2017-05-02 13:44:26.413 3055 INFO  com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - webSocketManager starting...
+2017-05-02 13:44:26.442 3084 INFO  com.neo.sk.utils.DBUtil$ [appSystem-akka.actor.default-dispatcher-3]  - connect to db: jdbc:postgresql://127.0.0.1:5432/flowshow
+2017-05-02 13:44:26.475 3117 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-4]  - akka://appSystem/user/wsClient starting...
+2017-05-02 13:44:28.277 4919 INFO  com.zaxxer.hikari.HikariDataSource [AsyncExecutor.default-1]  - HikariPool-1 - Started.
+2017-05-02 13:44:28.573 5215 INFO  com.zaxxer.hikari.pool.PoolBase [AsyncExecutor.default-1]  - HikariPool-1 - Driver does not support get/set network timeout for connections. (这个 org.postgresql.jdbc.PgConnection.getNetworkTimeout() 方法尚未被实作。)
+2017-05-02 13:44:28.853 5495 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/7003 starts.
+2017-05-02 13:44:28.853 5495 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-10]  - akka://appSystem/user/groupManager/7002 starts.
+2017-05-02 13:44:28.853 5495 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-5]  - akka://appSystem/user/groupManager/7005 starts.
+2017-05-02 13:44:28.853 5495 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager/7004 starts.
+2017-05-02 13:44:28.855 5497 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-11]  - akka://appSystem/user/groupManager/64517E3AE91A starts.
+2017-05-02 13:44:28.857 5499 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE91A register data...
+2017-05-02 13:44:28.858 5500 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADBA0 starts.
+2017-05-02 13:44:28.859 5501 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADBA0 register data...
+2017-05-02 13:44:28.859 5501 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADC16 starts.
+2017-05-02 13:44:28.859 5501 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC16 register data...
+2017-05-02 13:44:28.860 5502 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE114 starts.
+2017-05-02 13:44:28.861 5503 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE114 register data...
+2017-05-02 13:44:28.861 5503 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADC5C starts.
+2017-05-02 13:44:28.861 5503 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC5C register data...
+2017-05-02 13:44:28.862 5504 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/64517E3ADC60 starts.
+2017-05-02 13:44:28.862 5504 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC60 register data...
+2017-05-02 13:44:28.862 5504 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-13]  - akka://appSystem/user/groupManager/64517E3AE05E starts.
+2017-05-02 13:44:28.863 5505 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE05E register data...
+2017-05-02 13:44:28.863 5505 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-13]  - akka://appSystem/user/groupManager/64517E3ADC66 starts.
+2017-05-02 13:44:28.863 5505 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/64517E3AE962 starts.
+2017-05-02 13:44:28.864 5506 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC66 register data...
+2017-05-02 13:44:28.864 5506 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE96C starts.
+2017-05-02 13:44:28.864 5506 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/64517E3ADC44 starts.
+2017-05-02 13:44:28.865 5507 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE962 register data...
+2017-05-02 13:44:28.865 5507 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADFFC starts.
+2017-05-02 13:44:28.866 5508 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager/64517E3AE956 starts.
+2017-05-02 13:44:28.866 5508 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE96C register data...
+2017-05-02 13:44:28.866 5508 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE972 starts.
+2017-05-02 13:44:28.866 5508 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE9A8 starts.
+2017-05-02 13:44:28.866 5508 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC44 register data...
+2017-05-02 13:44:28.867 5509 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADC78 starts.
+2017-05-02 13:44:28.867 5509 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADFFC register data...
+2017-05-02 13:44:28.868 5510 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager/64517E3AE07A starts.
+2017-05-02 13:44:28.868 5510 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE956 register data...
+2017-05-02 13:44:28.868 5510 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3ADC2E starts.
+2017-05-02 13:44:28.869 5511 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE122 starts.
+2017-05-02 13:44:28.869 5511 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE972 register data...
+2017-05-02 13:44:28.869 5511 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager/64517E3AE948 starts.
+2017-05-02 13:44:28.870 5512 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE9A8 register data...
+2017-05-02 13:44:28.870 5512 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager/64517E3AE0C2 starts.
+2017-05-02 13:44:28.870 5512 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-4]  - akka://appSystem/user/groupManager/7001 starts.
+2017-05-02 13:44:28.871 5513 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/64517E3ADCA0 starts.
+2017-05-02 13:44:28.871 5513 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC78 register data...
+2017-05-02 13:44:28.871 5513 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/64517E3AE048 starts.
+2017-05-02 13:44:28.872 5514 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - akka://appSystem/user/groupManager/64517E3ADC80 starts.
+2017-05-02 13:44:28.872 5514 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE07A register data...
+2017-05-02 13:44:28.873 5515 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3ADC2E register data...
+2017-05-02 13:44:28.874 5516 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE122 register data...
+2017-05-02 13:44:28.875 5517 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-5]  - 64517E3AE948 register data...
+2017-05-02 13:44:28.877 5519 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-2]  - 64517E3AE0C2 register data...
+2017-05-02 13:44:28.879 5521 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-2]  - 64517E3ADCA0 register data...
+2017-05-02 13:44:28.880 5522 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-2]  - 64517E3AE048 register data...
+2017-05-02 13:44:28.881 5523 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.881 5523 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.default-dispatcher-2]  - 64517E3ADC80 register data...
+2017-05-02 13:44:28.885 5527 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.886 5528 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-4]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:44:28.886 5528 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.886 5528 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:44:28.887 5529 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.888 5530 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.888 5530 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-5]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:44:28.888 5530 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-6]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7001#-1860137803]),Some(7001),None,Some(60))
+2017-05-02 13:44:28.888 5530 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.889 5531 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-13]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:44:28.889 5531 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.889 5531 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-12]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7001#-1860137803]),Some(7001),None,Some(60))
+2017-05-02 13:44:28.889 5531 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.889 5531 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-11]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7001#-1860137803]),Some(7001),None,Some(60))
+2017-05-02 13:44:28.890 5532 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.890 5532 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-10]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.891 5533 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.891 5533 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-14]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.892 5534 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.892 5534 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.892 5534 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.892 5534 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.893 5535 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.894 5536 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-3]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.898 5540 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.898 5540 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-3]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.898 5540 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-11]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.899 5541 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-14]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7002#-752342717]),Some(7002),None,Some(60))
+2017-05-02 13:44:28.899 5541 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.899 5541 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-3]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.899 5541 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.900 5542 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.900 5542 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.900 5542 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.900 5542 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.900 5542 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.901 5543 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.901 5543 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-10]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.903 5545 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.904 5546 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-3]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.904 5546 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.904 5546 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7003#368925805]),Some(7003),None,Some(60))
+2017-05-02 13:44:28.905 5547 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.905 5547 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.905 5547 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.905 5547 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.906 5548 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.906 5548 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.906 5548 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.906 5548 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.906 5548 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.907 5549 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:44:28.907 5549 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.907 5549 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-10]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.907 5549 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:FindMyInfo
+2017-05-02 13:44:28.908 5550 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-2]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.908 5550 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-14]  - i receive a msg:GetMyInfo(Some(Actor[akka://appSystem/user/groupManager/7004#818045798]),Some(7004),None,Some(60))
+2017-05-02 13:44:28.931 5573 INFO  c.n.s.f.c.WsClient$$anonfun$props$1$$anon$1 [appSystem-akka.actor.my-blocking-dispatcher-16]  - Success(connect success)
+2017-05-02 13:44:29.094 5736 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - akka://appSystem/user/groupManager/7001/RealTime starting...
+2017-05-02 13:44:29.096 5738 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - akka://appSystem/user/groupManager/7002/RealTime starting...
+2017-05-02 13:44:29.097 5739 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - read from file 7001/realduration.txt lines 0 *******************
+2017-05-02 13:44:29.097 5739 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - read from file 7002/realduration.txt lines 0 *******************
+2017-05-02 13:44:29.097 5739 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7004/RealTime starting...
+2017-05-02 13:44:29.098 5740 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - read from file 7004/realduration.txt lines 0 *******************
+2017-05-02 13:44:29.099 5741 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - akka://appSystem/user/groupManager/7003/RealTime starting...
+2017-05-02 13:44:29.099 5741 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-13]  - akka://appSystem/user/groupManager/7005/RealTime starting...
+2017-05-02 13:44:29.099 5741 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-3]  - read from file 7003/realduration.txt lines 0 *******************
+2017-05-02 13:44:29.099 5741 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-13]  - read from file 7005/realduration.txt lines 0 *******************
+2017-05-02 13:44:29.136 5778 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-5]  - akka://appSystem/user/groupManager/7001/RealTime init countCache size 0
+2017-05-02 13:44:29.138 5780 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-5]  - akka://appSystem/user/groupManager/7005/RealTime init countCache size 0
+2017-05-02 13:44:29.139 5781 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - akka://appSystem/user/groupManager/7005/RealTime init done
+2017-05-02 13:44:29.139 5781 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-13]  - akka://appSystem/user/groupManager/7001/RealTime init done
+2017-05-02 13:44:29.145 5787 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-3]  - akka://appSystem/user/groupManager/7003/RealTime init countCache size 0
+2017-05-02 13:44:29.147 5789 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - akka://appSystem/user/groupManager/7003/RealTime init done
+2017-05-02 13:44:29.152 5794 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-1]  - akka://appSystem/user/groupManager/7002/RealTime init countCache size 0
+2017-05-02 13:44:29.153 5795 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - akka://appSystem/user/groupManager/7002/RealTime init done
+2017-05-02 13:44:29.167 5809 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-1]  - akka://appSystem/user/groupManager/7004/RealTime init countCache size 0
+2017-05-02 13:44:29.168 5810 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7004/RealTime init done
+2017-05-02 13:44:34.897 11539 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-10]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703571930
+2017-05-02 13:44:35.399 12041 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-3]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703571930
+2017-05-02 13:45:00.031 36673 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:SaveTmpFile
+2017-05-02 13:45:00.031 36673 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:45:00.031 36673 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:SaveTmpFile
+2017-05-02 13:45:00.031 36673 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:SaveTmpFile
+2017-05-02 13:45:00.031 36673 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:45:00.034 36676 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-13]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:45:00.036 36678 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 12 lines written into 7001/realduration.txt **********
+2017-05-02 13:45:00.036 36678 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 11 lines written into 7002/realduration.txt **********
+2017-05-02 13:45:00.036 36678 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-9]  - SAVETEMPFILE TASK: 10 lines written into 7004/realduration.txt **********
+2017-05-02 13:45:00.037 36679 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-11]  - SAVETEMPFILE TASK: 29 lines written into 7003/realduration.txt **********
+2017-05-02 13:45:36.912 73554 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-2]  - toUserSession: change map to session, STKey -> userSession,uid -> 4003,loginTime -> 1493703935956
+2017-05-02 13:45:47.003 83645 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-6]  - toUserSession: change map to session, STKey -> userSession,uid -> 4003,loginTime -> 1493703935956
+2017-05-02 13:46:00.007 96649 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:SaveTmpFile
+2017-05-02 13:46:00.007 96649 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:SaveTmpFile
+2017-05-02 13:46:00.007 96649 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:SaveTmpFile
+2017-05-02 13:46:00.008 96650 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:SaveTmpFile
+2017-05-02 13:46:00.022 96664 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-3]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:46:00.027 96669 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - SAVETEMPFILE TASK: 22 lines written into 7002/realduration.txt **********
+2017-05-02 13:46:00.028 96670 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-15]  - SAVETEMPFILE TASK: 26 lines written into 7001/realduration.txt **********
+2017-05-02 13:46:00.030 96672 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:SaveTmpFile
+2017-05-02 13:46:00.031 96673 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-11]  - SAVETEMPFILE TASK: 22 lines written into 7004/realduration.txt **********
+2017-05-02 13:46:00.053 96695 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-2]  - SAVETEMPFILE TASK: 46 lines written into 7003/realduration.txt **********
+2017-05-02 13:46:00.339 96981 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-2]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:18.433 115075 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-4]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:19.587 116229 INFO  com.neo.sk.utils.ImageUtil$ [appSystem-akka.actor.default-dispatcher-12]  - file uploaded to: /Users/dry/IdeaProjects/flowShow/src/main/resources/map/74020e66199093333bfad951e3d37f93.svg
+2017-05-02 13:46:24.818 121460 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-12]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:24.947 121589 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg AddGroupMsg(AddGroup(testArea,120000,Some(/flowShow/static/map/74020e66199093333bfad951e3d37f93.svg),None,None,None),4001)
+2017-05-02 13:46:24.953 121595 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-3]  - akka://appSystem/user/groupManager becomes busy state.
+2017-05-02 13:46:24.974 121616 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - akka://appSystem/user/groupManager becomes working state.
+2017-05-02 13:46:24.975 121617 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7006 starts.
+2017-05-02 13:46:24.976 121618 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:FindMyInfo
+2017-05-02 13:46:24.976 121618 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-15]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:46:24.978 121620 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7006/RealTime starting...
+2017-05-02 13:46:24.978 121620 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - read from file 7006/realduration.txt lines 0 *******************
+2017-05-02 13:46:25.011 121653 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-5]  - akka://appSystem/user/groupManager/7006/RealTime init countCache size 0
+2017-05-02 13:46:25.026 121668 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - akka://appSystem/user/groupManager/7006/RealTime init done
+2017-05-02 13:46:26.068 122710 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7001,CE98F792F300,1493703980000,false)
+2017-05-02 13:46:28.615 125257 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7002,E4B318C50391,1493703982000,true)
+2017-05-02 13:46:28.727 125369 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7003,28E347650F19,1493703982000,true)
+2017-05-02 13:46:28.939 125581 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7004,20AB373D6026,1493703983000,true)
+2017-05-02 13:46:28.942 125584 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7004,8489AD5A3A0C,1493703982000,true)
+2017-05-02 13:46:29.685 126327 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7003,F0D5BF1BFB43,1493703979000,true)
+2017-05-02 13:46:30.142 126784 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-6]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:30.269 126911 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7001,80E65015D576,1493703981000,false)
+2017-05-02 13:46:31.397 128039 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,C0EEFBEABDBA,1493703981000,true)
+2017-05-02 13:46:31.638 128280 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7001,F0D5BF4A4A1B,1493703983000,true)
+2017-05-02 13:46:32.371 129013 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,E4A4714E7CD5,1493703984000,true)
+2017-05-02 13:46:32.394 129036 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,80E65015C88C,1493703985000,true)
+2017-05-02 13:46:32.400 129042 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,DCEE06006712,1493703986000,true)
+2017-05-02 13:46:34.922 131564 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,74E54316B62C,1493703986000,false)
+2017-05-02 13:46:34.998 131640 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,E8B1FCC883D2,1493703987000,true)
+2017-05-02 13:46:35.052 131694 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7002,448500AB2EF3,1493703985000,true)
+2017-05-02 13:46:36.670 133312 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,784F43B051B5,1493703987000,false)
+2017-05-02 13:46:36.701 133343 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7003,E82AEA9933D3,1493703986000,true)
+2017-05-02 13:46:36.882 133524 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-13]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:36.998 133640 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7001,2016D82C8766,1493703989000,true)
+2017-05-02 13:46:37.563 134205 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7003,F45C898F80A9,1493703991000,true)
+2017-05-02 13:46:38.652 135294 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7002,9C4E369D529D,1493703989000,true)
+2017-05-02 13:46:38.702 135344 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7004,BC9680E666C9,1493703992000,true)
+2017-05-02 13:46:40.855 137497 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7004,70480F9BE2F8,1493703990000,false)
+2017-05-02 13:46:40.858 137500 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7004,448500B19045,1493703994000,true)
+2017-05-02 13:46:40.860 137502 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7004,08EDB94BDE0B,1493703994000,false)
+2017-05-02 13:46:40.877 137519 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7004,ACBC329B81B3,1493703991000,true)
+2017-05-02 13:46:41.620 138262 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,F0B429093D4E,1493703990000,true)
+2017-05-02 13:46:41.639 138281 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,54271E9DEC19,1493703995000,false)
+2017-05-02 13:46:41.641 138283 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,9C4E36C81DE0,1493703991000,true)
+2017-05-02 13:46:41.753 138395 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7003,28B2BD9F3030,1493703993000,true)
+2017-05-02 13:46:44.193 140835 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7003,7C7A91AE4B56,1493703995000,true)
+2017-05-02 13:46:44.721 141363 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7003,68A0F6151EE6,1493703996000,false)
+2017-05-02 13:46:44.883 141525 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,4C327599846F,1493703995000,false)
+2017-05-02 13:46:47.081 143723 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7001,7C1DD995A797,1493703999000,true)
+2017-05-02 13:46:48.259 144901 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,80E65015F3D0,1493704001000,true)
+2017-05-02 13:46:49.612 146254 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7003,DC5360319E3A,1493704002000,true)
+2017-05-02 13:46:50.645 147287 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7004,8C34FD8071FC,1493704004000,true)
+2017-05-02 13:46:51.335 147977 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7002,E8B1FC1844F8,1493704001000,true)
+2017-05-02 13:46:52.432 149074 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,2C282D67601D,1493704004000,true)
+2017-05-02 13:46:53.579 150221 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-12]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:46:53.639 150281 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg ModifyBoxMsg(ModifyBox(100001,64517E3AE91A,12a-4,60))
+2017-05-02 13:46:53.698 150340 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-10]  - akka://appSystem/user/groupManager becomes busy state.
+2017-05-02 13:46:53.715 150357 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-4]  - akka://appSystem/user/groupManager becomes working state.
+2017-05-02 13:46:53.720 150362 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg: UpdateRssi(60)
+2017-05-02 13:46:54.904 151546 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7003,72393A08A53D,1493704007000,false)
+2017-05-02 13:46:54.905 151547 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7003,E006E6CD4C6F,1493704008000,true)
+2017-05-02 13:46:55.412 152054 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7003,28A02B13533F,1493704007000,false)
+2017-05-02 13:46:59.566 156208 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7004,2C5BB8B71BA8,1493704009000,true)
+2017-05-02 13:47:00.019 156661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.019 156661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.019 156661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.019 156661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.019 156661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.021 156663 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:47:00.023 156665 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-12]  - SAVETEMPFILE TASK: 26 lines written into 7002/realduration.txt **********
+2017-05-02 13:47:00.023 156665 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-2]  - SAVETEMPFILE TASK: 32 lines written into 7001/realduration.txt **********
+2017-05-02 13:47:00.025 156667 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-11]  - SAVETEMPFILE TASK: 28 lines written into 7004/realduration.txt **********
+2017-05-02 13:47:00.030 156672 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 52 lines written into 7003/realduration.txt **********
+2017-05-02 13:47:00.051 156693 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:47:00.053 156695 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:47:00.222 156864 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7003,FA4274484717,1493704012000,false)
+2017-05-02 13:47:01.415 158057 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7004,C4B301CB776F,1493704015000,false)
+2017-05-02 13:47:01.750 158392 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7002,7C504920D627,1493704016000,true)
+2017-05-02 13:47:04.256 160898 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7001,6C4008BB940A,1493704016000,true)
+2017-05-02 13:47:05.109 161751 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7003,8CBEBE099AFE,1493704015000,true)
+2017-05-02 13:47:05.555 162197 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-11]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:47:05.563 162205 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7003,9C4E365239B0,1493704018000,true)
+2017-05-02 13:47:05.649 162291 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7003,2C200B3AEA4C,1493704017000,true)
+2017-05-02 13:47:06.378 163020 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7004,7C11CBABD03F,1493704019000,true)
+2017-05-02 13:47:06.382 163024 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7004,784F4380EF3A,1493704016000,false)
+2017-05-02 13:47:07.604 164246 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,ACF7F3AB7B8B,1493704017000,true)
+2017-05-02 13:47:09.028 165670 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-14]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493703959694
+2017-05-02 13:47:09.050 165692 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7003,3CDFBDE61D45,1493704019000,true)
+2017-05-02 13:47:09.077 165719 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:47:09.308 165950 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-17990-1-actorRefSource#1700628040]
+2017-05-02 13:47:09.310 165952 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - RegisterWsClient
+2017-05-02 13:47:09.313 165955 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:GetNowInfo(7001)
+2017-05-02 13:47:09.368 166010 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NowInfo(List((784F43B051B5,1493703987000), (2016D82C8766,1493703989000), (6C4008BB940A,1493704016000), (F0B429093D4E,1493703990000), (F0D5BF4A4A1B,1493703983000), (CE98F792F300,1493703980000), (9C4E36C81DE0,1493703991000), (54271E9DEC19,1493703995000), (7C1DD995A797,1493703999000), (80E65015D576,1493703981000), (C0EEFBEABDBA,1493703981000)),11,0,11,List((1493704020019,10), (1493704010025,10), (1493704000008,6), (1493703990025,1)))
+2017-05-02 13:47:09.760 166402 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7004,74E50BA3C062,1493704022000,true)
+2017-05-02 13:47:10.423 167065 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7001,64517E3ADC16,1493704023000,true)
+2017-05-02 13:47:10.436 167078 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-6]  - 64517E3ADC16 come in: 7001
+2017-05-02 13:47:10.439 167081 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7001,64517E3ADBA0,1493704022000,true)
+2017-05-02 13:47:10.440 167082 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - 64517E3ADBA0 come in: 7001
+2017-05-02 13:47:10.556 167198 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7002,E006E6CE20CC,1493704024000,true)
+2017-05-02 13:47:10.976 167618 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7003,3423BA7CCBA9,1493704023000,true)
+2017-05-02 13:47:10.978 167620 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7003,BC8556AB37C9,1493704024000,false)
+2017-05-02 13:47:10.981 167623 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7003,64517E3ADC78,1493704024000,true)
+2017-05-02 13:47:13.498 170140 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7001,BC8556B6D088,1493704025000,true)
+2017-05-02 13:47:13.500 170142 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-12]  - BC8556B6D088 come in: 7001
+2017-05-02 13:47:16.072 172714 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7003,48D2244A3E19,1493704028000,true)
+2017-05-02 13:47:17.368 174010 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7002,7C7A917612B8,1493704031000,false)
+2017-05-02 13:47:17.710 174352 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7003,B01041923E6D,1493704029000,false)
+2017-05-02 13:47:18.606 175248 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7001,BC855616F576,1493704031000,false)
+2017-05-02 13:47:18.607 175249 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - BC855616F576 come in: 7001
+2017-05-02 13:47:21.340 177982 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7004,CC29F5BFC3BA,1493704033000,false)
+2017-05-02 13:47:23.395 180037 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7003,448500B190C7,1493704032000,true)
+2017-05-02 13:47:25.674 182316 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7004,D691A417EDC5,1493704035000,false)
+2017-05-02 13:47:26.416 183058 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7003,0811963F0128,1493704037000,true)
+2017-05-02 13:47:29.084 185726 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-13]  - 断开一个webSocket 链接
+2017-05-02 13:47:29.092 185734 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-13]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:47:30.964 187606 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7003,F45C898F95EB,1493704040000,true)
+2017-05-02 13:47:31.503 188145 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7003,00C2C60D1231,1493704043000,true)
+2017-05-02 13:47:33.027 189669 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7001,F0B429094091,1493704045000,true)
+2017-05-02 13:47:37.085 193727 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7004,C0EEFBF18050,1493704046000,true)
+2017-05-02 13:47:46.882 203524 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7002,5CF7E6C9E690,1493704060000,false)
+2017-05-02 13:47:48.391 205033 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7004,7C7A91AF3DFE,1493704061000,true)
+2017-05-02 13:47:58.053 214695 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7004,8CA98238A888,1493704068000,true)
+2017-05-02 13:48:00.007 216649 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.008 216650 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.008 216650 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.008 216650 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.008 216650 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.014 216656 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 36 lines written into 7001/realduration.txt **********
+2017-05-02 13:48:00.015 216657 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-6]  - SAVETEMPFILE TASK: 35 lines written into 7002/realduration.txt **********
+2017-05-02 13:48:00.017 216659 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-12]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:48:00.020 216662 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-2]  - SAVETEMPFILE TASK: 32 lines written into 7004/realduration.txt **********
+2017-05-02 13:48:00.027 216669 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 62 lines written into 7003/realduration.txt **********
+2017-05-02 13:48:00.028 216670 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:48:00.040 216682 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:48:01.458 218100 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,9CB70D33C30F,1493704074000,true)
+2017-05-02 13:48:02.618 219260 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7002,404D7F4D839B,1493704076000,false)
+2017-05-02 13:48:05.779 222421 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7001,7C7A91765BC9,1493704078000,true)
+2017-05-02 13:48:05.839 222481 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7002,ACCF5C7495B8,1493704075000,true)
+2017-05-02 13:48:09.027 225669 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7004,64B0A694EF4E,1493704083000,true)
+2017-05-02 13:48:12.284 228926 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7002,64517E3AE956,1493704085000,true)
+2017-05-02 13:48:15.588 232230 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7001,64517E3AE940,1493704084000,true)
+2017-05-02 13:48:15.591 232233 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7001,2CD05AD0F44A,1493704088000,true)
+2017-05-02 13:48:18.979 235621 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-15]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704098479
+2017-05-02 13:48:20.967 237609 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-3]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704098479
+2017-05-02 13:48:22.066 238708 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-3]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704098479
+2017-05-02 13:48:22.067 238709 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:48:22.073 238715 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-11]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-26343-1-actorRefSource#2066727689]
+2017-05-02 13:48:22.074 238716 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - RegisterWsClient
+2017-05-02 13:48:22.074 238716 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:GetNowInfo(7001)
+2017-05-02 13:48:22.075 238717 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NowInfo(List((BC8556B6D088,1493704025000), (784F43B051B5,1493703987000), (64517E3ADC16,1493704023000), (2016D82C8766,1493703989000), (BC855616F576,1493704031000), (F0D5BF4A4A1B,1493703983000), (F0B429093D4E,1493703990000), (6C4008BB940A,1493704016000), (F0B429094091,1493704045000), (CE98F792F300,1493703980000), (64517E3ADBA0,1493704022000), (54271E9DEC19,1493703995000), (9C4E36C81DE0,1493703991000), (7C1DD995A797,1493703999000), (64517E3AE940,1493704084000), (80E65015D576,1493703981000), (2CD05AD0F44A,1493704088000), (C0EEFBEABDBA,1493703981000), (7C7A91765BC9,1493704078000)),19,0,19,List((1493704100015,19), (1493704090007,17), (1493704080028,16), (1493704070026,16), (1493704060005,16), (1493704050024,15), (1493704040037,15), (1493704030017,11), (1493704020019,10), (1493704010025,10)))
+2017-05-02 13:48:22.995 239637 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7004,9C4E369BCC04,1493704096000,true)
+2017-05-02 13:48:23.847 240489 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:NewMac(7002,64D954869C75,1493704097000,true)
+2017-05-02 13:48:24.347 240989 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7002,7014A684155D,1493704097000,false)
+2017-05-02 13:48:24.666 241308 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - 断开一个webSocket 链接
+2017-05-02 13:48:24.666 241308 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:48:31.573 248215 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7003,2082C06A64EE,1493704105000,false)
+2017-05-02 13:48:35.765 252407 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7002,92A566FE89B2,1493704106000,false)
+2017-05-02 13:48:36.915 253557 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7001,44044491F333,1493704109000,true)
+2017-05-02 13:48:36.917 253559 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7001,683E34BA7EBA,1493704111000,true)
+2017-05-02 13:48:42.365 259007 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7002,D65A4F47723C,1493704113000,false)
+2017-05-02 13:48:55.263 271905 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7002,98E0D98D3C19,1493704128000,true)
+2017-05-02 13:49:00.013 276655 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.014 276656 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.014 276656 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.015 276657 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.017 276659 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:49:00.018 276660 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.019 276661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:SaveTmpFile
+2017-05-02 13:49:00.042 276684 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-9]  - SAVETEMPFILE TASK: 40 lines written into 7001/realduration.txt **********
+2017-05-02 13:49:00.043 276685 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-15]  - SAVETEMPFILE TASK: 68 lines written into 7003/realduration.txt **********
+2017-05-02 13:49:00.045 276687 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-11]  - SAVETEMPFILE TASK: 40 lines written into 7002/realduration.txt **********
+2017-05-02 13:49:00.045 276687 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-4]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:49:00.047 276689 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 34 lines written into 7004/realduration.txt **********
+2017-05-02 13:49:05.861 282503 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7002,98D6BBAB0A41,1493704139000,true)
+2017-05-02 13:49:06.112 282754 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-4]  - toUserSession: change map to session, STKey -> userSession,uid -> 4004,loginTime -> 1493704145352
+2017-05-02 13:49:10.247 286889 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7003,64517E3AE07A,1493704143000,false)
+2017-05-02 13:49:10.939 287581 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7002,7C04D05146F6,1493704141000,false)
+2017-05-02 13:49:11.059 287701 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-13]  - toUserSession: change map to session, STKey -> userSession,uid -> 4004,loginTime -> 1493704145352
+2017-05-02 13:49:14.624 291266 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NewMac(7001,00DBDFE0AA3D,1493704146000,true)
+2017-05-02 13:49:20.400 297042 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NewMac(7004,ACC1EED1AF5B,1493704152000,true)
+2017-05-02 13:49:22.810 299452 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-12]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:49:36.993 313635 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7003,ACBC329B81B3,1493704168000,true)
+2017-05-02 13:49:38.297 314939 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-15]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:49:38.654 315296 INFO  com.neo.sk.utils.ImageUtil$ [appSystem-akka.actor.default-dispatcher-3]  - file uploaded to: /Users/dry/IdeaProjects/flowShow/src/main/resources/map/74020e66199093333bfad951e3d37f93.svg
+2017-05-02 13:49:42.450 319092 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-6]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:49:42.452 319094 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg AddGroupMsg(AddGroup(test,120000,Some(/flowShow/static/map/74020e66199093333bfad951e3d37f93.svg),None,None,None),4001)
+2017-05-02 13:49:42.453 319095 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-6]  - akka://appSystem/user/groupManager becomes busy state.
+2017-05-02 13:49:42.479 319121 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-9]  - akka://appSystem/user/groupManager becomes working state.
+2017-05-02 13:49:42.481 319123 INFO  com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-4]  - akka://appSystem/user/groupManager/7007 starts.
+2017-05-02 13:49:42.481 319123 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:FindMyInfo
+2017-05-02 13:49:42.482 319124 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-14]  - i receive a msg:GetMyInfo(None,None,Some(120000),None)
+2017-05-02 13:49:42.483 319125 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7007/RealTime starting...
+2017-05-02 13:49:42.484 319126 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - read from file 7007/realduration.txt lines 0 *******************
+2017-05-02 13:49:42.516 319158 INFO  com.neo.sk.flowShow.core.RealTimeActor [ForkJoinPool-2-worker-7]  - akka://appSystem/user/groupManager/7007/RealTime init countCache size 0
+2017-05-02 13:49:42.517 319159 INFO  com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - akka://appSystem/user/groupManager/7007/RealTime init done
+2017-05-02 13:49:53.839 330481 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-11]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:49:53.933 330575 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,9CA5C035E270,1493704183000,true)
+2017-05-02 13:49:53.933 330575 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7003,90671CA4BC6C,1493704186000,false)
+2017-05-02 13:49:56.913 333555 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:NewMac(7004,E4A471F80214,1493704190000,true)
+2017-05-02 13:50:00.005 336647 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.019 336661 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.019 336661 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-13]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:50:00.019 336661 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-12]  - SAVETEMPFILE TASK: 0 lines written into 7007/realduration.txt **********
+2017-05-02 13:50:00.027 336669 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.027 336669 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.027 336669 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.028 336670 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.028 336670 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:00.058 336700 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-12]  - SAVETEMPFILE TASK: 74 lines written into 7003/realduration.txt **********
+2017-05-02 13:50:00.058 336700 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-13]  - SAVETEMPFILE TASK: 43 lines written into 7001/realduration.txt **********
+2017-05-02 13:50:00.061 336703 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-15]  - SAVETEMPFILE TASK: 42 lines written into 7002/realduration.txt **********
+2017-05-02 13:50:00.065 336707 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:50:00.065 336707 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-2]  - SAVETEMPFILE TASK: 36 lines written into 7004/realduration.txt **********
+2017-05-02 13:50:08.743 345385 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7004,64517E3AE956,1493704201000,true)
+2017-05-02 13:50:19.301 355943 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7003,7451BA544B23,1493704208000,true)
+2017-05-02 13:50:20.898 357540 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-2]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:50:20.969 357611 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg ModifyGroupMsg(ModifyGroup(7007,test,120))
+2017-05-02 13:50:21.030 357672 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - akka://appSystem/user/groupManager becomes busy state.
+2017-05-02 13:50:21.033 357675 DEBUG com.neo.sk.flowShow.core.GroupActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg: UpdateDuration(120)
+2017-05-02 13:50:21.033 357675 DEBUG com.neo.sk.flowShow.core.GroupManager [appSystem-akka.actor.default-dispatcher-15]  - akka://appSystem/user/groupManager becomes working state.
+2017-05-02 13:50:31.841 368483 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-4]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:50:33.958 370600 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-13]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:50:33.981 370623 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-15]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:50:33.988 370630 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-41228-1-actorRefSource#1850628195]
+2017-05-02 13:50:33.989 370631 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - RegisterWsClient
+2017-05-02 13:50:33.990 370632 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:GetNowInfo(7001)
+2017-05-02 13:50:34.013 370655 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:NowInfo(List((BC8556B6D088,1493704025000), (784F43B051B5,1493703987000), (64517E3ADC16,1493704023000), (2016D82C8766,1493703989000), (BC855616F576,1493704031000), (F0D5BF4A4A1B,1493703983000), (F0B429093D4E,1493703990000), (6C4008BB940A,1493704016000), (F0B429094091,1493704045000), (CE98F792F300,1493703980000), (00DBDFE0AA3D,1493704146000), (64517E3ADBA0,1493704022000), (54271E9DEC19,1493703995000), (9C4E36C81DE0,1493703991000), (683E34BA7EBA,1493704111000), (44044491F333,1493704109000), (7C1DD995A797,1493703999000), (64517E3AE940,1493704084000), (80E65015D576,1493703981000), (2CD05AD0F44A,1493704088000), (C0EEFBEABDBA,1493703981000), (7C7A91765BC9,1493704078000)),22,0,22,List((1493704230025,22), (1493704220024,22), (1493704210003,22), (1493704200019,22), (1493704190016,22), (1493704180010,22), (1493704170031,22), (1493704160014,22), (1493704150004,21), (1493704140013,21)))
+2017-05-02 13:50:59.998 396640 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:59.998 396640 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:59.998 396640 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:59.998 396640 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:SaveTmpFile
+2017-05-02 13:50:59.998 396640 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:SaveTmpFile
+2017-05-02 13:51:00.002 396644 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-9]  - SAVETEMPFILE TASK: 44 lines written into 7002/realduration.txt **********
+2017-05-02 13:51:00.003 396645 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-6]  - SAVETEMPFILE TASK: 44 lines written into 7001/realduration.txt **********
+2017-05-02 13:51:00.004 396646 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-3]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:51:00.005 396647 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - SAVETEMPFILE TASK: 39 lines written into 7004/realduration.txt **********
+2017-05-02 13:51:00.007 396649 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 78 lines written into 7003/realduration.txt **********
+2017-05-02 13:51:00.032 396674 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:51:00.033 396675 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 0 lines written into 7007/realduration.txt **********
+2017-05-02 13:51:00.033 396675 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:51:00.034 396676 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:51:10.360 407002 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-12]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:51:10.361 407003 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-13]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:51:10.394 407036 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-13]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-45628-1-actorRefSource#-743275118]
+2017-05-02 13:51:10.418 407060 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - RegisterWsClient
+2017-05-02 13:51:10.418 407060 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:GetNowInfo(7002)
+2017-05-02 13:51:10.419 407061 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NowInfo(List((64D954869C75,1493704097000), (E8B1FC1844F8,1493704001000), (92A566FE89B2,1493704106000), (7C7A917612B8,1493704031000), (7C04D05146F6,1493704141000), (E006E6CE20CC,1493704024000), (5CF7E6C9E690,1493704060000), (98E0D98D3C19,1493704128000), (7014A684155D,1493704097000), (D65A4F47723C,1493704113000), (448500AB2EF3,1493703985000), (ACCF5C7495B8,1493704075000), (64517E3AE956,1493704085000), (404D7F4D839B,1493704076000), (9C4E369D529D,1493703989000), (E4B318C50391,1493703982000), (7C504920D627,1493704016000), (98D6BBAB0A41,1493704139000)),18,0,18,List((1493704270029,18), (1493704260034,18), (1493704250024,18), (1493704240013,18), (1493704230025,18), (1493704220024,18), (1493704210003,18), (1493704200019,18), (1493704190016,18), (1493704180010,18)))
+2017-05-02 13:51:18.896 415538 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:NewMac(7001,847303484008,1493704269000,true)
+2017-05-02 13:51:18.896 415538 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - 847303484008 come in: 7001
+2017-05-02 13:51:19.164 415806 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:LeaveMac(7003,Set(F0D5BF1BFB43),0)
+2017-05-02 13:51:20.844 417486 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:NewMac(7003,5CE0C5E8CB73,1493704275000,true)
+2017-05-02 13:51:21.014 417656 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-3]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:51:21.015 417657 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-14]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:51:21.033 417675 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-46876-1-actorRefSource#1632906262]
+2017-05-02 13:51:21.033 417675 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - RegisterWsClient
+2017-05-02 13:51:21.034 417676 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:GetNowInfo(7003)
+2017-05-02 13:51:21.043 417685 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:NowInfo(List((64517E3ADC78,1493704024000), (64517E3AE07A,1493704143000), (9C4E365239B0,1493704018000), (7451BA544B23,1493704208000), (74E54316B62C,1493703986000), (0811963F0128,1493704037000), (4C327599846F,1493703995000), (DCEE06006712,1493703986000), (48D2244A3E19,1493704028000), (E006E6CD4C6F,1493704008000), (E8B1FCC883D2,1493703987000), (E4A4714E7CD5,1493703984000), (00C2C60D1231,1493704043000), (68A0F6151EE6,1493703996000), (28B2BD9F3030,1493703993000), (DC5360319E3A,1493704002000), (2C200B3AEA4C,1493704017000), (7C7A91AE4B56,1493703995000), (2C282D67601D,1493704004000), (F45C898F80A9,1493703991000), (28E347650F19,1493703982000), (E82AEA9933D3,1493703986000), (448500B190C7,1493704032000), (9CB70D33C30F,1493704074000), (5CE0C5E8CB73,1493704275000), (9CA5C035E270,1493704183000), (ACF7F3AB7B8B,1493704017000), (FA4274484717,1493704012000), (80E65015C88C,1493703985000), (28A02B13533F,1493704007000), (3CDFBDE61D45,1493704019000), (90671CA4BC6C,1493704186000), (72393A08A53D,1493704007000), (2082C06A64EE,1493704105000), (F45C898F95EB,1493704040000), (B01041923E6D,1493704029000), (3423BA7CCBA9,1493704023000), (ACBC329B81B3,1493704168000), (80E65015F3D0,1493704001000), (8CBEBE099AFE,1493704015000), (BC8556AB37C9,1493704024000)),42,1,41,List((1493704280022,40), (1493704270029,41), (1493704260035,41), (1493704250024,41), (1493704240013,41), (1493704230025,41), (1493704220024,41), (1493704210004,40), (1493704200019,40), (1493704190015,38)))
+2017-05-02 13:51:22.524 419166 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7004,6641E917ADBF,1493704275000,false)
+2017-05-02 13:51:29.144 425786 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:LeaveMac(7001,Set(2016D82C8766),22)
+2017-05-02 13:51:29.145 425787 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - Set(2016D82C8766) get out: 7001
+2017-05-02 13:51:29.170 425812 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:LeaveMac(7003,Set(E4A4714E7CD5, E8B1FCC883D2, 28E347650F19, E82AEA9933D3),41)
+2017-05-02 13:51:29.170 425812 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:LeaveMac(7002,Set(9C4E369D529D),18)
+2017-05-02 13:51:29.171 425813 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-12]  - Set(E4A4714E7CD5, E8B1FCC883D2, 28E347650F19, E82AEA9933D3) get out: 7003
+2017-05-02 13:51:29.171 425813 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-12]  - Set(9C4E369D529D) get out: 7002
+2017-05-02 13:51:29.443 426085 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7001,7451BA6B0EC7,1493704278000,true)
+2017-05-02 13:51:29.457 426099 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-15]  - 7451BA6B0EC7 come in: 7001
+2017-05-02 13:51:39.181 435823 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:LeaveMac(7003,Set(28B2BD9F3030, 7C7A91AE4B56),41)
+2017-05-02 13:51:39.182 435824 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:LeaveMac(7001,Set(9C4E36C81DE0, 54271E9DEC19, 7C1DD995A797, C0EEFBEABDBA),22)
+2017-05-02 13:51:39.182 435824 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - Set(28B2BD9F3030, 7C7A91AE4B56) get out: 7003
+2017-05-02 13:51:39.182 435824 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-9]  - Set(9C4E36C81DE0, 54271E9DEC19, 7C1DD995A797, C0EEFBEABDBA) get out: 7001
+2017-05-02 13:51:39.246 435888 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:LeaveMac(7004,Set(ACBC329B81B3, BC9680E666C9),0)
+2017-05-02 13:51:47.155 443797 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7002,1C5CF2E14BBA,1493704299000,false)
+2017-05-02 13:51:47.176 443818 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-13]  - 1C5CF2E14BBA come in: 7002
+2017-05-02 13:51:47.748 444390 DEBUG com.neo.sk.flowShow.service.SessionBase$ [appSystem-akka.actor.default-dispatcher-14]  - toUserSession: change map to session, STKey -> userSession,uid -> 4001,loginTime -> 1493704161920
+2017-05-02 13:51:47.749 444391 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-10]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] starts.
+2017-05-02 13:51:47.755 444397 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-10]  - 产生一个webSocket链接Actor[akka://appSystem/user/StreamSupervisor-0/flow-49883-1-actorRefSource#-1231588761]
+2017-05-02 13:51:47.755 444397 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-6]  - RegisterWsClient
+2017-05-02 13:51:47.776 444418 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:GetNowInfo(7003)
+2017-05-02 13:51:47.777 444419 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NowInfo(List((64517E3ADC78,1493704024000), (64517E3AE07A,1493704143000), (9C4E365239B0,1493704018000), (7451BA544B23,1493704208000), (74E54316B62C,1493704297000), (0811963F0128,1493704037000), (4C327599846F,1493703995000), (DCEE06006712,1493704296000), (48D2244A3E19,1493704028000), (E006E6CD4C6F,1493704008000), (00C2C60D1231,1493704043000), (68A0F6151EE6,1493704299000), (DC5360319E3A,1493704002000), (2C200B3AEA4C,1493704017000), (2C282D67601D,1493704004000), (F45C898F80A9,1493703991000), (448500B190C7,1493704032000), (9CB70D33C30F,1493704074000), (5CE0C5E8CB73,1493704275000), (9CA5C035E270,1493704183000), (ACF7F3AB7B8B,1493704017000), (FA4274484717,1493704012000), (80E65015C88C,1493704298000), (28A02B13533F,1493704007000), (3CDFBDE61D45,1493704019000), (90671CA4BC6C,1493704186000), (72393A08A53D,1493704007000), (2082C06A64EE,1493704105000), (F45C898F95EB,1493704040000), (B01041923E6D,1493704029000), (3423BA7CCBA9,1493704023000), (ACBC329B81B3,1493704168000), (80E65015F3D0,1493704001000), (8CBEBE099AFE,1493704015000), (BC8556AB37C9,1493704024000)),42,7,35,List((1493704300016,35), (1493704290018,37), (1493704280022,40), (1493704270029,41), (1493704260035,41), (1493704250024,41), (1493704240013,41), (1493704230025,41), (1493704220024,41), (1493704210004,40)))
+2017-05-02 13:51:49.151 445793 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:LeaveMac(7003,Set(E006E6CD4C6F, 80E65015F3D0),35)
+2017-05-02 13:51:49.155 445797 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-14]  - Set(E006E6CD4C6F, 80E65015F3D0) get out: 7003
+2017-05-02 13:51:49.180 445822 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - Set(E006E6CD4C6F, 80E65015F3D0) get out: 7003
+2017-05-02 13:51:58.968 455610 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:NewMac(7003,AE283712396E,1493704310000,false)
+2017-05-02 13:51:58.969 455611 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-11]  - AE283712396E come in: 7003
+2017-05-02 13:51:58.969 455611 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-15]  - AE283712396E come in: 7003
+2017-05-02 13:51:59.143 455785 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:LeaveMac(7003,Set(FA4274484717),35)
+2017-05-02 13:51:59.144 455786 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - Set(FA4274484717) get out: 7003
+2017-05-02 13:51:59.144 455786 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-15]  - Set(FA4274484717) get out: 7003
+2017-05-02 13:52:00.001 456643 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.001 456643 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.001 456643 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.001 456643 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.001 456643 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-14]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.004 456646 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-11]  - SAVETEMPFILE TASK: 47 lines written into 7001/realduration.txt **********
+2017-05-02 13:52:00.014 456656 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-5]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:52:00.016 456658 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-9]  - SAVETEMPFILE TASK: 40 lines written into 7004/realduration.txt **********
+2017-05-02 13:52:00.016 456658 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-6]  - SAVETEMPFILE TASK: 46 lines written into 7002/realduration.txt **********
+2017-05-02 13:52:00.044 456686 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-14]  - SAVETEMPFILE TASK: 83 lines written into 7003/realduration.txt **********
+2017-05-02 13:52:00.044 456686 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.048 456690 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:SaveTmpFile
+2017-05-02 13:52:00.076 456718 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-3]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:52:00.076 456718 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-4]  - SAVETEMPFILE TASK: 0 lines written into 7007/realduration.txt **********
+2017-05-02 13:52:02.207 458849 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - 断开一个webSocket 链接
+2017-05-02 13:52:02.210 458852 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-2]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:52:02.211 458853 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - 断开一个webSocket 链接
+2017-05-02 13:52:02.211 458853 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-12]  - 断开一个webSocket 链接
+2017-05-02 13:52:02.211 458853 DEBUG com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-4]  - 断开一个webSocket 链接
+2017-05-02 13:52:02.212 458854 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-3]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:52:02.212 458854 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-12]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:52:02.212 458854 INFO  com.neo.sk.flowShow.core.WebSocketActor$ [appSystem-akka.actor.default-dispatcher-4]  - Logger[com.neo.sk.flowShow.core.WebSocketActor$] stops.
+2017-05-02 13:52:05.516 462158 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-5]  - i got a msg:NewMac(7003,A08D16251666,1493704319000,false)
+2017-05-02 13:52:09.156 465798 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:LeaveMac(7003,Set(64517E3ADC78),35)
+2017-05-02 13:52:09.160 465802 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:LeaveMac(7002,Set(E006E6CE20CC),18)
+2017-05-02 13:52:09.234 465876 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:LeaveMac(7004,Set(74E50BA3C062),0)
+2017-05-02 13:52:15.847 472489 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7002,A43135EED582,1493704328000,false)
+2017-05-02 13:52:19.141 475783 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:LeaveMac(7003,Set(0811963F0128, 448500B190C7),35)
+2017-05-02 13:52:19.211 475853 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:LeaveMac(7004,Set(D691A417EDC5),0)
+2017-05-02 13:52:19.215 475857 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:LeaveMac(7001,Set(64517E3ADC16),22)
+2017-05-02 13:52:19.963 476605 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7001,1697B5C6119C,1493704333000,false)
+2017-05-02 13:52:20.613 477255 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-13]  - i got a msg:NewMac(7003,903C925114A2,1493704330000,true)
+2017-05-02 13:52:28.652 485294 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:NewMac(7003,E006E6CE205C,1493704341000,true)
+2017-05-02 13:52:29.953 486595 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:NewMac(7004,4C7C5FB11AC7,1493704344000,false)
+2017-05-02 13:52:39.150 495792 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-2]  - i got a msg:LeaveMac(7003,Set(DC5360319E3A),35)
+2017-05-02 13:52:56.856 513498 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:NewMac(7003,A03BE3CE8ED2,1493704371000,false)
+2017-05-02 13:52:59.154 515796 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:LeaveMac(7003,Set(9CB70D33C30F),35)
+2017-05-02 13:52:59.177 515819 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:LeaveMac(7001,Set(7C7A91765BC9),22)
+2017-05-02 13:52:59.187 515829 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-11]  - i got a msg:LeaveMac(7002,Set(404D7F4D839B),18)
+2017-05-02 13:53:00.023 516665 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-4]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.023 516665 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-9]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.023 516665 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.023 516665 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-6]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.024 516666 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-3]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.024 516666 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-15]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.024 516666 DEBUG com.neo.sk.flowShow.core.RealTimeActor [appSystem-akka.actor.default-dispatcher-10]  - i got a msg:SaveTmpFile
+2017-05-02 13:53:00.027 516669 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-9]  - SAVETEMPFILE TASK: 0 lines written into 7005/realduration.txt **********
+2017-05-02 13:53:00.036 516678 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-3]  - SAVETEMPFILE TASK: 48 lines written into 7002/realduration.txt **********
+2017-05-02 13:53:00.037 516679 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-12]  - SAVETEMPFILE TASK: 42 lines written into 7004/realduration.txt **********
+2017-05-02 13:53:00.038 516680 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-6]  - SAVETEMPFILE TASK: 90 lines written into 7003/realduration.txt **********
+2017-05-02 13:53:00.039 516681 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-15]  - SAVETEMPFILE TASK: 0 lines written into 7006/realduration.txt **********
+2017-05-02 13:53:00.040 516682 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-4]  - SAVETEMPFILE TASK: 47 lines written into 7001/realduration.txt **********
+2017-05-02 13:53:00.052 516694 DEBUG com.neo.sk.utils.FileUtil$ [appSystem-akka.actor.default-dispatcher-10]  - SAVETEMPFILE TASK: 0 lines written into 7007/realduration.txt **********
+2017-05-02 13:53:19.174 535816 DEBUG com.neo.sk.flowShow.core.WebSocketManager [appSystem-akka.actor.default-dispatcher-12]  - i got a msg:LeaveMac(7002,Set(7014A684155D),18)
+2017-05-02 13:53:23.325 539967 INFO  net.sf.ehcache.CacheManager [Thread-0]  - VM shutting down with the CacheManager still active. Calling shutdown.

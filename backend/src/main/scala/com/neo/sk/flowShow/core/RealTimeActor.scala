@@ -208,7 +208,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
           if (needSend2Socket && realTimeMacCache.get(clientMac).isEmpty) {
             val oldOrNot = if(oldPeopleList.contains(clientMac)) true
             else{
-              oldPeopleList += clientMac
               false
             }
             sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2, oldOrNot))
@@ -261,6 +260,7 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             oldSumForLeave = 0
             leaveMac.foreach{ i =>
               if (oldPeopleList.contains(i)) oldSumForLeave += 1
+              else oldPeopleList += i
             }
             sendSocket(LeaveMac(groupId, leaveMac, oldPeopleSum))
             realTimeMacCache.--=(leaveMac)

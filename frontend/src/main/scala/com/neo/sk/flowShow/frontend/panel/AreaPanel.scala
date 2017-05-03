@@ -57,6 +57,10 @@ object AreaPanel extends Panel {
 
   private var stayTime = (0l, 0l)  //(historyMax, NowMax)
 
+  private var taskFlag = 0
+
+  private val drawChartTask = Shortcut.schedule(scheduleDrawTask, 5000)
+
   private val searchByIdIncome =
     div(
       form(*.cls := "form-inline", *.marginLeft := "8%")(
@@ -284,7 +288,10 @@ object AreaPanel extends Panel {
               onLineDiv.appendChild(newDiv)
               drawChart(pastOnline)
               drawOldChart(oldPerson, onlinePerson)
-              Shortcut.schedule(scheduleTask, 1000)
+              if(taskFlag == 0 ){
+                Shortcut.schedule(scheduleTask, 1000)
+                taskFlag = 1
+              }
 
             case x =>
               println(s"i got a msg:$x")
@@ -318,6 +325,12 @@ object AreaPanel extends Panel {
     } catch {
       case e:Exception =>
         println(s"$e")
+    }
+  }
+
+  private def scheduleDrawTask() = {
+    jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
+      jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
     }
   }
 

@@ -199,3 +199,6 @@ c
 compile
 ~re-start
 compile
+~re-start
+pack
+~re-start
