@@ -73,6 +73,9 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
 
   private val countCache = collection.mutable.HashMap[Long, Int]()
 
+  //(mac) -> time
+  private val userInCache = collection.mutable.HashMap[String, Long]()
+
   //(time) -> count
   private val realTimeUnsureDurCache = collection.mutable.HashMap[String, (Long, Long)]()
 
@@ -212,9 +215,10 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             }
             sendSocket(NewMac(groupId, clientMac, newUnsureDuration._2, oldOrNot))
             clientMacIn.put(clientMac, clientMacIn.getOrElse(clientMac, 0) + 1)
-            realTimeUnsureDurCache.put(clientMac, newUnsureDuration) ///记录最后一次的时间
+            userInCache.put(clientMac, newUnsureDuration._2)
             CountDao.userIn(clientMac, groupId.toLong, newUnsureDuration._2)
           }
+          realTimeUnsureDurCache.put(clientMac, newUnsureDuration) ///记录最新的时间
           realTimeMacCache.put(clientMac, newUnsureDuration._2) //记录最新的时间
         } else {
           realTimeUnsureDurCache.put(clientMac, newUnsureDuration)
@@ -265,8 +269,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             sendSocket(LeaveMac(groupId, leaveMac, oldPeopleSum))
             realTimeMacCache.--=(leaveMac)
             realTimeUnsureDurCache.--=(leaveMac)
+            userInCache.--=(leaveMac)
             leaveMac.foreach { i =>
-              realTimeUnsureDurCache.remove(i)
               clientMacOut.put(i, clientMacOut.getOrElse(i, 0) + 1)
               CountDao.userOut(i, groupId.toLong, System.currentTimeMillis())
             }
@@ -345,8 +349,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
       val online = {
         if (realTimeUnsureDurCache.nonEmpty) {
           realTimeMacCache.toList.map { i =>
-            val tmp = realTimeUnsureDurCache.get(i._1).head
-            (i._1, tmp._2)
+            val tmp = userInCache.get(i._1).head
+            (i._1, tmp)
           }
         }
         else List()

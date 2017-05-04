@@ -39,7 +39,7 @@ object AreaPanel extends Panel {
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
-  private val realTimeChart = div(*.cls := "row")().render
+  private val realTimeChart = div(*.id := "realTime", *.cls := "row")().render
 
   private val oldPeopleChart = div(*.cls := "row")().render
 
@@ -59,7 +59,7 @@ object AreaPanel extends Panel {
 
   private var taskFlag = 0
 
-  private val drawChartTask = Shortcut.schedule(scheduleDrawTask, 5000)
+  private var aveStayTime = 0l
 
   private val searchByIdIncome =
     div(
@@ -161,7 +161,13 @@ object AreaPanel extends Panel {
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
                     ),
-                    p(s"驻留时长(s)")
+                    p(s"最长驻留时长(s)")
+                  ),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
+                    p(s"平均驻留时长(s)")
                   )
                 ).render
               )
@@ -217,6 +223,12 @@ object AreaPanel extends Panel {
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
                     ),
                     p(s"驻留时长(s)")
+                  ),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
+                    p(s"平均驻留时长(s)")
                   )
                 ).render
               )
@@ -269,6 +281,12 @@ object AreaPanel extends Panel {
                   div(*.cls := "col-md-3", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._2/1000),
                     p(s"驻留时长(s)")
+                  ),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
+                    p(s"平均驻留时长(s)")
                   )
                 ).render
               )
