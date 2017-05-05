@@ -189,9 +189,7 @@ object AreaPanel extends Panel {
               if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
                 drawOldChart(oldPerson, onlinePerson)
 
-              jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
-              }
+              scheduleDrawTask()
 
             case msg@GetOut(macs, oldSum) =>
               println(s"i got a msg:$msg")
@@ -250,9 +248,7 @@ object AreaPanel extends Panel {
               if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
                 drawOldChart(oldPerson, onlinePerson)
 
-              jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
-                jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
-              }
+              scheduleDrawTask()
 
             case msg@NowInfo(onlineSum, inSum, outSum, oldSum, pastOnline) =>
               println(s"i got a msg:$msg")
@@ -310,6 +306,8 @@ object AreaPanel extends Panel {
                 Shortcut.schedule(scheduleTask, 1000)
                 taskFlag = 1
               }
+              Shortcut.schedule(scheduleDrawTask, 5000)
+
 
             case x =>
               println(s"i got a msg:$x")
@@ -347,8 +345,9 @@ object AreaPanel extends Panel {
   }
 
   private def scheduleDrawTask() = {
-    jQuery("div[data-highcharts-chart=0]").each { (_: Int, e: dom.Element) =>
-      jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000) , y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
+    val realTime = dom.document.getElementById("realTime").firstChild.asInstanceOf[dom.Element]
+    jQuery(realTime).each { (_: Int, e: dom.Element) =>
+      jQuery(e).highcharts().foreach(_.series.apply(0).addPoint(options = SeriesSplineData(x = new Date(System.currentTimeMillis()).getTime() + (8 * 3600 * 1000), y = onlinePerson), redraw = true, shift = true)).asInstanceOf[js.Any]
     }
   }
 
