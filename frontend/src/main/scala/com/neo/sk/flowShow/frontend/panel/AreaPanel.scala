@@ -39,9 +39,9 @@ object AreaPanel extends Panel {
 
   private val searchByDateButton = button(*.cls := "btn btn-default")("查询").render
 
-  private val realTimeChart = div(*.id := "realTime", *.cls := "row")().render
+  private val realTimeChart = div(*.id := "realTime", *.cls := "col-md-10 col-md-offset-1")().render
 
-  private val oldPeopleChart = div(*.cls := "row")().render
+  private val oldPeopleChart = div(*.cls := "col-md-10 col-md-offset-1")().render
 
   private val GroupMap = mutable.HashMap[String, Group]()
 
@@ -142,30 +142,31 @@ object AreaPanel extends Panel {
               inPerson +=  1
               onlinePerson += 1
               if(oldOrNot) oldPerson += 1
+              aveStayTime = System.currentTimeMillis() - onLineMap.values.sum / onlinePerson
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
                     p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
                     p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
                     p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
                     ),
                     p(s"最长驻留时长(s)")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                      aveStayTime
                     ),
                     p(s"平均驻留时长(s)")
                   )
@@ -199,32 +200,33 @@ object AreaPanel extends Panel {
               outPerson = outPerson + macs.length
               onlinePerson = onlinePerson - macs.length
               if(oldSum != 0) oldPerson = oldPerson - oldSum
+              aveStayTime = System.currentTimeMillis() - onLineMap.values.sum / onlinePerson
               val timeTmp = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
               stayTime = (stayTime._1, timeTmp)
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
                     p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
                     p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
                     p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
                     ),
-                    p(s"驻留时长(s)")
+                    p(s"最长驻留时长(s)")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                      aveStayTime
                     ),
                     p(s"平均驻留时长(s)")
                   )
@@ -257,30 +259,33 @@ object AreaPanel extends Panel {
               inPerson = inSum
               outPerson = outSum
               oldPerson = oldSum
+              aveStayTime = System.currentTimeMillis() - onlineSum.map(_._2).sum / onlinePerson
               val timeTmp = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
               stayTime = (timeTmp, timeTmp)
               areaDiv.innerHTML = ""
               areaDiv.appendChild(
                 div(
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
                     p("区域内人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
                     p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
                     p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(stayTime._2/1000),
-                    p(s"驻留时长(s)")
-                  ),
-                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
+                    ),
+                    p(s"最长驻留时长(s)")
+                  ),
+                  div(*.cls := "col-md-2", *.textAlign := "center")(
+                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
+                      aveStayTime / 1000
                     ),
                     p(s"平均驻留时长(s)")
                   )
@@ -304,10 +309,9 @@ object AreaPanel extends Panel {
               drawOldChart(oldPerson, onlinePerson)
               if(taskFlag == 0 ){
                 Shortcut.schedule(scheduleTask, 1000)
+                Shortcut.schedule(scheduleDrawTask, 5000)
                 taskFlag = 1
               }
-              Shortcut.schedule(scheduleDrawTask, 5000)
-
 
             case x =>
               println(s"i got a msg:$x")

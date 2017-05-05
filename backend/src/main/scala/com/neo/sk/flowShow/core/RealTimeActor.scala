@@ -81,8 +81,6 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
 
   private var oldPeopleSum = 0
 
-  private var oldSumForLeave = 0
-
   private val reg = "[0-9]*".r
   private val needSend2Socket = if (reg.pattern.matcher(groupId).matches()) true else {
     realTimeMacCache.clear()
@@ -261,12 +259,12 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
             cur - c._2 > realTimeDurationLength
           }.keys
           if (leaveMac.nonEmpty) {
-            oldSumForLeave = 0
+            var oldSumForLeave = 0
             leaveMac.foreach{ i =>
               if (oldPeopleList.contains(i)) oldSumForLeave += 1
               else oldPeopleList += i
             }
-            sendSocket(LeaveMac(groupId, leaveMac, oldPeopleSum))
+            sendSocket(LeaveMac(groupId, leaveMac, oldSumForLeave))
             realTimeMacCache.--=(leaveMac)
             realTimeUnsureDurCache.--=(leaveMac)
             userInCache.--=(leaveMac)
