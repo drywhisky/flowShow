@@ -166,7 +166,7 @@ object AreaPanel extends Panel {
                   ),
                   div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      aveStayTime
+                      aveStayTime / 1000
                     ),
                     p(s"平均驻留时长(s)")
                   )
@@ -226,7 +226,7 @@ object AreaPanel extends Panel {
                   ),
                   div(*.cls := "col-md-2", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      aveStayTime
+                      aveStayTime / 1000
                     ),
                     p(s"平均驻留时长(s)")
                   )
