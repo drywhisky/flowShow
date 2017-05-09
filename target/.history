@@ -205,3 +205,6 @@ pack
 compile
 c
 ~re-start
+compile
+~re-start
+compile

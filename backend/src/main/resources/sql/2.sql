@@ -51,6 +51,14 @@ CREATE TABLE user_action (
   in_time BIGINT NOT NULL ,
   out_time BIGINT
 );
+
+CREATE TABLE staff_mac (
+  id BIGSERIAL PRIMARY KEY ,
+  mac VARCHAR(255) NOT NULL ,
+  group_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL
+);
+
 --
 -- CREATE TABLE brand(
 --   id SERIAL PRIMARY KEY ,

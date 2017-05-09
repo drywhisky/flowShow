@@ -14,7 +14,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = tBoxs.schema ++ tCountDetail.schema ++ tGroups.schema ++ tUserAction.schema ++ tUsers.schema
+  lazy val schema: profile.SchemaDescription = Array(tBoxs.schema, tCountDetail.schema, tGroups.schema, tStaffMac.schema, tUserAction.schema, tUsers.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -134,6 +134,35 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tGroups */
   lazy val tGroups = new TableQuery(tag => new tGroups(tag))
+
+  /** Entity class storing rows of table tStaffMac
+    *  @param id Database column id SqlType(bigserial), AutoInc, PrimaryKey
+    *  @param mac Database column mac SqlType(varchar), Length(255,true)
+    *  @param groupId Database column group_id SqlType(int8)
+    *  @param userId Database column user_id SqlType(int8) */
+  case class rStaffMac(id: Long, mac: String, groupId: Long, userId: Long)
+  /** GetResult implicit for fetching rStaffMac objects using plain SQL queries */
+  implicit def GetResultrStaffMac(implicit e0: GR[Long], e1: GR[String]): GR[rStaffMac] = GR{
+    prs => import prs._
+      rStaffMac.tupled((<<[Long], <<[String], <<[Long], <<[Long]))
+  }
+  /** Table description of table staff_mac. Objects of this class serve as prototypes for rows in queries. */
+  class tStaffMac(_tableTag: Tag) extends profile.api.Table[rStaffMac](_tableTag, "staff_mac") {
+    def * = (id, mac, groupId, userId) <> (rStaffMac.tupled, rStaffMac.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(mac), Rep.Some(groupId), Rep.Some(userId)).shaped.<>({r=>import r._; _1.map(_=> rStaffMac.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(bigserial), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column mac SqlType(varchar), Length(255,true) */
+    val mac: Rep[String] = column[String]("mac", O.Length(255,varying=true))
+    /** Database column group_id SqlType(int8) */
+    val groupId: Rep[Long] = column[Long]("group_id")
+    /** Database column user_id SqlType(int8) */
+    val userId: Rep[Long] = column[Long]("user_id")
+  }
+  /** Collection-like TableQuery object for table tStaffMac */
+  lazy val tStaffMac = new TableQuery(tag => new tStaffMac(tag))
 
   /** Entity class storing rows of table tUserAction
     *  @param id Database column id SqlType(bigserial), AutoInc, PrimaryKey

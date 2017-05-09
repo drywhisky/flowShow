@@ -170,7 +170,7 @@ object GroupListPanel extends Panel{
         Http.postJsonAndParse[AddGroupRsp](Routes.addGroup, data).map { rsp =>
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
-            val newGroup = Group(rsp.id.getOrElse(0l), modalName.value, rsp.timestamp.getOrElse(0l), modalDua.value.toLong, fileUrlValue, scalaValue)
+            val newGroup = Group(rsp.id.getOrElse(0l), modalName.value, rsp.timestamp.getOrElse(0l), modalDua.value.toLong * 1000, fileUrlValue, scalaValue)
             GroupMap.put(newGroup.id, newGroup)
             makeGroupList(GroupMap)
           } else {

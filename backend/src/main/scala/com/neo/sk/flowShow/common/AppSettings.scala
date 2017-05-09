@@ -44,6 +44,7 @@ object AppSettings {
   val realTimeCountInterval = config.getInt("app.realTimeCountInterval")
   val historyCountInterval = config.getInt("app.historyCountInterval")
   val realTimeMacInterval = config.getInt("app.realTimeMacInterval")
+  val staffDuration = config.getInt("app.staffDuration")
 
   val tempPath = config.getString("app.tempPath")
   val rssiValue = config.getInt("app.rssiValue")

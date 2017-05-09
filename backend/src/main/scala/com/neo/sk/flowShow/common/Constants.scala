@@ -11,6 +11,11 @@ object Constants {
 
   val defaultGroupId = 0l
 
+  object ADDTYPE {
+    val AUTO = 1
+    val UNAUTO = 2
+  }
+
 
 
 

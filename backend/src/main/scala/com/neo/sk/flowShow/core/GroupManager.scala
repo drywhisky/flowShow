@@ -5,9 +5,11 @@ import akka.actor.SupervisorStrategy.{Restart, Resume}
 import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, ReceiveTimeout, Stash, Terminated}
 import akka.util.Timeout
 import org.slf4j.LoggerFactory
-import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao}
+import com.neo.sk.flowShow.models.dao.{BoxDao, GroupDao, UserDao}
 import com.neo.sk.flowShow.core.WsClient.SubscribeData
-import com.neo.sk.flowShow.core.GroupActor._
+import com.neo.sk.flowShow.core.GroupActor.{UnAutoAddStaff, _}
+import com.neo.sk.flowShow.common.Constants.ADDTYPE
+
 import scala.util.{Failure, Success}
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -33,9 +35,13 @@ object GroupManager {
 
   case class AddBoxMsg(info: AddBox, userId: Long)
 
+  case class AddStaffMsg(mac: String, groupId: Long)
+
   case class ModifyGroupMsg(info: ModifyGroup)
 
   case class ModifyBoxMsg(info: ModifyBox)
+
+  case class DeleteStaffMsg(id: Long)
 }
 
 
@@ -197,6 +203,37 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
 
         case Failure(e) =>
           log.debug(s"AddBox error in database.$e")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
+
+    case msg@AddStaffMsg(mac, groupId) =>
+      log.debug(s"i got a msg $msg")
+      val peer = sender()
+      UserDao.addStaff(mac, groupId, ADDTYPE.UNAUTO).onComplete{
+        case Success(id) =>
+            peer ! id
+            selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+            getActor(groupId.toString) ! UnAutoAddStaff(mac)
+
+        case Failure(e) =>
+          log.debug(s"AddStaff error in database.$e")
+          peer ! "Error"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+      }
+      switchState("busy", busy(), BusyTimeOut)
+
+    case msg@DeleteStaffMsg(id) =>
+      log.debug(s"i got a msg $msg")
+      val peer = sender()
+      UserDao.deleteStaff(id).onComplete{
+        case Success(_) =>
+          peer ! "OK"
+          selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+
+        case Failure(e) =>
+          log.debug(s"deleteStaff error in database.$e")
           peer ! "Error"
           selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
       }
