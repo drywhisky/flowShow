@@ -346,9 +346,13 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
 
   private val boxList = div().render
 
+  private val staffList = div().render
+
   private val editBox = div().render
 
   private val BoxMap = mutable.HashMap[Long, Box]()
+
+  private val StaffMap = collection.mutable.ListBuffer[(String, Boolean)]()
 
   private var iFrame = iframe(*.id := "svg", *.width := "100%", *.height := "488px").render
 
@@ -482,6 +486,71 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
     }
   }
 
+  private def makeStaffList(staff: mutable.ListBuffer[(String, Boolean)]) : Unit = {
+
+    var sort = 0
+
+    def makeRow(mac: (String, Boolean)) = {
+
+      val deleteButton = button(*.cls := "btn btn-info")("删除").render
+
+      deleteButton.onclick = { e: MouseEvent =>
+        e.preventDefault()
+        val data = AddStaff(mac._1, groupId).asJson.noSpaces
+        Http.postJsonAndParse[CommonRsp](Routes.deleteStaff, data).map { rsp =>
+          if (rsp.errCode == 0) {
+            JsFunc.alert(s"success")
+            StaffMap -= mac
+            makeStaffList(StaffMap)
+          } else {
+            JsFunc.alert(s"error: ${rsp.msg}")
+          }
+        }
+      }
+
+      sort += 1
+
+      tr(
+        td(sort),
+        td(mac._1),
+        td(if(mac._2) "系统添加" else "手工添加"),
+        td(deleteButton)
+      )
+    }
+
+    val newDiv = div(
+      table(*.cls := "table")(
+        thead(
+          tr(
+            th(*.textAlign.center)("#"),
+            th(*.textAlign.center)("mac"),
+            th(*.textAlign.center)("添加类型"),
+            th(*.textAlign.center)("操作")
+          )
+        ),
+        tbody(*.textAlign.center)(
+          staff.toList.map( m => makeRow(m))
+        )
+      )
+    ).render
+
+    staffList.innerHTML = ""
+    staffList.appendChild(newDiv)
+  }
+
+
+  private def getStaff(groupId: Long) = {
+    Http.getAndParse[StaffRsp](Routes.getAllStaff(groupId)).map { rsp =>
+      if (rsp.errCode == 0) {
+        println(s"success")
+        StaffMap ++= rsp.data.map(r => (r.mac, r.autoOrNot))
+        makeStaffList(StaffMap)
+      } else {
+        println(s"getCategoryList error: ${rsp.msg}")
+      }
+    }
+  }
+
   def getImg(map:String) = {
     ImgSvg.innerHTML = ""
     ImgSvg.appendChild(
@@ -569,10 +638,58 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
     editBox.appendChild(model.render)
   }
 
+  val createStaffButton = button(*.cls := "btn btn-warning")("+添加员工").render
+
+  createBoxButton.onclick = { e: MouseEvent =>
+
+    val mac = input(*.`type` := "text", *.cls := "form-control").render
+
+
+    val header = div(*.cls := "modal-title")("添加员工")
+    val body = div(*.cls := "row", *.textAlign.center)(
+      form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
+        div(*.cls := "form-group", *.textAlign.center)(
+          label(*.cls := "col-md-2 col-md-offset-2 control-label", *.color := "black")("员工mac"),
+          div(*.cls := "col-md-4")(mac)
+        )
+      )
+    )
+
+    def clickFunction(): Unit = {
+
+      if (mac.value == "") {
+        JsFunc.alert(s"error!")
+      } else {
+        val data = AddStaff(mac.value, groupId).asJson.noSpaces
+        Http.postJsonAndParse[AddStaffRsp](Routes.addStaff, data).map { rsp =>
+          if (rsp.errCode == 0) {
+            JsFunc.alert(s"success")
+            StaffMap += ((mac.value, false))
+            makeBoxList(BoxMap)
+          } else {
+            JsFunc.alert(s"error: ${rsp.msg}")
+          }
+        }
+      }
+    }
+
+    val model = new Modal(
+      header.render,
+      body.render,
+      clickFunction,
+      ""
+    )
+
+    model.show
+    editBox.textContent = ""
+    editBox.appendChild(model.render)
+  }
+
   override def locationHash = ""
 
   override protected def build(): Div = {
     getBox(groupId)
+    getStaff(groupId)
     if(map.nonEmpty) getImg(map.get)
     div(
       div(*.cls := "row")(
@@ -589,7 +706,17 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
         ImgSvg
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
+        h1("盒子管理")
+      ),
+      div(*.cls := "row", *.style := "margin-top:20px;")(
         boxList
+      ),
+      div(*.cls := "row", *.style := "margin-top:20px;")(
+        div(*.cls := "col-md-4")(h1("员工管理")),
+        div(*.cls := "col-md-3 col-md-offset-4")(createStaffButton)
+      ),
+      div(*.cls := "row", *.style := "margin-top:20px;")(
+        staffList
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
         editBox

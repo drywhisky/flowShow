@@ -41,7 +41,7 @@ object GroupManager {
 
   case class ModifyBoxMsg(info: ModifyBox)
 
-  case class DeleteStaffMsg(id: Long)
+  case class DeleteStaffMsg(mac: String, groupId: Long)
 }
 
 
@@ -224,13 +224,14 @@ class GroupManager(wsClient: ActorRef) extends Actor with Stash {
       }
       switchState("busy", busy(), BusyTimeOut)
 
-    case msg@DeleteStaffMsg(id) =>
+    case msg@DeleteStaffMsg(mac, groupId) =>
       log.debug(s"i got a msg $msg")
       val peer = sender()
-      UserDao.deleteStaff(id).onComplete{
+      UserDao.deleteStaff(mac, groupId).onComplete{
         case Success(_) =>
           peer ! "OK"
           selfRef ! SwitchState("working", working(relations, baseInfo), Duration.Undefined)
+          getActor(groupId.toString) ! DeleteStaff(mac)
 
         case Failure(e) =>
           log.debug(s"deleteStaff error in database.$e")

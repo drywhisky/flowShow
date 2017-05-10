@@ -58,13 +58,13 @@ object UserDao {
 
   def getAllStaff(groupId:Long) = {
     db.run(
-      tStaffMac.filter(_.groupId === groupId).map(_.mac).result
+      tStaffMac.filter(_.groupId === groupId).result
     )
   }
 
-  def deleteStaff(id: Long) = {
+  def deleteStaff(mac: String, groupId: Long) = {
     db.run(
-      tStaffMac.filter(_.id === id).delete
+      tStaffMac.filter(r => (r.mac === mac) && (r.groupId === groupId)).delete
     )
   }
 

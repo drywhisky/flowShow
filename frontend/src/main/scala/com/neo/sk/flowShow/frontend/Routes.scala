@@ -32,5 +32,11 @@ object Routes {
     baseUrl + s"/getHistory?mac=$mac"
   }
 
+  val addStaff = baseUrl + "/addStaff"
+  val deleteStaff = baseUrl + "/deleteStaff"
+  def getAllStaff(groupId: Long) = {
+    baseUrl + s"/getAllStaff?groupId=$groupId"
+  }
+
 
 }

@@ -14,6 +14,7 @@ import com.neo.sk.flowShow.service.SessionBase.{UserSession, UserSessionKey}
 import com.neo.sk.flowShow.core.GroupManager._
 import scala.concurrent.ExecutionContext.Implicits.global
 import io.circe.Error
+import com.neo.sk.flowShow.common.Constants.ADDTYPE
 
 /**
   * Created by whisky on 17/4/22.
@@ -29,7 +30,8 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
   val userRoutes = pathPrefix("user")(
     staticRoutes ~ loginSubmit ~ registerSubmit ~ logout ~
       getGroups ~ getBoxs ~ addBox ~ addGroup ~ modifyGroup ~
-      modifyBox ~ imageUpload ~ getAllBoxs ~ getHistory
+      modifyBox ~ imageUpload ~ getAllBoxs ~ getHistory ~
+      addStaff ~ deleteStaff ~ getAllStaff
 
   )
 
@@ -255,6 +257,67 @@ trait UserService extends ServiceUtils with SessionBase with CirceSupport{
               r => UserHistory(mac, r._2.groupName, r._1.inTime, r._1.outTime)
             }.toList
             complete(UserHistoryRsp(data = historyList))
+          }.recover {
+            case t =>
+              complete(CommonRsp(104005, s"error.$t"))
+          }
+        }
+      }
+    }
+  }
+
+  private val addStaff = (path("addStaff") & post & pathEndOrSingleSlash) {
+    UserAction { _ =>
+      entity(as[Either[Error, AddStaff]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(AddStaffMsg(req.mac, req.groupId)).map {
+              case id: Long  =>
+                complete(AddStaffRsp(Some(id)))
+
+              case "Error" =>
+                complete(AddStaffRsp(None, 104006, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(AddGroupRsp(None, None, 104002, "parse error."))
+      }
+    }
+  }
+
+  private val deleteStaff = (path("deleteStaff") & post & pathEndOrSingleSlash) {
+    UserAction { _ =>
+      entity(as[Either[Error, AddStaff]]){
+        case Right(req) =>
+          dealFutureResult {
+            groupManager.ask(DeleteStaffMsg(req.mac, req.groupId)).map {
+              case "OK"  =>
+                complete(CommonRsp())
+
+              case "Error" =>
+                complete(CommonRsp(104007, "Error"))
+            }
+          }
+
+        case Left(e) =>
+          complete(CommonRsp(104002, "parse error."))
+      }
+    }
+  }
+
+  private val getAllStaff = (path("getAllStaff") & get & pathEndOrSingleSlash) {
+    UserAction { _ =>
+      parameters(
+        'groupId.as[Long]
+      ) { case (groupId) =>
+        dealFutureResult {
+          UserDao.getAllStaff(groupId).map { res =>
+            val staffList = res.map { r =>
+              val autoOrNot = if(r.userId == ADDTYPE.AUTO) true else false
+              Staff(r.mac, autoOrNot)
+            }.toList
+            complete(StaffRsp(data = staffList))
           }.recover {
             case t =>
               complete(CommonRsp(104005, s"error.$t"))

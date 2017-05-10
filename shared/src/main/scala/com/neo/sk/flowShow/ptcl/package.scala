@@ -111,6 +111,19 @@ package object ptcl {
 
   case class AddBox(name:String, mac:String, rssi:Int, groupId:Long, x: Option[Double], y: Option[Double])
 
+  case class AddStaff(mac:String, groupId: Long)
+
+  case class Staff(mac:String, autoOrNot: Boolean)
+
+  case class AddStaffRsp(id: Option[Long],
+                         errCode: Int = 0,
+                         msg: String = "ok") extends Response
+
+  case class StaffRsp(data: List[Staff],
+                     errCode: Int = 0,
+                     msg: String = "ok") extends Response
+
+
 
   /**
     * userHistory

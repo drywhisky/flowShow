@@ -30,6 +30,8 @@ object GroupActor {
 
   case class UnAutoAddStaff(staffMac: String)
 
+  case class DeleteStaff(staffMac: String)
+
 }
 
 case object GroupType{
@@ -113,7 +115,7 @@ class GroupActor(id:String) extends Actor with Stash{
       val rssi = rssiSet.getOrElse(defaultRssiSet)
       if(uniterType == GroupType.group) {
         getRealTimeActor("RealTime", duration)
-        UserDao.getAllStaff(id.toLong).map { r => staffList ++= r }
+        UserDao.getAllStaff(id.toLong).map { r => staffList ++= r.map(_.mac) }
       }
       unstashAll()
       context.become(idle(father, fatherName, duration, rssi))
@@ -180,8 +182,13 @@ class GroupActor(id:String) extends Actor with Stash{
       }
 
     case msg@UnAutoAddStaff(mac) =>
-      log.debug(s"i got a msg")
+      log.debug(s"i got a msg:$msg")
       staffList += mac
+
+    case msg@DeleteStaff(mac) =>
+      log.debug(s"i got a msg:$msg")
+      staffList -= mac
+
 
     case Terminated(child) =>
       context.unwatch(child)
