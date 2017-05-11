@@ -450,7 +450,7 @@ object AreaPanel extends Panel {
       ),
       searchByIdIncome,
       div(*.cls := "row", *.width := "100%", *.backgroundColor := "#282B3F")(
-        div(*.cls := "div(*.cls := \"col-md-5\")(h1(\"员工管理\"))", *.backgroundColor := "#282B3F")(
+        div(*.cls := "col-md-8", *.backgroundColor := "#282B3F")(
           areaDiv,
           realTimeChart,
           oldPeopleChart

@@ -640,11 +640,9 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
 
   val createStaffButton = button(*.cls := "btn btn-warning")("+添加员工").render
 
-  createBoxButton.onclick = { e: MouseEvent =>
-
+  createStaffButton.onclick = { e: MouseEvent =>
+    e.preventDefault()
     val mac = input(*.`type` := "text", *.cls := "form-control").render
-
-
     val header = div(*.cls := "modal-title")("添加员工")
     val body = div(*.cls := "row", *.textAlign.center)(
       form(*.cls := "form-horizontal", *.textAlign.center, *.style := "margin-top:10px;")(
@@ -656,7 +654,6 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
     )
 
     def clickFunction(): Unit = {
-
       if (mac.value == "") {
         JsFunc.alert(s"error!")
       } else {
@@ -665,7 +662,7 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
           if (rsp.errCode == 0) {
             JsFunc.alert(s"success")
             StaffMap += ((mac.value, false))
-            makeBoxList(BoxMap)
+            makeStaffList(StaffMap)
           } else {
             JsFunc.alert(s"error: ${rsp.msg}")
           }
@@ -699,21 +696,21 @@ class BoxListPanel(groupId: Long, name: String, map:Option[String], scala:Option
             GroupPanel.SetContent(GroupListPanel.render)
           }, *.fontSize := "x-large"
           )(s"区域管理/${name}区")
-        ),
-        div(*.cls := "col-md-2 col-md-offset-5")(createBoxButton)
+        )
       ),
       div(*.cls := "row", *.style := "margin-top:20px;", *.width := "100%")(
         ImgSvg
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
-        h1("盒子管理")
+        div(*.cls := "col-md-4", *.fontSize := "x-large")("盒子管理"),
+        div(*.cls := "col-md-2 col-md-offset-6")(createBoxButton)
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
         boxList
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
-        div(*.cls := "col-md-4")(h1("员工管理")),
-        div(*.cls := "col-md-3 col-md-offset-4")(createStaffButton)
+        div(*.cls := "col-md-4", *.fontSize := "x-large")("员工管理"),
+        div(*.cls := "col-md-2 col-md-offset-6")(createStaffButton)
       ),
       div(*.cls := "row", *.style := "margin-top:20px;")(
         staffList
