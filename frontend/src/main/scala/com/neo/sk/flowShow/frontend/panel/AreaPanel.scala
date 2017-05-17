@@ -47,6 +47,8 @@ object AreaPanel extends Panel {
 
   private val peopleCustomerChart = div(*.cls := "col-md-10 col-md-offset-1")().render
 
+  private val durationChart = div(*.cls := "col-md-10 col-md-offset-1")().render
+
   private val GroupMap = mutable.HashMap[String, Group]()
 
   private val onLineMap = mutable.HashMap[String, Long]()
@@ -303,9 +305,11 @@ object AreaPanel extends Panel {
               drawChart(pastOnline)
               drawOldChart(oldPerson, onlinePerson)
               drawPeopleChart(onlinePerson, walkPerson)
+              drawDurationChart()
               if(taskFlag == 0 ){
                 Shortcut.schedule(scheduleTask, 1000)
                 Shortcut.schedule(scheduleDrawTask, 5000)
+                Shortcut.schedule(drawDurationChart, 5000)
                 taskFlag = 1
               }
 
@@ -419,6 +423,44 @@ object AreaPanel extends Panel {
     peopleCustomerChart.innerHTML = ""
 
     renderChart(drawChart, peopleCustomerChart)
+  }
+
+  private def drawDurationChart() = {
+
+    val underThree = onLineMap.count(System.currentTimeMillis() - _._2 < 3 * 60 * 1000)
+
+    val threeAndNine = onLineMap.count(a => (3 * 60 * 1000 < System.currentTimeMillis() - a._2  && System.currentTimeMillis() - a._2 < 9 * 60 * 1000))
+
+    val nineAndFifteen = onLineMap.count(a => (9 * 60 * 1000 < System.currentTimeMillis() - a._2  && System.currentTimeMillis() - a._2 < 15 * 60 * 1000))
+
+    val onFifteen = onLineMap.count(System.currentTimeMillis() - _._2 < 15 * 60 * 1000)
+
+    val drawChart = new HighchartsConfig {
+
+      // Chart config
+      override val chart: Cfg[Chart] = Chart(`type` = "bar")
+
+      // Chart title
+      override val title: Cfg[Title] = Title(text = "客流驻留时长分布图")
+
+      // Y Axis settings
+      override val yAxis: CfgArray[YAxis] = js.Array(YAxis(title = YAxisTitle(text = "duration")))
+
+      // X Axis settings
+      override val xAxis: CfgArray[XAxis] = js.Array(XAxis(categories = js.Array("人数")))
+
+      // Chart data
+      override val series: SeriesCfg = js.Array[AnySeries](
+        SeriesBar(name = "<3min", data = js.Array[Double](underThree)),
+        SeriesBar(name = "3min-9min", data = js.Array[Double](threeAndNine)),
+        SeriesBar(name = "9min-15min", data = js.Array[Double](nineAndFifteen)),
+        SeriesBar(name = ">15min", data = js.Array[Double](onFifteen))
+      )
+    }
+
+    durationChart.innerHTML = ""
+
+    renderChart(drawChart, durationChart)
   }
 
   private def getdata(pastData: List[(Long, Int)]) = {
