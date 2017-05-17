@@ -10,7 +10,7 @@ import com.neo.sk.flowShow.common.AppSettings
 
 import scala.collection.mutable
 import com.neo.sk.flowShow.models.dao.{CountDao, GroupDao}
-import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, PushData}
+import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac, NewWalk, PushData}
 import com.neo.sk.flowShow.ptcl.NowInfo
 
 import scala.concurrent.duration._
@@ -66,6 +66,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
   private val clientMacOut = collection.mutable.HashMap[String, Int]()
 
   private val oldPeopleList = collection.mutable.ListBuffer[(String)]()
+
+  private val walkPeopleList = collection.mutable.ListBuffer[(String)]()
 
   private val visitDurationLent = AppSettings.visitDurationLent
   //持续两分钟收到算进店
@@ -165,6 +167,10 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
                           cache: mutable.HashMap[String, List[(Long, Long)]],
                           intervalMillis: Int): mutable.HashMap[String, List[(Long, Long)]] = {
     shoots.groupBy(_.clientMac).foreach { case (clientMac, shootList) =>
+      if(!walkPeopleList.contains(clientMac)){
+        walkPeopleList += clientMac
+        sendSocket(NewWalk(groupId))
+      }
       var realTimeShootsCache = List[Shoot]()
       val clientOpt = cache.get(clientMac)
       val oldDuration = clientOpt.getOrElse(Nil)
@@ -357,7 +363,8 @@ class RealTimeActor(fatherName:String) extends Actor with Stash{
         if (oldPeopleList.contains(i)) oldPeopleSum += 1
       }
       val pastOnLine = countCache.toList.sortBy(_._1).reverse.take(10)
-      peer ! NowInfo(online, inSum, outSum, oldPeopleSum, pastOnLine)
+      val walkSum = walkPeopleList.length
+      peer ! NowInfo(online, inSum, outSum, oldPeopleSum, pastOnLine, walkSum)
 
     case ReceiveTimeout =>
       log.error(s"$logPrefix did not init...")

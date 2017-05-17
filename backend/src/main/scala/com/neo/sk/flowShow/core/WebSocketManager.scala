@@ -25,6 +25,8 @@ object WebSocketManager {
 
   case class LeaveMac(groupId:String, mac:Iterable[String], oldNum: Int) extends PushData
 
+  case class NewWalk(groupId: String) extends PushData
+
 }
 
 class WebSocketManager extends Actor{
@@ -58,6 +60,9 @@ class WebSocketManager extends Actor{
 
     case msg@LeaveMac(groupId, _, _) =>
       log.debug(s"i got a msg:$msg")
+      actorList.filter(_._2 == groupId)foreach( _._1 ! msg)
+
+    case msg@NewWalk(groupId) =>
       actorList.filter(_._2 == groupId)foreach( _._1 ! msg)
 
     case DeleterWsClient(peer) =>

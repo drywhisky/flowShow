@@ -7,13 +7,12 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
-import com.neo.sk.flowShow.core.WebSocketManager.{LeaveMac, NewMac}
+import com.neo.sk.flowShow.core.WebSocketManager._
 import com.neo.sk.flowShow.ptcl._
 import com.neo.sk.utils.SecureUtil
 import akka.actor.PoisonPill
 import com.neo.sk.flowShow.Boot.webSocketManager
 import com.neo.sk.flowShow.core.RealTimeActor.GetNowInfo
-import com.neo.sk.flowShow.core.WebSocketManager.{DeleterWsClient, RegisterWsClient}
 
 /**
   * Created by dry on 2017/4/5.
@@ -65,17 +64,20 @@ object WebSocketActor {
         case Tick =>
           subscriber ! Heartbeat(id = "heartbeat")
 
-        case NewMac(groupId: String, mac: String, time: Long, oldOrNot: Boolean) =>
+        case NewMac(groupId, mac, time, oldOrNot) =>
           log.info(s"$mac come in: $groupId")
           subscriber ! ComeIn(mac, time, oldOrNot)
 
-        case LeaveMac(groupId: String, mac: Iterable[String], oldNum: Int) =>
+        case LeaveMac(groupId, mac, oldNum) =>
           log.info(s"$mac get out: $groupId")
           subscriber ! GetOut(mac.toList, oldNum)
 
-        case msg@NowInfo(_, _, _, _, _) =>
+        case msg@NowInfo(_, _, _, _, _, _) =>
           log.info(s"i got a msg:$msg")
           subscriber ! msg
+
+        case NewWalk(_) =>
+          subscriber ! WalkIn
 
         case Handle(msg) =>
           log.info(s"$id got msg $msg.")

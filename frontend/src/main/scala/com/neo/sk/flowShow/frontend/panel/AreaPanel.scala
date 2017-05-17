@@ -31,7 +31,9 @@ import scala.scalajs.js.Date
 
 object AreaPanel extends Panel {
 
-  private val areaDiv = div(*.cls := "row info-blips")().render
+  private val areaDiv1 = div(*.cls := "row info-blips")().render
+
+  private val areaDiv2 = div(*.cls := "row info-blips")().render
 
   private val onLineDiv = div(*.cls := "col-md-2 col-md-offset-1", *.backgroundColor := "#282B3F")().render
 
@@ -42,6 +44,8 @@ object AreaPanel extends Panel {
   private val realTimeChart = div(*.id := "realTime", *.cls := "col-md-10 col-md-offset-1")().render
 
   private val oldPeopleChart = div(*.cls := "col-md-10 col-md-offset-1")().render
+
+  private val peopleCustomerChart = div(*.cls := "col-md-10 col-md-offset-1")().render
 
   private val GroupMap = mutable.HashMap[String, Group]()
 
@@ -54,6 +58,8 @@ object AreaPanel extends Panel {
   private var outPerson = 0
 
   private var oldPerson = 0
+
+  private var walkPerson = 0
 
   private var stayTime = (0l, 0l)  //(historyMax, NowMax)
 
@@ -141,37 +147,19 @@ object AreaPanel extends Panel {
               onLineMap.put(mac, time)
               inPerson +=  1
               onlinePerson += 1
-              if(oldOrNot) oldPerson += 1
+              if(oldOrNot) {
+                oldPerson += 1
+                val oldDiv = dom.document.getElementById("older").asInstanceOf[Div]
+                oldDiv.innerHTML = oldOldPerson.toString
+              } else {
+                val newDiv = dom.document.getElementById("newer").asInstanceOf[Div]
+                newDiv.innerHTML = (onlinePerson - oldOldPerson).toString
+              }
               aveStayTime = System.currentTimeMillis() - onLineMap.values.sum / onlinePerson
-              areaDiv.innerHTML = ""
-              areaDiv.appendChild(
-                div(
-                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
-                    p("区域内人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
-                    p(s"进区域人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
-                    p(s"出区域人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
-                    ),
-                    p(s"最长驻留时长(s)")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      aveStayTime / 1000
-                    ),
-                    p(s"平均驻留时长(s)")
-                  )
-                ).render
-              )
+              val stayDiv = dom.document.getElementById("stayIn").asInstanceOf[Div]
+              val InDiv = dom.document.getElementById("comeIn").asInstanceOf[Div]
+              stayDiv.innerHTML = onlinePerson.toString
+              InDiv.innerHTML = inPerson.toString
               val newDiv = div(
                 table(*.cls := "table")(
                   thead(
@@ -189,6 +177,8 @@ object AreaPanel extends Panel {
 
               if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
                 drawOldChart(oldPerson, onlinePerson)
+
+              drawPeopleChart(onlinePerson, walkPerson)
 
               scheduleDrawTask()
 
@@ -203,35 +193,14 @@ object AreaPanel extends Panel {
               aveStayTime = System.currentTimeMillis() - onLineMap.values.sum / onlinePerson
               val timeTmp = System.currentTimeMillis() - onLineMap.toList.sortBy(_._2).head._2
               stayTime = (stayTime._1, timeTmp)
-              areaDiv.innerHTML = ""
-              areaDiv.appendChild(
-                div(
-                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
-                    p("区域内人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
-                    p(s"进区域人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
-                    p(s"出区域人数")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
-                    ),
-                    p(s"最长驻留时长(s)")
-                  ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
-                      aveStayTime / 1000
-                    ),
-                    p(s"平均驻留时长(s)")
-                  )
-                ).render
-              )
+              val stayDiv = dom.document.getElementById("stayIn").asInstanceOf[Div]
+              val outDiv = dom.document.getElementById("getOut").asInstanceOf[Div]
+              val olderDiv = dom.document.getElementById("older").asInstanceOf[Div]
+              val newerDiv = dom.document.getElementById("newer").asInstanceOf[Div]
+              olderDiv.innerHTML = oldOldPerson.toString
+              newerDiv.innerHTML = (onlinePerson - oldOldPerson).toString
+              stayDiv.innerHTML = onlinePerson.toString
+              outDiv.innerHTML = outPerson.toString
               val newDiv = div(
                 table(*.cls := "table")(
                   thead(
@@ -250,40 +219,66 @@ object AreaPanel extends Panel {
               if(oldOldPerson / oldOnlinePerson != oldPerson / onlinePerson)
                 drawOldChart(oldPerson, onlinePerson)
 
+              drawPeopleChart(onlinePerson, walkPerson)
+
               scheduleDrawTask()
 
-            case msg@NowInfo(onlineSum, inSum, outSum, oldSum, pastOnline) =>
+            case WalkIn =>
+              walkPerson = walkPerson + 1
+              val walkDiv = dom.document.getElementById("walkIn").asInstanceOf[Div]
+              walkDiv.innerHTML = walkPerson.toString
+              drawPeopleChart(onlinePerson, walkPerson)
+
+            case msg@NowInfo(onlineSum, inSum, outSum, oldSum, pastOnline, walkSum) =>
               println(s"i got a msg:$msg")
               onLineMap ++= onlineSum.map(a => (a._1, a._2))
               onlinePerson = onlineSum.length
               inPerson = inSum
               outPerson = outSum
               oldPerson = oldSum
+              walkPerson = walkSum
               aveStayTime = System.currentTimeMillis() - onlineSum.map(_._2).sum / onlinePerson
               val timeTmp = System.currentTimeMillis() - onlineSum.sortBy(_._2).head._2
               stayTime = (timeTmp, timeTmp)
-              areaDiv.innerHTML = ""
-              areaDiv.appendChild(
+              areaDiv1.innerHTML = ""
+              areaDiv2.innerHTML = ""
+              areaDiv1.appendChild(
                 div(
-                  div(*.cls := "col-md-2 col-md-offset-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "stayIn", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson),
                     p("区域内人数")
                   ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "comeIn", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(inPerson),
                     p(s"进区域人数")
                   ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
-                    div(*.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "getOut", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(outPerson),
                     p(s"出区域人数")
                   ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "walkIn", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(walkPerson),
+                    p(s"穿行区域人数")
+                  )
+                ).render
+              )
+              areaDiv2.appendChild(
+                div(
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "older", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(oldPerson),
+                    p("老顾客人数")
+                  ),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
+                    div(*.id := "newer", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(onlinePerson - oldPerson),
+                    p(s"新顾客人数")
+                  ),
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       if(stayTime._2 > stayTime._1) stayTime._2/1000 else stayTime._1/1000
                     ),
                     p(s"最长驻留时长(s)")
                   ),
-                  div(*.cls := "col-md-2", *.textAlign := "center")(
+                  div(*.cls := "col-md-3", *.textAlign := "center")(
                     div(*.id := "stayTime", *.cls := "info-blip glyphicon", *.fontSize := "xx-large")(
                       aveStayTime / 1000
                     ),
@@ -307,6 +302,7 @@ object AreaPanel extends Panel {
               onLineDiv.appendChild(newDiv)
               drawChart(pastOnline)
               drawOldChart(oldPerson, onlinePerson)
+              drawPeopleChart(onlinePerson, walkPerson)
               if(taskFlag == 0 ){
                 Shortcut.schedule(scheduleTask, 1000)
                 Shortcut.schedule(scheduleDrawTask, 5000)
@@ -390,6 +386,41 @@ object AreaPanel extends Panel {
     renderChart(drawChart, realTimeChart)
   }
 
+  private def drawPeopleChart(walker: Int, customer: Int) = {
+
+    val drawChart = new HighchartsConfig {
+
+      // Chart config
+      override val chart: Cfg[Chart] = Chart(`type` = "doughnut", options3d = ChartOptions3d(alpha = 45, beta = 0, enabled = true))
+
+      // Chart title
+      override val title: Cfg[Title] = Title(text = "区域客流转化比")
+
+      override val tooltip: Cfg[Tooltip] = Tooltip(pointFormat = "{series.name}: <b>{point.percentage:.1f}%</b>")
+
+      override val plotOptions: Cfg[PlotOptions] = PlotOptions(pie = PlotOptionsPie(
+        allowPointSelect = true,
+        cursor = "pointer",
+        depth = 35,
+        dataLabels = PlotOptionsPieDataLabels(enabled = true, format = "{point.name}"),
+        size = "100%"
+      ))
+      // Series
+      override val series: SeriesCfg = js.Array[AnySeries](
+        SeriesPie(name = "数据",
+          data = js.Array[SeriesPieData](
+            SeriesPieData(y = walker, name = "非客户"),
+            SeriesPieData(y = customer, name = "客户")
+          )
+        )
+      )
+    }
+
+    peopleCustomerChart.innerHTML = ""
+
+    renderChart(drawChart, peopleCustomerChart)
+  }
+
   private def getdata(pastData: List[(Long, Int)]) = {
     import scala.scalajs.js.Date
 
@@ -451,9 +482,11 @@ object AreaPanel extends Panel {
       searchByIdIncome,
       div(*.cls := "row", *.width := "100%", *.backgroundColor := "#282B3F")(
         div(*.cls := "col-md-8", *.backgroundColor := "#282B3F")(
-          areaDiv,
+          areaDiv1,
+          areaDiv2,
           realTimeChart,
-          oldPeopleChart
+          oldPeopleChart,
+          peopleCustomerChart
         ),
         onLineDiv
       )
