@@ -309,7 +309,7 @@ object AreaPanel extends Panel {
               if(taskFlag == 0 ){
                 Shortcut.schedule(scheduleTask, 1000)
                 Shortcut.schedule(scheduleDrawTask, 5000)
-                Shortcut.schedule(drawDurationChart, 5000)
+                Shortcut.schedule(drawDurationChart, 10000)
                 taskFlag = 1
               }
 
@@ -427,13 +427,15 @@ object AreaPanel extends Panel {
 
   private def drawDurationChart() = {
 
-    val underThree = onLineMap.count(System.currentTimeMillis() - _._2 < 3 * 60 * 1000)
+    val time = System.currentTimeMillis()
 
-    val threeAndNine = onLineMap.count(a => (3 * 60 * 1000 < System.currentTimeMillis() - a._2  && System.currentTimeMillis() - a._2 < 9 * 60 * 1000))
+    val underThree = onLineMap.count(time - _._2 < 3 * 60 * 1000)
 
-    val nineAndFifteen = onLineMap.count(a => (9 * 60 * 1000 < System.currentTimeMillis() - a._2  && System.currentTimeMillis() - a._2 < 15 * 60 * 1000))
+    val threeAndNine = onLineMap.count(a => (3 * 60 * 1000 < time - a._2)  && (time - a._2 < 9 * 60 * 1000))
 
-    val onFifteen = onLineMap.count(System.currentTimeMillis() - _._2 < 15 * 60 * 1000)
+    val nineAndFifteen = onLineMap.count(a => (9 * 60 * 1000 < time - a._2) && (time - a._2 < 15 * 60 * 1000))
+
+    val onFifteen = onLineMap.count(time - _._2 > 15 * 60 * 1000)
 
     val drawChart = new HighchartsConfig {
 
