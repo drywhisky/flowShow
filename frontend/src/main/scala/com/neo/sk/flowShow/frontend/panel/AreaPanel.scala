@@ -528,7 +528,8 @@ object AreaPanel extends Panel {
           areaDiv2,
           realTimeChart,
           oldPeopleChart,
-          peopleCustomerChart
+          peopleCustomerChart,
+          durationChart
         ),
         onLineDiv
       )
