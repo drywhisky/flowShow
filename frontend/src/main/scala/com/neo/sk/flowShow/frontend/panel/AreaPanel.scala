@@ -390,12 +390,12 @@ object AreaPanel extends Panel {
     renderChart(drawChart, realTimeChart)
   }
 
-  private def drawPeopleChart(walker: Int, customer: Int) = {
+  private def drawPeopleChart(customer: Int, walker: Int) = {
 
     val drawChart = new HighchartsConfig {
 
       // Chart config
-      override val chart: Cfg[Chart] = Chart(`type` = "doughnut", options3d = ChartOptions3d(alpha = 45, beta = 0, enabled = true))
+      override val chart: Cfg[Chart] = Chart(`type` = "pie", options3d = ChartOptions3d(alpha = 45, beta = 0, enabled = true))
 
       // Chart title
       override val title: Cfg[Title] = Title(text = "区域客流转化比")
@@ -404,10 +404,9 @@ object AreaPanel extends Panel {
 
       override val plotOptions: Cfg[PlotOptions] = PlotOptions(pie = PlotOptionsPie(
         allowPointSelect = true,
-        cursor = "pointer",
-        depth = 35,
-        dataLabels = PlotOptionsPieDataLabels(enabled = true, format = "{point.name}"),
-        size = "100%"
+        dataLabels = PlotOptionsPieDataLabels(enabled = true),
+        size = "80%",
+        innerSize = "20%"
       ))
       // Series
       override val series: SeriesCfg = js.Array[AnySeries](
@@ -529,9 +528,9 @@ object AreaPanel extends Panel {
           areaDiv1,
           areaDiv2,
           realTimeChart,
-          oldPeopleChart,
           peopleCustomerChart,
-          durationChart
+          durationChart,
+          oldPeopleChart
         ),
         onLineDiv
       )
