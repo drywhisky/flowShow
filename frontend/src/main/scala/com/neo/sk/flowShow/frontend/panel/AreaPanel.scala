@@ -143,7 +143,7 @@ object AreaPanel extends Panel {
                 //do nothing
 
             case msg@ComeIn(mac, time, oldOrNot) =>
-              println(s"comeIn.i got a msg:$msg")
+              println(s"comeIn.i got a msg:$msg.time is ${System.currentTimeMillis()}")
               val oldOldPerson = oldPerson
               val oldOnlinePerson = onlinePerson
               onLineMap.put(mac, time)

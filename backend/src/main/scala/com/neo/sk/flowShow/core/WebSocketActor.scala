@@ -65,7 +65,7 @@ object WebSocketActor {
           subscriber ! Heartbeat(id = "heartbeat")
 
         case NewMac(groupId, mac, time, oldOrNot) =>
-          log.info(s"$mac come in: $groupId")
+          log.info(s"$mac come in: $groupId.time is ${System.currentTimeMillis()}")
           subscriber ! ComeIn(mac, time, oldOrNot)
 
         case LeaveMac(groupId, mac, oldNum) =>
