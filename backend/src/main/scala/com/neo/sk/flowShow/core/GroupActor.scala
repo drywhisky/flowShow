@@ -62,7 +62,7 @@ class GroupActor(id:String) extends Actor with Stash{
     else GroupType.box
 
   private[this] val boxInfo = new collection.mutable.HashMap[String,Long]
-  private[this] val clientData = new ListBuffer[Shoot]
+  private[this] val sbtclientData = new ListBuffer[Shoot]
 
   private[this] def terminate(cause:String) = {
     log.info(s"$logPrefix will terminate because $cause.")
